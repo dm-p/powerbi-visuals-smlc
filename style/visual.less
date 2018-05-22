@@ -1,0 +1,29 @@
+@import (less) "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.css";
+@import (less) "node_modules/powerbi-visuals-utils-chartutils/lib/index.css";
+@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
+
+.grid .tick {
+    stroke-opacity: 1;
+}
+
+.grid path {
+    stroke-width: 0;
+}
+
+.grid .tick line.dashed {
+    stroke-dasharray: 5, 5;
+}
+
+.grid .tick line.dotted {
+    stroke-dasharray: 1, 5;
+}
+
+.lineSeries {
+    fill: none;
+    stroke-width: 2px; /* This will be done via shape config later on */
+}
+
+.overlay {
+    fill: none;
+    pointer-events: all;
+}
