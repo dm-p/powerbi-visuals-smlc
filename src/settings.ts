@@ -40,6 +40,7 @@ module powerbi.extensibility.visual {
     export class VisualSettings extends DataViewObjectsParser {
       public debug: debugSettings = new debugSettings();
       public smallMultiple: smallMultipleSettings = new smallMultipleSettings();
+      public legend: legendSettings = new legendSettings();
       public colorSelector: colorSelectorSettings = new colorSelectorSettings();
       public yAxis: yAxisSettings = new yAxisSettings();
     }
@@ -50,6 +51,11 @@ module powerbi.extensibility.visual {
 
     export class colorSelectorSettings {
 
+    }
+
+    export class legendSettings {
+      public show: boolean = true;
+      public position: string = "Top";
     }
 
     export class smallMultipleSettings {
