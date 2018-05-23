@@ -184,6 +184,12 @@
                         }
                     }
                 },
+                "backgroundTransparency": {
+                    "displayName": "Transparency",
+                    "type": {
+                        "integer": true
+                    }
+                },
                 "bandedMultiples": {
                     "displayName": "Banded multiples",
                     "type": {
