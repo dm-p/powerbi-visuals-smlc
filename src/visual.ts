@@ -435,9 +435,12 @@ module powerbi.extensibility.visual {
                                     width: multipleIndividualWidth,
                                     fill: function(d, i) {
                                         return i % 2 && settings.smallMultiple.bandedMultiples ? 
-                                            settings.smallMultiple.backgroundColorAlternate : 
+                                        settings.smallMultiple.backgroundColorAlternate : 
+                                        !settings.smallMultiple.backgroundColor ? 
+                                            'transparent' : 
                                             settings.smallMultiple.backgroundColor;
-                                    }                                       
+                                    },
+                                    'fill-opacity': 1 - (settings.smallMultiple.backgroundTransparency / 100)                                
                                 });
 
                         /** Add container to multiple, specifically to manage interaction */
