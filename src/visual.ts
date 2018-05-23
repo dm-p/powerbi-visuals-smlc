@@ -479,10 +479,7 @@ module powerbi.extensibility.visual {
                                                     return d.measures[measureIndex].color;
                                                 }
                                             });
-                                });                            
-
-                            /** Add tooltip functionality to each multiple */
-                                // smallMultipleLineChartUtils.createSmallMultipleTooltip(multiple);
+                                });
 
                             /** Add events to the multiple container */
                                 overlay
