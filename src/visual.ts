@@ -451,7 +451,21 @@ module powerbi.extensibility.visual {
                                 .attr({
                                     width: multipleIndividualWidth - SmallMultipleLineChart.Config.chartSeriesPadding.right,
                                     height: multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom,
-                                    transform: `translate(${SmallMultipleLineChart.Config.chartSeriesPadding.left}, 0)`
+                                    transform: function() {
+                                        let x = SmallMultipleLineChart.Config.chartSeriesPadding.left,
+                                            y: number;
+                                        switch(settings.smallMultiple.labelPosition) {
+                                            case 'top': {
+                                                y = settings.smallMultiple.labelHeight;
+                                                break;
+                                            }
+                                            case 'bottom': {
+                                                y = 0;
+                                                break;
+                                            }
+                                        }
+                                        return `translate(${x}, ${y})`;
+                                    }
                                 });
 
                         /** Add stuff for each measure */
