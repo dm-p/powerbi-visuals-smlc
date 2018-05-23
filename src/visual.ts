@@ -309,15 +309,30 @@ module powerbi.extensibility.visual {
                 /** Y-axis setup */
 
                     /** Scaling */
+
+                        /** Get upper/lower bounds based on label configuration for multiple */
+                            let yRangeLower: number,
+                                yRangeUpper: number;
+
+                            switch(settings.smallMultiple.labelPosition) {
+                                case 'top': {
+                                    yRangeLower = multipleIndividualRowHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom;
+                                    yRangeUpper = SmallMultipleLineChart.Config.chartAreaPadding.top + settings.smallMultiple.labelHeight;
+                                    break;
+                                }
+                                case 'bottom': {
+                                    yRangeLower = multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom;
+                                    yRangeUpper = SmallMultipleLineChart.Config.chartAreaPadding.top;
+                                    break;
+                                }
+                            }
+                            
                         let yScale = d3.scale.linear()
-                        .domain([
-                            settings.yAxis.start != null ? settings.yAxis.start : viewModel.yMin, 
-                            settings.yAxis.end != null ? settings.yAxis.end : viewModel.yMax, 
-                        ])
-                        .range([
-                            multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom, 
-                            SmallMultipleLineChart.Config.chartAreaPadding.top]
-                        ); // TODO: May get more complicated if we change position of multiple label!
+                            .domain([
+                                settings.yAxis.start != null ? settings.yAxis.start : viewModel.yMin, 
+                                settings.yAxis.end != null ? settings.yAxis.end : viewModel.yMax, 
+                            ])
+                            .range([yRangeLower, yRangeUpper]);
 
                     /** Ticks and labels */
                         let yAxis = d3.svg.axis()
