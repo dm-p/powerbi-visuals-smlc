@@ -57,6 +57,8 @@ module powerbi.extensibility.visual {
       public showMultipleLabel: boolean = true;
       // Font color
       public fontColor: string = defaultAxisFontColor;
+      // Position
+      public labelPosition: string = 'bottom';
       // Alignment
       public labelAlignment: string = 'center';
       // Text Size
