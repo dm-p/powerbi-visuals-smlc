@@ -426,6 +426,21 @@ module powerbi.extensibility.visual {
                                         }
                                     });
 
+                        /** Multiple background */
+                            multiple.append('rect')
+                                .classed({
+                                    multipleBackground: true
+                                })
+                                .attr({
+                                    height: multipleIndividualRowHeight,
+                                    width: multipleIndividualWidth,
+                                    fill: function(d, i) {
+                                        return i % 2 && settings.smallMultiple.bandedMultiples ? 
+                                            settings.smallMultiple.backgroundColorAlternate : 
+                                            settings.smallMultiple.backgroundColor;
+                                    }                                       
+                                });
+
                         /** Add container to multiple, specifically to manage interaction */
                             let overlay = multiple.append('rect')
                             .classed({
