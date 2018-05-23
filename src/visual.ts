@@ -409,7 +409,6 @@ module powerbi.extensibility.visual {
                                             'stroke-width': settings.yAxis.gridlines? settings.yAxis.gridlineStrokeWidth : 0
                                         })
                                         .classed(settings.yAxis.gridlineStrokeLineStyle, true);
-
                             }
 
                         /** Add group elements for each multiple, and translate based on Y-axis configuration */
@@ -418,7 +417,7 @@ module powerbi.extensibility.visual {
                                 .enter()
                                 .append('g')
                                     .classed({
-                                        lineChartSmallMultiple: true
+                                        lineChartSmallMultiple: true                                        
                                     })
                                     .attr({
                                         transform: function(d, i) {
@@ -443,14 +442,14 @@ module powerbi.extensibility.visual {
 
                         /** Add container to multiple, specifically to manage interaction */
                             let overlay = multiple.append('rect')
-                            .classed({
-                                overlay: true
-                            })
-                            .attr({
-                                width: multipleIndividualWidth - SmallMultipleLineChart.Config.chartSeriesPadding.right,
-                                height: multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom,
-                                transform: `translate(${SmallMultipleLineChart.Config.chartSeriesPadding.left}, 0)`
-                            })
+                                .classed({
+                                    overlay: true
+                                })
+                                .attr({
+                                    width: multipleIndividualWidth - SmallMultipleLineChart.Config.chartSeriesPadding.right,
+                                    height: multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom,
+                                    transform: `translate(${SmallMultipleLineChart.Config.chartSeriesPadding.left}, 0)`
+                                });
 
                         /** Add stuff for each measure */
 
