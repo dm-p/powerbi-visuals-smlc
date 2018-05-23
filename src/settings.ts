@@ -34,7 +34,7 @@ module powerbi.extensibility.visual {
     let defaultFontColor: string = '#C8C8C8';
     let defaultAxisFontColor: string = '#777777';
     let defaultAxisGridlineColor: string = '#EAEAEA';
-    let defaultBackgroundColor: string = '#FFFFFF';
+    let defaultBackgroundColor: string = null;
     let defaultBackgroundColorAlternate: string = '#F3F3F3';
 
     export class VisualSettings extends DataViewObjectsParser {
@@ -67,13 +67,15 @@ module powerbi.extensibility.visual {
       public maximumMultiplesPerRow: number = null;
       // Background color
       public backgroundColor: string = defaultBackgroundColor;
+      // Background transparency
+      public backgroundTransparency: number = 50;
       // Banded multiples switch
       public bandedMultiples: boolean = false;
-      // Alternate font color
-      public fontColorAlternate: string = defaultAxisFontColor;
       // Alternate background color
       public backgroundColorAlternate: string = defaultBackgroundColorAlternate;
-
+      // Alternate font color
+      public fontColorAlternate: string = defaultAxisFontColor;
+      
       // No capabilities, so not in the properties pane, but still accessible
 
         // Required height for multiple label
