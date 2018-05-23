@@ -566,7 +566,11 @@ module powerbi.extensibility.visual {
                                 .style({
                                     'font-size': `${settings.smallMultiple.fontSize}px`,
                                     'font-family': settings.smallMultiple.fontFamily,
-                                    'fill': settings.smallMultiple.fontColor
+                                    fill: function(d, i) {
+                                        return i % 2 && settings.smallMultiple.bandedMultiples ? 
+                                                settings.smallMultiple.fontColorAlternate : 
+                                                settings.smallMultiple.fontColor;
+                                    }
                                 })
                                 .text(function(d) { 
                                     return d.facet; 
