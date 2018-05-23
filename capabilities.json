@@ -173,6 +173,42 @@
                             }
                         ]
                     }
+                },
+                "backgroundColor" :{
+                    "displayName": "Background color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "bandedMultiples": {
+                    "displayName": "Banded multiples",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "backgroundColorAlternate" :{
+                    "displayName": "Alternate background color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontColorAlternate": {
+                    "displayName": "Alternate font color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
                 }
             }
         },
