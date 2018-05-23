@@ -44,6 +44,21 @@
                     },
                     "placeHolderText": "All"
                 },
+                "labelPosition": {
+                    "displayName": "Position",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Top",
+                                "value": "top"
+                            },
+                            {
+                                "displayName": "Bottom",
+                                "value": "bottom"
+                            }
+                        ]
+                    }
+                },
                 "labelAlignment": {
                     "displayName": "Alignment",
                     "type": {
