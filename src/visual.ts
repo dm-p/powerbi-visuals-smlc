@@ -564,7 +564,16 @@ module powerbi.extensibility.visual {
                                             }
                                         }
                                     },
-                                    'y': multipleIndividualRowHeight,
+                                    'y': function(){
+                                        switch(settings.smallMultiple.labelPosition) {
+                                            case 'top': {
+                                                return 0 + settings.smallMultiple.labelHeight;
+                                            }
+                                            case  'bottom': {
+                                                return multipleIndividualRowHeight;
+                                            }
+                                        }                                        
+                                    },
                                     'text-anchor': function(d) {
                                         switch(settings.smallMultiple.labelAlignment) {
                                             case 'left': {
