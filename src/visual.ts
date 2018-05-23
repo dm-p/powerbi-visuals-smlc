@@ -611,6 +611,11 @@ module powerbi.extensibility.visual {
                         delete instances[0].properties['fontFamily'];
                         delete instances[0].properties['labelAlignment'];
                     }
+                    /** Banded multiples toggle */
+                    if(!this.settings.smallMultiple.bandedMultiples) {
+                        delete instances[0].properties['fontColorAlternate'];
+                        delete instances[0].properties['backgroundColorAlternate'];
+                    }
                     break;
                 }
                 case 'colorSelector': {
