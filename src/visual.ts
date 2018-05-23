@@ -627,6 +627,7 @@ module powerbi.extensibility.visual {
                         delete instances[0].properties['fontColor'];
                         delete instances[0].properties['fontSize'];
                         delete instances[0].properties['fontFamily'];
+                        delete instances[0].properties['labelPosition'];
                         delete instances[0].properties['labelAlignment'];
                     }
                     /** Banded multiples toggle */
