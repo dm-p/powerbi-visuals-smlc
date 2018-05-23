@@ -279,7 +279,7 @@ module powerbi.extensibility.visual {
                         multipleColumns = settings.smallMultiple.maximumMultiplesPerRow
                     }
 
-                    multipleIndividualWidth = Math.floor(multipleAvailableRowWidth / multipleColumns);
+                    multipleIndividualWidth = multipleAvailableRowWidth / multipleColumns;
                     multipleRows = Math.ceil(multipleCount / multipleColumns);
 
                     multipleIndividualRowHeight = Math.floor(multipleAvailableChartHeight / multipleRows) - 4; /* TODO: This -4 deals with arbitrary overflow; needs fixing properly once we introduce padding etc. */
