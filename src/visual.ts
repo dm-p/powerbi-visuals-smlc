@@ -196,8 +196,8 @@ module powerbi.extensibility.visual {
              */
                 
                 /** Get the viewport dimensions and cater for padding */
-                    let entireChartWidth = options.viewport.width;
-                    let entireChartHeight = options.viewport.height;
+                    let entireChartWidth = options.viewport.width,
+                        entireChartHeight = options.viewport.height * 0.99; /** Setting this to 99% avoids some overflow problems of using 100% of the viewport */
                 
                 /** Work out the horizontal space that a y-axis would take, based on our configuration, and we might as well prep it while we're at it... */
                     if(settings.yAxis.show) {
@@ -254,7 +254,7 @@ module powerbi.extensibility.visual {
                 /** Size our initial container to match the viewport */
                     this.svg.attr({
                         width: entireChartWidth,
-                        height: entireChartHeight
+                        height: entireChartHeight,
                     });
 
                 /** Calculate our row width, after the Y-Axis has been taken into consideration */
@@ -282,7 +282,7 @@ module powerbi.extensibility.visual {
                     multipleIndividualWidth = multipleAvailableRowWidth / multipleColumns;
                     multipleRows = Math.ceil(multipleCount / multipleColumns);
 
-                    multipleIndividualRowHeight = Math.floor(multipleAvailableChartHeight / multipleRows) - 4; /* TODO: This -4 deals with arbitrary overflow; needs fixing properly once we introduce padding etc. */
+                    multipleIndividualRowHeight = multipleAvailableChartHeight / multipleRows;
 
                     /** TODO: at this point, we should determine if we need to overflow, based on minimum height, which we will need to also work out
                      * in accordance with height reserved for the multiple text
@@ -291,7 +291,8 @@ module powerbi.extensibility.visual {
                     /** Debugging stuff for grid dimensions */
                     if (settings.debug.show) {
                         console.log(`Grid:\n`,
-                            `Viewport Width: ${entireChartWidth}\n`,
+                            `Viewport Width: ${options.viewport.width}\n`,
+                            `Viewport Height: ${options.viewport.height}\n`,
                             `Y-Axis Label Width: ${settings.yAxis.width}\n`,
                             `Width Available for Multiples: ${multipleAvailableRowWidth}\n`,
                             `Height Available for Multiples: ${multipleAvailableChartHeight}\n`,
