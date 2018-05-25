@@ -47,6 +47,7 @@ module powerbi.extensibility.visual {
         queryName: string;
         categories: LineChartSeriesSmallMultipleCategoryDataPoint[];
         color: string;
+        selectionId: ISelectionId
     }
 
     /**
