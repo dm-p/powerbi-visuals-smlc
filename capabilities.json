@@ -513,7 +513,21 @@
                         }
                         ]
                     }
+                },
+                "showTitle": {
+                    "displayName": "Title",
+                    "displayNameKey": "Visual_Title",
+                    "type": {
+                        "bool": true
                     }
+                },
+                "titleText": {
+                    "displayName": "Title text",
+                    "displayNameKey": "Visual_Text",
+                    "type": {
+                        "text": true
+                    }
+                }
             }
         }
     },

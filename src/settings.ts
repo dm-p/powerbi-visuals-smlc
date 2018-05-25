@@ -54,8 +54,14 @@ module powerbi.extensibility.visual {
     }
 
     export class legendSettings {
+      // Show legend
       public show: boolean = true;
+      // Legend position
       public position: string = "Top";
+      // Show title
+      public showTitle: boolean = true;
+      // Title text
+      public titleText: string = "Legend";
     }
 
     export class smallMultipleSettings {
@@ -64,7 +70,7 @@ module powerbi.extensibility.visual {
       // Font color
       public fontColor: string = defaultAxisFontColor;
       // Position
-      public labelPosition: string = 'bottom';
+      public labelPosition: string = 'top';
       // Alignment
       public labelAlignment: string = 'center';
       // Text Size

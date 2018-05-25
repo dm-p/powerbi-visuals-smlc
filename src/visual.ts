@@ -676,6 +676,13 @@ module powerbi.extensibility.visual {
                     }
                     break;
                 }
+                case 'legend': {
+                    /** Legend title toggle */
+                    if(!this.settings.legend.showTitle) {
+                        delete instances[0].properties['titleText'];
+                    }
+                    break;
+                }
                 case 'colorSelector': {
                     /** Enumerate measures and create colour pickers */
                     for (let measure of this.measures) {
