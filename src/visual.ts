@@ -206,33 +206,26 @@ module powerbi.extensibility.visual {
             this.measures = viewModel.multiples[0].measures;
             this.viewport = options.viewport;
             
-            /** Basic legend */
-                let dataPoints = [{
-                    label: 'Actual',
-                    color: '#000000',
-                    icon: LegendIcon.Line,
-                    selected: false,
-                    identity: this.host.createSelectionIdBuilder().createSelectionId()
-                },
-                {
-                    label: 'Budget',
-                    color: '#CCCCCC',
-                    icon: LegendIcon.Line,
-                    selected: false,
-                    identity: this.host.createSelectionIdBuilder().createSelectionId()
-                }];
-                console.log('Datapoints:', dataPoints);
+            /** construct legend from measures */
                 this.legendData = {
                     title: (settings.legend.showTitle ? settings.legend.titleText : null),
                     fontSize: settings.legend.fontSize,
                     labelColor: settings.legend.fontColor,
-                    dataPoints: dataPoints                  
+                    dataPoints: this.measures.map(function(m, i) {
+                        return {
+                            label: m.name,
+                            color: m.color,
+                            icon: LegendIcon.Circle,
+                            selected: false,
+                            identity: m.selectionId
+                        }
+                    })                  
                 };
                 this.renderLegend();
             
             /** For debugging purposes - remove later on */
                 if (settings.debug.show) {
-                    // console.clear();
+                    console.clear();
                     console.log('Visual update', options, 'View model', viewModel, 'Settings', settings);
                 }
                 
@@ -690,10 +683,9 @@ module powerbi.extensibility.visual {
         }
 
         private renderLegend(): void {
-            console.log('Calling legend!');
-            // if (!this.data) {
-            //     return;
-            // }
+            if (!this.measures) {
+                return;
+            }
             const position: LegendPosition = this.settings.legend.show
                 ? LegendPosition[this.settings.legend.position]
                 : LegendPosition.None;
@@ -716,7 +708,6 @@ module powerbi.extensibility.visual {
                     this.viewport.height -= this.legend.getMargins().height;
                     break;
             }
-            console.log('Done with legend!');
         }
         
         private static parseSettings(dataView: DataView): VisualSettings {
