@@ -152,7 +152,7 @@
                             },
                             {
                                 "displayName": "Segoe (Bold)",
-                                "value": "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
+                                "value": "\"Segoe UI Semibold\", wf_segoe-ui_semibold, helvetica, arial, sans-serif"
                             },
                             {
                                 "displayName": "Segoe UI",
@@ -401,7 +401,7 @@
                             },
                             {
                                 "displayName": "Segoe (Bold)",
-                                "value": "\"Segoe UI Bold\", wf_segoe-ui_bold, helvetica, arial, sans-serif"
+                                "value": "\"Segoe UI Semibold\", wf_segoe-ui_semibold, helvetica, arial, sans-serif"
                             },
                             {
                                 "displayName": "Segoe UI",
