@@ -32,8 +32,20 @@ module powerbi.extensibility.visual {
     import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
     import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
     import ISelectionId = powerbi.visuals.ISelectionId;
+    import SelectionId = powerbi.visuals.ISelectionIdBuilder;
     import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
     import createTooltipServiceWrapper = powerbi.extensibility.utils.tooltip.createTooltipServiceWrapper;
+
+    /** powerbi.extensibility.utils.type */
+        import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
+
+    /** powerbi.extensibility.utils.chart.legend */
+        import createLegend = powerbi.extensibility.utils.chart.legend.createLegend;
+        import ILegend = powerbi.extensibility.utils.chart.legend.ILegend;
+        import Legend = powerbi.extensibility.utils.chart.legend;
+        import LegendData = powerbi.extensibility.utils.chart.legend.LegendData;
+        import LegendIcon = powerbi.extensibility.utils.chart.legend.LegendIcon;
+        import LegendPosition = powerbi.extensibility.utils.chart.legend.LegendPosition;
         
     /**
      * Function that converts queried data into a view model that will be used by the visual
@@ -102,9 +114,10 @@ module powerbi.extensibility.visual {
                             let targetKey = multipleIndex * valueSources.length + measureIndex
                             let categoryValue = <number>category.value; //TODO: This should manage different types
                             let value = <number>category.values[targetKey].value; // TODO: Manage data types for measure
-                            /** Get highest/lowest x/y values; TODO: handle categorical vs. continuous for x */
+                            /** Get highest/lowest x/y values */
                                 yMax = Math.max(isNaN(yMax) ? value : yMax, value);
                                 yMin = Math.min(isNaN(yMin) ? value : yMin, value);
+                                /** TODO: handle categorical vs. continuous for x */
                                 xMax = Math.max(isNaN(xMax) ? categoryValue: xMax, categoryValue);
                                 xMin = Math.min(isNaN(xMin) ? categoryValue: xMin, categoryValue);
                             return {
@@ -140,14 +153,16 @@ module powerbi.extensibility.visual {
         private settings: VisualSettings;
         private measures: LineChartSeriesSmallMultipleMeasure[]
         private element: HTMLElement;
-        private svg: d3.Selection<SVGElement>;
-        private div: d3.Selection<HTMLElement>;
+        private svg: d3.Selection<{}>;
+        private chartWrapper: d3.Selection<{}>;
         private host: IVisualHost;
-        private selectionManager: ISelectionManager;
+        private viewport: IViewport;
+        private legend: ILegend;
+        private legendData: LegendData;
 
         static Config = {
             chartAreaPadding: {
-                top: 5,
+                top: 10,
                 right: 10,
                 bottom: 10,
                 left: 10,
@@ -159,15 +174,24 @@ module powerbi.extensibility.visual {
         };
 
         constructor(options: VisualConstructorOptions) {
-            this.host = options.host;
-            this.element = options.element;
             options.element.style.overflow = 'auto';
 
-            // TODO: selectionManager
+            this.host = options.host;
+            this.element = options.element;
             
-            this.svg = d3.select(options.element)
-                .append('div')
-                .classed('cartesianLineChart', true);
+            /** Visual container */
+                this.svg = d3.select(options.element)
+                    .append('div')
+                    .classed('cartesianLineChart', true);
+
+            /** Legend container */
+                this.legend = createLegend(
+                    options.element,
+                    false,
+                    null,
+                    false,
+                    LegendPosition.Top
+                );
 
         }
 
@@ -177,10 +201,35 @@ module powerbi.extensibility.visual {
             let settings = this.settings = SmallMultipleLineChart.parseSettings(options && options.dataViews && options.dataViews[0]);
             let element = this.element;
             this.measures = viewModel.multiples[0].measures;
+            this.viewport = options.viewport;
+            
+            /** Basic legend */
+                let dataPoints = [{
+                    label: 'Actual',
+                    color: '#000000',
+                    icon: LegendIcon.Line,
+                    selected: false,
+                    identity: this.host.createSelectionIdBuilder().createSelectionId()
+                },
+                {
+                    label: 'Budget',
+                    color: '#CCCCCC',
+                    icon: LegendIcon.Line,
+                    selected: false,
+                    identity: this.host.createSelectionIdBuilder().createSelectionId()
+                }];
+                console.log('Datapoints:', dataPoints);
+                this.legendData = {
+                    title: (settings.legend.showTitle ? settings.legend.titleText : null),
+                    fontSize: settings.legend.fontSize,
+                    labelColor: settings.legend.fontColor,
+                    dataPoints: dataPoints                  
+                };
+                this.renderLegend();
             
             /** For debugging purposes - remove later on */
                 if (settings.debug.show) {
-                    console.clear();
+                    // console.clear();
                     console.log('Visual update', options, 'View model', viewModel, 'Settings', settings);
                 }
                 
@@ -637,6 +686,36 @@ module powerbi.extensibility.visual {
             console.log('We did it!');
         }
 
+        private renderLegend(): void {
+            console.log('Calling legend!');
+            // if (!this.data) {
+            //     return;
+            // }
+            const position: LegendPosition = this.settings.legend.show
+                ? LegendPosition[this.settings.legend.position]
+                : LegendPosition.None;
+
+            this.legend.changeOrientation(position);
+            this.legend.drawLegend(this.legendData, JSON.parse(JSON.stringify(this.viewport)));
+            Legend.positionChartArea(this.svg, this.legend);
+
+            switch (this.legend.getOrientation()) {
+                case LegendPosition.Left:
+                case LegendPosition.LeftCenter:
+                case LegendPosition.Right:
+                case LegendPosition.RightCenter:
+                    this.viewport.width -= this.legend.getMargins().width;
+                    break;
+                case LegendPosition.Top:
+                case LegendPosition.TopCenter:
+                case LegendPosition.Bottom:
+                case LegendPosition.BottomCenter:
+                    this.viewport.height -= this.legend.getMargins().height;
+                    break;
+            }
+            console.log('Done with legend!');
+        }
+        
         private static parseSettings(dataView: DataView): VisualSettings {
             return VisualSettings.parse(dataView) as VisualSettings;
         }
