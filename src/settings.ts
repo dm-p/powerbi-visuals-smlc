@@ -30,8 +30,9 @@ module powerbi.extensibility.visual {
     import ValueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
 
     let defaultFontSize: number = 11;
+    let defaultFontSizeSmall: number = 8;
     let defaultFontFamily: string = '"Segoe UI", wf_segoe-ui_normal, helvetica, arial, sans-serif';
-    let defaultFontColor: string = '#C8C8C8';
+    let defaultFontColor: string = '#777777';
     let defaultAxisFontColor: string = '#777777';
     let defaultAxisGridlineColor: string = '#EAEAEA';
     let defaultBackgroundColor: string = null;
@@ -62,13 +63,17 @@ module powerbi.extensibility.visual {
       public showTitle: boolean = true;
       // Title text
       public titleText: string = "Legend";
+      // Font color
+      public fontColor: string = defaultFontColor;
+      // Text Size
+      public fontSize: number = defaultFontSizeSmall;
     }
 
     export class smallMultipleSettings {
       // Show label
       public showMultipleLabel: boolean = true;
       // Font color
-      public fontColor: string = defaultAxisFontColor;
+      public fontColor: string = defaultFontColor;
       // Position
       public labelPosition: string = 'top';
       // Alignment
@@ -103,7 +108,7 @@ module powerbi.extensibility.visual {
       // Show whole axis
       public show: boolean = true;
       // Font color
-      public fontColor: string = defaultAxisFontColor;
+      public fontColor: string = defaultFontColor;
       // Text Size
       public fontSize: number = defaultFontSize;
       // Font

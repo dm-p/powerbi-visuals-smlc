@@ -220,13 +220,13 @@ module powerbi.extensibility.visual {
                         let yAxisTextPropertiesMin: TextProperties = {
                             text: settings.yAxis.numberFormat.format(viewModel.yMin),
                             fontFamily: `${settings.yAxis.fontFamily}`,
-                            fontSize: `${settings.yAxis.fontSize}px`
+                            fontSize: PixelConverter.toString(settings.yAxis.fontSize)
                         };
     
                         let yAxisTextPropertiesMax: TextProperties = {
                             text: settings.yAxis.numberFormat.format(viewModel.yMax),
                             fontFamily: `${settings.yAxis.fontFamily}`,
-                            fontSize: `${settings.yAxis.fontSize}px`
+                            fontSize: PixelConverter.toString(settings.yAxis.fontSize)
                         };
             
                         settings.yAxis.width = Math.round(
@@ -244,7 +244,7 @@ module powerbi.extensibility.visual {
                         let smallMultipleTextProperties: TextProperties = {
                             text: dataView.categorical.categories[0].values[0].toString(),
                             fontFamily: `${settings.smallMultiple.fontFamily}`,
-                            fontSize: `${settings.smallMultiple.fontSize}px`
+                            fontSize: PixelConverter.toString(settings.smallMultiple.fontSize)
                         }
                         settings.smallMultiple.labelHeight = textMeasurementService.measureSvgTextHeight(smallMultipleTextProperties);
                     } else {
