@@ -110,6 +110,9 @@ module powerbi.extensibility.visual {
                     return {                        
                         name: measure.displayName,
                         queryName: measureMetadata.queryName,
+                        selectionId: host.createSelectionIdBuilder()
+                            .withMeasure(measureMetadata.queryName)
+                            .createSelectionId(),
                         categories: rows.root.children.map(function(category, categoryIndex) {
                             let targetKey = multipleIndex * valueSources.length + measureIndex
                             let categoryValue = <number>category.value; //TODO: This should manage different types
