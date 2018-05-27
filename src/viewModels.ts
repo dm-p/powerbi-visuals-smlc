@@ -16,7 +16,9 @@ module powerbi.extensibility.visual {
         yMax: number;
         yMin: number;
         xMax: number;
+        xMaxFormatted: string;
         xMin: number;
+        xMinFormatted: string;
     }
 
     /**
