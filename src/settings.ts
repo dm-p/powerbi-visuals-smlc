@@ -119,8 +119,19 @@ module powerbi.extensibility.visual {
       public labelDisplayUnits: number = 0;
       // Precision
       public precision: number = null;
-      // TODO: Title
-      // Gridlines toggle
+      // Show Title
+      public showTitle: boolean = true;
+      // Title Style
+      public titleStyle: string = 'title'
+      // Title Colour
+      public titleColor: string = defaultAxisFontColor;
+      // Title
+      public titleText: string = null;
+      // Title Text Size
+      public titleFontSize: number = defaultFontSize;
+      // Title Font
+      public titleFontFamily: string = defaultFontFamily;
+      // Gridlines Toggle
       public gridlines: boolean = true;
       // Gridline colour
       public gridlineColor: string = defaultAxisGridlineColor;

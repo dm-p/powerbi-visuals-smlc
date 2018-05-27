@@ -750,6 +750,14 @@ module powerbi.extensibility.visual {
                         delete instances[0].properties['gridlineStrokeWidth'];
                         delete instances[0].properties['gridlineStrokeLineStyle'];
                     }
+                    /** Title toggle */
+                    if (!this.settings.yAxis.showTitle) {
+                        delete instances[0].properties['titleStyle'];
+                        delete instances[0].properties['titleColor'];
+                        delete instances[0].properties['titleText'];
+                        delete instances[0].properties['titleFontSize'];
+                        delete instances[0].properties['titleFontFamily'];
+                    }
                     break;
                 }
                 case 'smallMultiple': {
