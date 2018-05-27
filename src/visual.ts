@@ -509,7 +509,7 @@ module powerbi.extensibility.visual {
                                             yAxisContainer: true
                                         })
                                         .style({
-                                            'font-size': `${settings.yAxis.fontSize}px`,
+                                            'font-size': settings.yAxis.fontSize,
                                             'font-family': settings.yAxis.fontFamily,
                                             'fill': settings.yAxis.fontColor,
                                             'stroke-width' : 1 /** TODO: Config */
