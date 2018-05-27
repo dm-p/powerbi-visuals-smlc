@@ -259,45 +259,46 @@ module powerbi.extensibility.visual {
                 /** Get the viewport dimensions and cater for padding */
                     let entireChartWidth = options.viewport.width,
                         entireChartHeight = options.viewport.height * 0.99; /** Setting this to 99% avoids some overflow problems of using 100% of the viewport */
-                
+
                 /** Work out the horizontal space that a y-axis would take, based on our configuration, and we might as well prep it while we're at it... */
                     if(settings.yAxis.show) {
-                        settings.yAxis.numberFormat = valueFormatter.create({
-                            format: valueFormatter.getFormatStringByColumn(dataView.metadata.columns[2]),
-                            value : (settings.yAxis.labelDisplayUnits == 0 
-                                ? this.viewModel.yMax
-                                : settings.yAxis.labelDisplayUnits
-                            ),
-                            precision: (settings.yAxis.precision != null
-                                ? settings.yAxis.precision
-                                : null
-                            )
-                        });
 
-                        if (settings.debug.show) {
-                            console.log('Formatter:', settings.yAxis.numberFormat);
-                        }
-
-
-
-                        let yAxisTextPropertiesMin: TextProperties = {
-                            text: settings.yAxis.numberFormat.format(this.viewModel.yMin),
-                            fontFamily: settings.yAxis.fontFamily,
-                            fontSize: PixelConverter.toString(settings.yAxis.fontSize)
-                        };
-    
-                        let yAxisTextPropertiesMax: TextProperties = {
-                            text: settings.yAxis.numberFormat.format(this.viewModel.yMax),
-                            fontFamily: settings.yAxis.fontFamily,
-                            fontSize: PixelConverter.toString(settings.yAxis.fontSize)
-                        };
-            
-                        settings.yAxis.width = Math.round(
-                                Math.max(
-                                    textMeasurementService.measureSvgTextWidth(yAxisTextPropertiesMin),
-                                    textMeasurementService.measureSvgTextWidth(yAxisTextPropertiesMax)
+                        /** Get desired number format for measures based on settings. We always use the first measure for this (like inbuilt charts seem to do) */
+                            settings.yAxis.numberFormat = valueFormatter.create({
+                                format: valueFormatter.getFormatStringByColumn(dataView.metadata.columns[2]),
+                                value : (settings.yAxis.labelDisplayUnits == 0 
+                                    ? this.viewModel.yMax
+                                    : settings.yAxis.labelDisplayUnits
+                                ),
+                                precision: (settings.yAxis.precision != null
+                                    ? settings.yAxis.precision
+                                    : null
                                 )
-                            ) + 10;
+                            });
+
+
+
+                        /** Calculate the width that the ticks will take up, once resolved for font size/family/display unit.
+                         *  We need min and max values, as if we go negative then we may need to accomodate a minus symbol.
+                         */
+                            let yAxisTextPropertiesMin: TextProperties = {
+                                    text: settings.yAxis.numberFormat.format(this.viewModel.yMin),
+                                    fontFamily: settings.yAxis.fontFamily,
+                                    fontSize: PixelConverter.toString(settings.yAxis.fontSize)
+                                },
+                                yAxisTextPropertiesMax: TextProperties = {
+                                    text: settings.yAxis.numberFormat.format(this.viewModel.yMax),
+                                    fontFamily: settings.yAxis.fontFamily,
+                                    fontSize: PixelConverter.toString(settings.yAxis.fontSize)
+                                };
+            
+                            settings.yAxis.width = Math.round(
+                                    Math.max(
+                                        textMeasurementService.measureSvgTextWidth(yAxisTextPropertiesMin),
+                                        textMeasurementService.measureSvgTextWidth(yAxisTextPropertiesMax)
+                                    )
+                                ) + 10;
+
                     } else {
                          settings.yAxis.width = 0;
                     }
