@@ -58,11 +58,13 @@ module powerbi.extensibility.visual {
       // Show legend
       public show: boolean = true;
       // Legend position
-      public position: string = "Top";
+      public position: string = 'Top';
       // Show title
       public showTitle: boolean = true;
       // Title text
-      public titleText: string = "Legend";
+      public titleText: string = 'Legend';
+      // Include x-ranges
+      public includeRanges: boolean = true;
       // Font color
       public fontColor: string = defaultFontColor;
       // Text Size

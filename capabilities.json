@@ -528,6 +528,14 @@
                         "text": true
                     }
                 },
+                "includeRanges": {
+                    "displayName": "Include range as suffix",
+                    "displayNameKey": "Visual_X_Range",
+                    "description": "Include the min/max ranges of the x-axis in the legend title",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "fontColor": {
                     "displayName": "Font color",
                     "type": {
