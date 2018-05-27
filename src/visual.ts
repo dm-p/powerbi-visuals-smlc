@@ -65,7 +65,9 @@ module powerbi.extensibility.visual {
             yMax: 0,
             yMin: 0,
             xMax: 0,
-            xMin: 0
+            xMaxFormatted: '',
+            xMin: 0,
+            xMinFormatted: ''
         };
 
         if (!dataViews
@@ -79,20 +81,22 @@ module powerbi.extensibility.visual {
             return viewModel;
         }
 
-        let matrix = dataViews[0].matrix;
-        let columns = dataViews[0].matrix.columns;
-        let rows = dataViews[0].matrix.rows;
-        let valueSources = dataViews[0].matrix.valueSources;
-        let metadata = dataViews[0].metadata;
-        let smallMultipleFacetMetadata = metadata.columns.filter(c => c.roles['smallMultiple'])[0];
-        let categoryMetadata = metadata.columns.filter(c => c.roles['category'])[0];
+        let matrix = dataViews[0].matrix,
+            columns = dataViews[0].matrix.columns,
+            rows = dataViews[0].matrix.rows,
+            valueSources = dataViews[0].matrix.valueSources,
+            metadata = dataViews[0].metadata,
+            smallMultipleFacetMetadata = metadata.columns.filter(c => c.roles['smallMultiple'])[0],
+            categoryMetadata = metadata.columns.filter(c => c.roles['category'])[0],
+            colorPalette: IColorPalette = host.colorPalette,
+            lineChartSmallMultiples: LineChartSeriesSmallMultiple[] = [],
+            yMax: number = 0,
+            yMin: number = 0,
+            xMax: number,
+            xMaxFormatted: string,
+            xMin: number,
+            xMinFormatted: string;
 
-        let colorPalette: IColorPalette = host.colorPalette;
-        let lineChartSmallMultiples: LineChartSeriesSmallMultiple[] = []
-        let yMax: number = 0;
-        let yMin: number = 0;
-        let xMax: number;
-        let xMin: number;
 
         // TODO: We might be able to do this better now that we know how to traverse metadata (see smallMultipleFacetName etc.)
         let multiples = columns.root.children.map(function(multiple, multipleIndex) {
@@ -122,7 +126,9 @@ module powerbi.extensibility.visual {
                                 yMin = Math.min(isNaN(yMin) ? value : yMin, value);
                                 /** TODO: handle categorical vs. continuous for x */
                                 xMax = Math.max(isNaN(xMax) ? categoryValue: xMax, categoryValue);
+                                xMaxFormatted = categoryValue >= xMax ? valueFormatter.format(categoryValue, categoryMetadata.format) : xMaxFormatted;
                                 xMin = Math.min(isNaN(xMin) ? categoryValue: xMin, categoryValue);
+                                xMinFormatted = categoryValue <= xMin ? valueFormatter.format(categoryValue, categoryMetadata.format) : xMinFormatted;
                             return {
                                 name: categoryValue,
                                 value: value,
