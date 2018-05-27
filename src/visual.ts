@@ -341,12 +341,14 @@ module powerbi.extensibility.visual {
                                     fontSize: PixelConverter.toString(settings.yAxis.fontSize)
                                 };
             
-                            settings.yAxis.width = Math.round(
-                                    Math.max(
-                                        textMeasurementService.measureSvgTextWidth(yAxisTextPropertiesMin),
-                                        textMeasurementService.measureSvgTextWidth(yAxisTextPropertiesMax)
-                                    )
-                                ) + 10;
+                            settings.yAxis.width = settings.yAxis.titleWidth                                
+                                + Math.round(
+                                        Math.max(
+                                            textMeasurementService.measureSvgTextWidth(yAxisTextPropertiesMin),
+                                            textMeasurementService.measureSvgTextWidth(yAxisTextPropertiesMax)
+                                        )
+                                    ) 
+                                + 10;
 
                     } else {
                          settings.yAxis.width = 0;
