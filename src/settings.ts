@@ -155,6 +155,12 @@ module powerbi.extensibility.visual {
       
       // No capabilities, so not in the properties pane, but still accessible
 
+        // Resolved title based on settings and visual logic
+        public resolvedTitleText: string = '';
+
+        // Specified width of title
+        public titleWidth: number = 0;
+
         // Specified width of y-axis
         public width: number = 0;
 
