@@ -276,7 +276,49 @@ module powerbi.extensibility.visual {
                                 )
                             });
 
+                        /** Resolve our y-axis title based on settings:
+                         *   - If we specify placeholder (auto) then create a nice list of measures, split with commas but using 'and' on the last item
+                         *   - Also, look at what we want to show - either title, unit or both and resolve accordingly
+                         *   - We will need the derived size of the text to work our spacing for axis width below                         * 
+                         */
+                            
+                            /** Title text resolved for measures */
+                                let titleForMeasures =
+                                    !settings.yAxis.titleText ?
+                                        this.measures.map(function(m, i) {
+                                                return m.name
+                                            })
+                                            .join(', ')
+                                            .replace(/, ([^,]*)$/, ' and $1'):
+                                        settings.yAxis.titleText;
 
+                            /** Actual title text, resolved for style */
+                                switch (settings.yAxis.titleStyle) {
+                                    case 'title': {
+                                        settings.yAxis.resolvedTitleText = titleForMeasures;
+                                        break;
+                                    }
+                                    case 'unit': {
+                                        settings.yAxis.resolvedTitleText = settings.yAxis.numberFormat.displayUnit.title;
+                                        break;
+                                    }
+                                    case 'both': {
+                                        settings.yAxis.resolvedTitleText = `${titleForMeasures} (${settings.yAxis.numberFormat.displayUnit.title})`;
+                                        break;
+                                    }
+                                }
+
+                            /** Calculate observed width of title (actually height, as it's going to be rotated) */
+                                if (settings.yAxis.showTitle) {
+                                    let yAxisTitleTextProperties: TextProperties = {
+                                        text: settings.yAxis.resolvedTitleText,
+                                        fontFamily: settings.yAxis.titleFontFamily,
+                                        fontSize: PixelConverter.toString(settings.yAxis.titleFontSize)
+                                    };
+                                    settings.yAxis.titleWidth = textMeasurementService.measureSvgTextHeight(yAxisTitleTextProperties, settings.yAxis.resolvedTitleText);
+                                } else {
+                                    settings.yAxis.titleWidth = 0;
+                                }
 
                         /** Calculate the width that the ticks will take up, once resolved for font size/family/display unit.
                          *  We need min and max values, as if we go negative then we may need to accomodate a minus symbol.
