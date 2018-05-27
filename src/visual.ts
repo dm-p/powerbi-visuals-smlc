@@ -156,7 +156,7 @@ module powerbi.extensibility.visual {
         private settings: VisualSettings;
         private measures: LineChartSeriesSmallMultipleMeasure[]
         private element: HTMLElement;
-        private svg: d3.Selection<{}>;
+        private container: d3.Selection<{}>;
         private chartWrapper: d3.Selection<{}>;
         private host: IVisualHost;
         private viewport: IViewport;
@@ -183,7 +183,7 @@ module powerbi.extensibility.visual {
             this.element = options.element;
             
             /** Visual container */
-                this.svg = d3.select(options.element)
+                this.container = d3.select(options.element)
                     .append('div')
                     .classed('cartesianLineChart', true);
 
@@ -206,7 +206,7 @@ module powerbi.extensibility.visual {
             this.measures = viewModel.multiples[0].measures;
             this.viewport = options.viewport;
             
-            /** construct legend from measures */
+            /** Construct legend from measures */
                 this.legendData = {
                     title: (settings.legend.showTitle ? settings.legend.titleText : null),
                     fontSize: settings.legend.fontSize,
@@ -230,7 +230,7 @@ module powerbi.extensibility.visual {
                 }
                 
             /** Clear down our existing plot data as we need to re-draw the whole thing */
-                this.svg.selectAll('*').remove();
+                this.container.selectAll('*').remove();
 
             /** We need to start figuring things out in terms of layout:
              *  - Determine if we need a y-axis and calculate how much space we'll need, based on the axis number format.
@@ -297,7 +297,7 @@ module powerbi.extensibility.visual {
                     }
 
                 /** Size our initial container to match the viewport */
-                    this.svg.attr({
+                    this.container.attr({
                         width: entireChartWidth,
                         height: entireChartHeight,
                     });
@@ -421,7 +421,7 @@ module powerbi.extensibility.visual {
                             }).slice(i * multipleColumns, (i * multipleColumns) + multipleColumns);
                 
                         /** Container for entire row of multiples */
-                            let multipleRow = this.svg
+                            let multipleRow = this.container
                                 .append('svg')
                                     .classed({
                                         smallMultipleRowContainer: true
@@ -692,7 +692,7 @@ module powerbi.extensibility.visual {
 
             this.legend.changeOrientation(position);
             this.legend.drawLegend(this.legendData, JSON.parse(JSON.stringify(this.viewport)));
-            Legend.positionChartArea(this.svg, this.legend);
+            Legend.positionChartArea(this.container, this.legend);
 
             switch (this.legend.getOrientation()) {
                 case LegendPosition.Left:
@@ -708,6 +708,7 @@ module powerbi.extensibility.visual {
                     this.viewport.height -= this.legend.getMargins().height;
                     break;
             }
+
         }
         
         private static parseSettings(dataView: DataView): VisualSettings {
