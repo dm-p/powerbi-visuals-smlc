@@ -182,6 +182,10 @@ module powerbi.extensibility.visual {
             chartSeriesPadding: {
                 left: 2,
                 right: 2
+            },
+            chartAxisTitlePadding: {
+                left: 5,
+                right: 5,
             }
         };
 
