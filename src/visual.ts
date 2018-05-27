@@ -147,13 +147,16 @@ module powerbi.extensibility.visual {
             yMax: yMax,
             yMin: yMin,
             xMax: xMax,
-            xMin: xMin
+            xMaxFormatted: xMaxFormatted,
+            xMin: xMin,
+            xMinFormatted: xMinFormatted
         };
 
     }
 
     export class SmallMultipleLineChart implements IVisual {
         private settings: VisualSettings;
+        private viewModel: LineChartSmallMultipleViewModel;
         private measures: LineChartSeriesSmallMultipleMeasure[]
         private element: HTMLElement;
         private container: d3.Selection<{}>;
@@ -199,16 +202,23 @@ module powerbi.extensibility.visual {
         }
 
         public update(options: VisualUpdateOptions) {
-            let viewModel: LineChartSmallMultipleViewModel = visualTransform(options, this.host);
+            this.viewModel = visualTransform(options, this.host);
             let dataView: DataView = options.dataViews[0];
             let settings = this.settings = SmallMultipleLineChart.parseSettings(options && options.dataViews && options.dataViews[0]);
             let element = this.element;
-            this.measures = viewModel.multiples[0].measures;
+            this.measures = this.viewModel.multiples[0].measures;
             this.viewport = options.viewport;
             
             /** Construct legend from measures */
                 this.legendData = {
-                    title: (settings.legend.showTitle ? settings.legend.titleText : null),
+                    title: (settings.legend.showTitle ? 
+                        settings.legend.titleText 
+                            + (settings.legend.includeRanges ?
+                                ` (${this.viewModel.xMinFormatted} - ${this.viewModel.xMaxFormatted})`:
+                                '' 
+                            ):
+                        null
+                    ),
                     fontSize: settings.legend.fontSize,
                     labelColor: settings.legend.fontColor,
                     dataPoints: this.measures.map(function(m, i) {
@@ -219,14 +229,14 @@ module powerbi.extensibility.visual {
                             selected: false,
                             identity: m.selectionId
                         }
-                    })                  
-                };
+                    })
+                }
                 this.renderLegend();
             
             /** For debugging purposes - remove later on */
                 if (settings.debug.show) {
                     console.clear();
-                    console.log('Visual update', options, 'View model', viewModel, 'Settings', settings);
+                    console.log('Visual update', options, 'View model', this.viewModel, 'Settings', settings);
                 }
                 
             /** Clear down our existing plot data as we need to re-draw the whole thing */
@@ -249,7 +259,7 @@ module powerbi.extensibility.visual {
                         settings.yAxis.numberFormat = valueFormatter.create({
                             format: valueFormatter.getFormatStringByColumn(dataView.metadata.columns[2]),
                             value : (settings.yAxis.labelDisplayUnits == 0 
-                                ? viewModel.yMax
+                                ? this.viewModel.yMax
                                 : settings.yAxis.labelDisplayUnits
                             ),
                             precision: (settings.yAxis.precision != null
@@ -263,13 +273,13 @@ module powerbi.extensibility.visual {
                         }
 
                         let yAxisTextPropertiesMin: TextProperties = {
-                            text: settings.yAxis.numberFormat.format(viewModel.yMin),
+                            text: settings.yAxis.numberFormat.format(this.viewModel.yMin),
                             fontFamily: `${settings.yAxis.fontFamily}`,
                             fontSize: PixelConverter.toString(settings.yAxis.fontSize)
                         };
     
                         let yAxisTextPropertiesMax: TextProperties = {
-                            text: settings.yAxis.numberFormat.format(viewModel.yMax),
+                            text: settings.yAxis.numberFormat.format(this.viewModel.yMax),
                             fontFamily: `${settings.yAxis.fontFamily}`,
                             fontSize: PixelConverter.toString(settings.yAxis.fontSize)
                         };
@@ -310,7 +320,7 @@ module powerbi.extensibility.visual {
                     let multipleAvailableChartHeight: number = entireChartHeight;
 
                 /** Resolve our number of columns, based on configuration and calculate how much space we have available for each small multiple */
-                    let multipleCount: number = viewModel.multiples.length,
+                    let multipleCount: number = this.viewModel.multiples.length,
                         multipleColumns: number,
                         multipleIndividualWidth: number,
                         multipleRows: number,
@@ -375,8 +385,8 @@ module powerbi.extensibility.visual {
                             
                         let yScale = d3.scale.linear()
                             .domain([
-                                settings.yAxis.start != null ? settings.yAxis.start : viewModel.yMin, 
-                                settings.yAxis.end != null ? settings.yAxis.end : viewModel.yMax, 
+                                settings.yAxis.start != null ? settings.yAxis.start : this.viewModel.yMin, 
+                                settings.yAxis.end != null ? settings.yAxis.end : this.viewModel.yMax, 
                             ])
                             .range([yRangeLower, yRangeUpper]);
 
@@ -392,7 +402,7 @@ module powerbi.extensibility.visual {
 
                     /** Scaling */
                         let xScale = d3.scale.linear()
-                            .domain([viewModel.xMin, viewModel.xMax])
+                            .domain([this.viewModel.xMin, this.viewModel.xMax])
                             .rangeRound([SmallMultipleLineChart.Config.chartSeriesPadding.left, multipleIndividualWidth - SmallMultipleLineChart.Config.chartSeriesPadding.right]);
                     
                     /** Pass the scale to our utils module for reuse in the chart */
@@ -416,7 +426,7 @@ module powerbi.extensibility.visual {
                         /** We can filter the source data when drawing but this creates empty elements; this step creates a subset of our
                          *  data for the row in question
                          */
-                            let eligibleMultipleFacets: LineChartSeriesSmallMultiple[] = viewModel.multiples.map(function(o) {
+                            let eligibleMultipleFacets: LineChartSeriesSmallMultiple[] = this.viewModel.multiples.map(function(o) {
                                 return o;
                             }).slice(i * multipleColumns, (i * multipleColumns) + multipleColumns);
                 
