@@ -540,6 +540,25 @@ module powerbi.extensibility.visual {
                                             'stroke-width': settings.yAxis.gridlines? settings.yAxis.gridlineStrokeWidth : 0
                                         })
                                         .classed(settings.yAxis.gridlineStrokeLineStyle, true);
+
+                                /** Add axis title */
+                                    if (settings.yAxis.showTitle) {
+                                        axisContainer
+                                        .append('text')
+                                        .attr({
+                                            transform: 'rotate(-90)',
+                                            y: 0 + (settings.yAxis.titleWidth / 2),
+                                            x: 0 - (multipleIndividualRowHeight / 2),
+                                            dy: '1em'
+                                        })
+                                        .style({
+                                            'text-anchor': 'middle',
+                                            'font-size': settings.yAxis.titleFontSize,
+                                            'font-family': settings.yAxis.titleFontFamily,
+                                            'fill': settings.yAxis.titleColor,
+                                        })
+                                        .text(settings.yAxis.resolvedTitleText);
+                                    }
                             }
 
                         /** Add group elements for each multiple, and translate based on Y-axis configuration */
