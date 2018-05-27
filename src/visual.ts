@@ -278,15 +278,17 @@ module powerbi.extensibility.visual {
                             console.log('Formatter:', settings.yAxis.numberFormat);
                         }
 
+
+
                         let yAxisTextPropertiesMin: TextProperties = {
                             text: settings.yAxis.numberFormat.format(this.viewModel.yMin),
-                            fontFamily: `${settings.yAxis.fontFamily}`,
+                            fontFamily: settings.yAxis.fontFamily,
                             fontSize: PixelConverter.toString(settings.yAxis.fontSize)
                         };
     
                         let yAxisTextPropertiesMax: TextProperties = {
                             text: settings.yAxis.numberFormat.format(this.viewModel.yMax),
-                            fontFamily: `${settings.yAxis.fontFamily}`,
+                            fontFamily: settings.yAxis.fontFamily,
                             fontSize: PixelConverter.toString(settings.yAxis.fontSize)
                         };
             
