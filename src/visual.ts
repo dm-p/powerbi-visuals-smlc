@@ -772,6 +772,7 @@ module powerbi.extensibility.visual {
                     /** Legend title toggle */
                     if(!this.settings.legend.showTitle) {
                         delete instances[0].properties['titleText'];
+                        delete instances[0].properties['includeRanges'];
                     }
                     break;
                 }
