@@ -319,7 +319,10 @@ module powerbi.extensibility.visual {
                                         fontFamily: settings.yAxis.titleFontFamily,
                                         fontSize: PixelConverter.toString(settings.yAxis.titleFontSize)
                                     };
-                                    settings.yAxis.titleWidth = textMeasurementService.measureSvgTextHeight(yAxisTitleTextProperties, settings.yAxis.resolvedTitleText);
+                                    settings.yAxis.titleWidth = 
+                                        SmallMultipleLineChart.Config.chartAxisTitlePadding.left
+                                        + textMeasurementService.measureSvgTextHeight(yAxisTitleTextProperties, settings.yAxis.resolvedTitleText)
+                                        + SmallMultipleLineChart.Config.chartAxisTitlePadding.right;
                                 } else {
                                     settings.yAxis.titleWidth = 0;
                                 }
