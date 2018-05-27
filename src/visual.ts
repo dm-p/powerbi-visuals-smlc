@@ -698,10 +698,12 @@ module powerbi.extensibility.visual {
             console.log('We did it!');
         }
 
+        /** Renders the legend, based on the properties supplied in the update method */
         private renderLegend(): void {
             if (!this.measures) {
                 return;
             }
+
             const position: LegendPosition = this.settings.legend.show
                 ? LegendPosition[this.settings.legend.position]
                 : LegendPosition.None;
@@ -710,21 +712,21 @@ module powerbi.extensibility.visual {
             this.legend.drawLegend(this.legendData, JSON.parse(JSON.stringify(this.viewport)));
             Legend.positionChartArea(this.container, this.legend);
 
-            switch (this.legend.getOrientation()) {
-                case LegendPosition.Left:
-                case LegendPosition.LeftCenter:
-                case LegendPosition.Right:
-                case LegendPosition.RightCenter:
-                    this.viewport.width -= this.legend.getMargins().width;
-                    break;
-                case LegendPosition.Top:
-                case LegendPosition.TopCenter:
-                case LegendPosition.Bottom:
-                case LegendPosition.BottomCenter:
-                    this.viewport.height -= this.legend.getMargins().height;
-                    break;
-            }
-
+            /** Adjust to viewport to match the legend orientation */
+                switch (this.legend.getOrientation()) {
+                    case LegendPosition.Left:
+                    case LegendPosition.LeftCenter:
+                    case LegendPosition.Right:
+                    case LegendPosition.RightCenter:
+                        this.viewport.width -= this.legend.getMargins().width;
+                        break;
+                    case LegendPosition.Top:
+                    case LegendPosition.TopCenter:
+                    case LegendPosition.Bottom:
+                    case LegendPosition.BottomCenter:
+                        this.viewport.height -= this.legend.getMargins().height;
+                        break;
+                }
         }
         
         private static parseSettings(dataView: DataView): VisualSettings {
