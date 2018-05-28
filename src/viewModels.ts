@@ -9,7 +9,9 @@ module powerbi.extensibility.visual {
      * @property {number} yMax                                          - Highest y-value in our data
      * @property {number} yMin                                          - Lowest y-value in our data
      * @property {number} xMax                                          - Highest x-value in our data
+     * @property {string} xMaxFormatted                                 - Maximum x-value, formatted according to attribute settings
      * @property {number} xMin                                          - Lowest x-value in our data
+     * @property {string} xMinFormatted                                 - Minimum x-value, formatted according to attribute settings
      */
     export interface LineChartSmallMultipleViewModel {
         multiples: LineChartSeriesSmallMultiple[];
