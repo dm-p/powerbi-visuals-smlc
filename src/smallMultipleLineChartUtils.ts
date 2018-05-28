@@ -29,6 +29,12 @@ module powerbi.extensibility.visual {
             return defaultValue;
         }
 
+        /**
+         * Gets the multiple, category and measure data from the data model
+         * 
+         * @param {LineChartSeriesSmallMultiple[]} dataPoints - Data points to extract values from
+         * @returns {VisualTooltipDataItem[]}                 - Array of tooltip data items
+         */
         export function getTooltipData(dataPoints: LineChartSeriesSmallMultipleCategoryDataPoint[]): VisualTooltipDataItem[] {
             let tooltipData: VisualTooltipDataItem[] = [];
             dataPoints.map(function(dataPoint, dataPointIndex){
