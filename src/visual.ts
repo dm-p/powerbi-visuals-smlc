@@ -606,197 +606,210 @@ module powerbi.extensibility.visual {
                                         }
                                     });
 
-                        /** Multiple background */
-                            multiple.append('rect')
-                                .classed({
-                                    multipleBackground: true
-                                })
-                                .attr({
-                                    height: multipleIndividualRowHeight,
-                                    width: multipleIndividualWidth,
-                                    fill: function(d, i) {
-                                        return i % 2 && settings.smallMultiple.bandedMultiples ? 
-                                        settings.smallMultiple.backgroundColorAlternate : 
-                                        !settings.smallMultiple.backgroundColor ? 
-                                            'transparent' : 
-                                            settings.smallMultiple.backgroundColor;
-                                    },
-                                    'fill-opacity': 1 - (settings.smallMultiple.backgroundTransparency / 100)                                
-                                });
-
-                        /** Add container to multiple, specifically to manage interaction */
-                            let overlay = multiple.append('rect')
-                                .classed({
-                                    overlay: true
-                                })
-                                .attr({
-                                    width: multipleIndividualWidth - SmallMultipleLineChart.Config.chartSeriesPadding.right,
-                                    height: multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom,
-                                    transform: function() {
-                                        let x = SmallMultipleLineChart.Config.chartSeriesPadding.left,
-                                            y: number;
-                                        switch(settings.smallMultiple.labelPosition) {
-                                            case 'top': {
-                                                y = settings.smallMultiple.labelHeight;
-                                                break;
-                                            }
-                                            case 'bottom': {
-                                                y = 0;
-                                                break;
-                                            }
-                                        }
-                                        return `translate(${x}, ${y})`;
-                                    }
-                                });
-
-                        /** Add stuff for each measure */
-
-                            /** Container for line plot(s) */
-                                let paths = multiple
-                                    .append('g')
+                            /** Multiple background */
+                                multiple
+                                    .append('rect')
                                         .classed({
-                                            pathContainer: true
+                                            multipleBackground: true
+                                        })
+                                        .attr({
+                                            height: multipleIndividualRowHeight,
+                                            width: multipleIndividualWidth,
+                                            fill: function(d, i) {
+                                                return i % 2 && settings.smallMultiple.bandedMultiples ? 
+                                                settings.smallMultiple.backgroundColorAlternate : 
+                                                !settings.smallMultiple.backgroundColor ? 
+                                                    'transparent' : 
+                                                    settings.smallMultiple.backgroundColor;
+                                            },
+                                            'fill-opacity': 1 - (settings.smallMultiple.backgroundTransparency / 100)                                
                                         });
 
-                            /** Container for tooltip nodes */
-                                let focus = multiple
+                            /** Canvas for lines and points this will overlay the clip-path */
+                                let canvas = multiple
                                     .append('g')
-                                        .classed( {
-                                            tooltipFocus: true
+                                        .classed({
+                                            multipleCanvas: true
                                         })
-                                        .style({
-                                            display: 'none' 
-                                        });                                    
+                                        .attr('clip-path', 'url(#multiple-clip)');                              
 
-                            /** For each measure, add a line plot and a tooltip node */
-                                this.measures.map(function(measure, measureIndex) {
-                                    paths
-                                        .append('path')
+                            /** Add container to multiple, specifically to manage interaction */
+                                let overlay = canvas
+                                    .append('rect')
+                                        .classed({
+                                            overlay: true
+                                        })
+                                        .attr({
+                                            width: multipleIndividualWidth - SmallMultipleLineChart.Config.chartSeriesPadding.right,
+                                            height: multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom,
+                                            transform: function() {
+                                                let x = SmallMultipleLineChart.Config.chartSeriesPadding.left,
+                                                    y: number;
+                                                switch(settings.smallMultiple.labelPosition) {
+                                                    case 'top': {
+                                                        y = settings.smallMultiple.labelHeight;
+                                                        break;
+                                                    }
+                                                    case 'bottom': {
+                                                        y = 0;
+                                                        break;
+                                                    }
+                                                }
+                                                return `translate(${x}, ${y})`;
+                                            }
+                                        });
+
+                            /** Add stuff for each measure */
+
+                                /** Container for line plot(s) */
+                                    let paths = canvas
+                                        .append('g')
                                             .classed({
-                                                lineSeries: true /** TODO: May need to change this when multiple measures are introduced */
+                                                pathContainer: true
                                             })
                                             .attr({
-                                                d: function(d) {
-                                                    return lineGen(d.measures[measureIndex].categories);
-                                                },
-                                                transform: 'translate(0, 0)',
-                                                stroke: measure.color
+                                                id: 'multiple-clip'
                                             });
 
-                                    focus
-                                        .append('circle')
-                                            .attr({
-                                                'r': 3,
-                                                fill: function(d) {
-                                                    return d.measures[measureIndex].color;
-                                                }
-                                            });
-                                });
+                                /** Container for tooltip nodes */
+                                    let focus = canvas
+                                        .append('g')
+                                            .classed( {
+                                                tooltipFocus: true
+                                            })
+                                            .style({
+                                                display: 'none' 
+                                            });                                    
 
-                            /** Add events to the multiple container */
-                                overlay
-                                    /** Upon entry, display the line nodes */
-                                        .on("mouseover", function() { 
-                                            let selectedFocus = d3.select(this.parentNode).select('.tooltipFocus'),
-                                                mouse = d3.mouse(element),
-                                                dataPoints = smallMultipleLineChartUtils.getHighlightedDataPoints(this);
+                                /** For each measure, add a line plot and a tooltip node */
+                                    this.measures.map(function(measure, measureIndex) {
+                                        paths
+                                            .append('path')
+                                                .classed({
+                                                    lineSeries: true /** TODO: May need to change this when multiple measures are introduced */
+                                                })
+                                                .attr({
+                                                    d: function(d) {
+                                                        return lineGen(d.measures[measureIndex].categories);
+                                                    },
+                                                    transform: 'translate(0, 0)',
+                                                    stroke: measure.color
+                                                });
 
-                                                selectedFocus.style('display', null);
+                                        focus
+                                            .append('circle')
+                                                .attr({
+                                                    'r': 3,
+                                                    fill: function(d) {
+                                                        return d.measures[measureIndex].color;
+                                                    }
+                                                });
+                                    });
 
-                                                smallMultipleLineChartUtils.tooltipService.show({
+                                /** Add events to the multiple container */
+                                    overlay
+                                        /** Upon entry, display the line nodes */
+                                            .on("mouseover", function() { 
+                                                let selectedFocus = d3.select(this.parentNode).select('.tooltipFocus'),
+                                                    mouse = d3.mouse(element),
+                                                    dataPoints = smallMultipleLineChartUtils.getHighlightedDataPoints(this);
+
+                                                    selectedFocus.style('display', null);
+
+                                                    smallMultipleLineChartUtils.tooltipService.show({
+                                                        dataItems: smallMultipleLineChartUtils.getTooltipData(dataPoints),
+                                                        identities: [],
+                                                        coordinates: [mouse[0], mouse[1]],
+                                                        isTouchEvent: false
+                                                    });
+                                            })
+                                        /** Upon exit, hide the line nodes */
+                                            .on("mouseout", function() { 
+                                                let selectedFocus = d3.select(this.parentNode).select('.tooltipFocus');
+                                                selectedFocus.style('display', 'none');
+                                                smallMultipleLineChartUtils.tooltipService.hide({
+                                                    immediately: true,
+                                                    isTouchEvent: false
+                                                });
+                                            })
+                                        /** When mouse is moved, calculate node position for tooltips */
+                                            .on('mousemove', function(d) {
+                                                let dataPoints = smallMultipleLineChartUtils.getHighlightedDataPoints(this),
+                                                    mouse = d3.mouse(element);
+
+                                                focus.selectAll('circle')
+                                                    .attr({
+                                                        transform: function(d, j) {
+                                                            return `translate(${xScale(dataPoints[j].name)}, ${yScale(dataPoints[j].value)})`;
+                                                        }
+                                                    });
+
+                                                smallMultipleLineChartUtils.tooltipService.move({
                                                     dataItems: smallMultipleLineChartUtils.getTooltipData(dataPoints),
                                                     identities: [],
                                                     coordinates: [mouse[0], mouse[1]],
                                                     isTouchEvent: false
                                                 });
-                                        })
-                                    /** Upon exit, hide the line nodes */
-                                        .on("mouseout", function() { 
-                                            let selectedFocus = d3.select(this.parentNode).select('.tooltipFocus');
-                                            selectedFocus.style('display', 'none');
-                                            smallMultipleLineChartUtils.tooltipService.hide({
-                                                immediately: true,
-                                                isTouchEvent: false
                                             });
-                                        })
-                                    /** When mouse is moved, calculate node position for tooltips */
-                                        .on('mousemove', function(d) {
-                                            let dataPoints = smallMultipleLineChartUtils.getHighlightedDataPoints(this),
-                                                mouse = d3.mouse(element);
 
-                                            focus.selectAll('circle')
-                                                .attr({
-                                                    transform: function(d, j) {
-                                                        return `translate(${xScale(dataPoints[j].name)}, ${yScale(dataPoints[j].value)})`;
-                                                    }
-                                                });
-
-                                            smallMultipleLineChartUtils.tooltipService.move({
-                                                dataItems: smallMultipleLineChartUtils.getTooltipData(dataPoints),
-                                                identities: [],
-                                                coordinates: [mouse[0], mouse[1]],
-                                                isTouchEvent: false
-                                            });
-                                        });
-
-                        /** Apply our text label */
-                            if(settings.smallMultiple.showMultipleLabel) {
-                                multiple.append('text')
-                                .classed({
-                                    smallMultipleLabel: true
-                                })
-                                .attr({
-                                    'x': function(d) {
-                                        switch(settings.smallMultiple.labelAlignment) {
-                                            case 'left': {
-                                                return 0;
+                            /** Apply our text label */
+                                if(settings.smallMultiple.showMultipleLabel) {
+                                    multiple.append('text')
+                                    .classed({
+                                        smallMultipleLabel: true
+                                    })
+                                    .attr({
+                                        'x': function(d) {
+                                            switch(settings.smallMultiple.labelAlignment) {
+                                                case 'left': {
+                                                    return 0;
+                                                }
+                                                case 'center': {
+                                                    return multipleIndividualWidth / 2;
+                                                }
+                                                case 'right': {
+                                                    return multipleIndividualWidth;
+                                                }
                                             }
-                                            case 'center': {
-                                                return multipleIndividualWidth / 2;
+                                        },
+                                        'y': function(){
+                                            switch(settings.smallMultiple.labelPosition) {
+                                                case 'top': {
+                                                    return 0 + settings.smallMultiple.labelHeight;
+                                                }
+                                                case  'bottom': {
+                                                    return multipleIndividualRowHeight;
+                                                }
+                                            }                                        
+                                        },
+                                        'text-anchor': function(d) {
+                                            switch(settings.smallMultiple.labelAlignment) {
+                                                case 'left': {
+                                                    return 'start';
+                                                }
+                                                case 'center': {
+                                                    return 'middle';
+                                                }
+                                                case 'right': {
+                                                    return 'end';
+                                                }
                                             }
-                                            case 'right': {
-                                                return multipleIndividualWidth;
-                                            }
+                                        },
+                                        'alignment-baseline': 'text-after-edge'
+                                    })
+                                    .style({
+                                        'font-size': `${settings.smallMultiple.fontSize}px`,
+                                        'font-family': settings.smallMultiple.fontFamily,
+                                        fill: function(d, i) {
+                                            return i % 2 && settings.smallMultiple.bandedMultiples ? 
+                                                    settings.smallMultiple.fontColorAlternate : 
+                                                    settings.smallMultiple.fontColor;
                                         }
-                                    },
-                                    'y': function(){
-                                        switch(settings.smallMultiple.labelPosition) {
-                                            case 'top': {
-                                                return 0 + settings.smallMultiple.labelHeight;
-                                            }
-                                            case  'bottom': {
-                                                return multipleIndividualRowHeight;
-                                            }
-                                        }                                        
-                                    },
-                                    'text-anchor': function(d) {
-                                        switch(settings.smallMultiple.labelAlignment) {
-                                            case 'left': {
-                                                return 'start';
-                                            }
-                                            case 'center': {
-                                                return 'middle';
-                                            }
-                                            case 'right': {
-                                                return 'end';
-                                            }
-                                        }
-                                    },
-                                    'alignment-baseline': 'text-after-edge'
-                                })
-                                .style({
-                                    'font-size': `${settings.smallMultiple.fontSize}px`,
-                                    'font-family': settings.smallMultiple.fontFamily,
-                                    fill: function(d, i) {
-                                        return i % 2 && settings.smallMultiple.bandedMultiples ? 
-                                                settings.smallMultiple.fontColorAlternate : 
-                                                settings.smallMultiple.fontColor;
-                                    }
-                                })
-                                .text(function(d) { 
-                                    return d.facet; 
-                                });
-                            }
+                                    })
+                                    .text(function(d) { 
+                                        return d.facet; 
+                                    });
+                                }
                     }
 
             console.log('We did it!');
