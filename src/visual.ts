@@ -501,6 +501,37 @@ module powerbi.extensibility.visual {
                                         width: entireChartWidth
                                     });
 
+                        /** Definition for clip container */
+                            d3.select('.smallMultipleRowContainer')
+                                .append('defs')
+                                    .append('clipPath')
+                                        .attr({
+                                            id: 'multiple-clip'
+                                        })
+                                        .classed({
+                                            'multipleClip': true
+                                        })
+                                        .append('rect')
+                                            .attr({
+                                                width: multipleIndividualWidth,
+                                                height: multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom,
+                                                transform: function() {
+                                                    let x = 0,
+                                                        y: number;
+                                                    switch(settings.smallMultiple.labelPosition) {
+                                                        case 'top': {
+                                                            y = settings.smallMultiple.labelHeight;
+                                                            break;
+                                                        }
+                                                        case 'bottom': {
+                                                            y = 0;
+                                                            break;
+                                                        }
+                                                    }
+                                                    return `translate(${x}, ${y})`;
+                                                }
+                                            });   
+
                         /** If we've determined that a Y-axis is required, add it in */
                             if(settings.yAxis.show) {
                                 let axisContainer = multipleRow
