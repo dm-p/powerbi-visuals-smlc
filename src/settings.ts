@@ -50,9 +50,7 @@ module powerbi.extensibility.visual {
       public show: boolean = true;
     }
 
-    export class colorSelectorSettings {
-
-    }
+    export class colorSelectorSettings {}
 
     export class legendSettings {
       // Show legend
@@ -96,12 +94,6 @@ module powerbi.extensibility.visual {
       public backgroundColorAlternate: string = defaultBackgroundColorAlternate;
       // Alternate font color
       public fontColorAlternate: string = defaultAxisFontColor;
-      
-      // No capabilities, so not in the properties pane, but still accessible
-
-        // Required height for multiple label
-        public labelHeight: number = 0;
-
     }
 
     
@@ -139,11 +131,6 @@ module powerbi.extensibility.visual {
       public gridlineStrokeWidth: number = 1;
       // Gridline line style
       public gridlineStrokeLineStyle: string = 'solid';
-      // No capabilities, so not in the properties pane, but still accessible
-
-        // Axis number format
-        public numberFormat: utils.formatting.IValueFormatter;
-
     }
 
     // Independent of the toggle
@@ -152,21 +139,6 @@ module powerbi.extensibility.visual {
       public start: number = null;
       // Axis range end
       public end: number = null;
-      
-      // No capabilities, so not in the properties pane, but still accessible
-
-        // Resolved title based on settings and visual logic
-        public resolvedTitleText: string = '';
-
-        // Specified width of title
-        public titleWidth: number = 0;
-
-        // Specified width of y-axis
-        public width: number = 0;
-
     }
-
-
-
 
 }
