@@ -358,7 +358,7 @@ module powerbi.extensibility.visual {
                     if(settings.smallMultiple.showMultipleLabel) {
                         let smallMultipleTextProperties: TextProperties = {
                             text: dataView.categorical.categories[0].values[0].toString(),
-                            fontFamily: `${settings.smallMultiple.fontFamily}`,
+                            fontFamily: settings.smallMultiple.fontFamily,
                             fontSize: PixelConverter.toString(settings.smallMultiple.fontSize)
                         }
                         settings.smallMultiple.labelHeight = textMeasurementService.measureSvgTextHeight(smallMultipleTextProperties);
