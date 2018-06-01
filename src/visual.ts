@@ -105,7 +105,7 @@ module powerbi.extensibility.visual {
                                     )
                                 : null
                     ),
-                    fontSize: settings.legend.fontSize,
+                    fontSize: PixelConverter.toPoint(settings.legend.fontSize),
                     labelColor: settings.legend.fontColor,
                     dataPoints: this.measureMetadata.map(function(m, i) {
                         return {
@@ -261,7 +261,7 @@ module powerbi.extensibility.visual {
                                             yAxisContainer: true
                                         })
                                         .style({
-                                            'font-size': settings.yAxis.fontSize,
+                                            'font-size': viewModel.layout.yAxis.maxValue.textProperties.fontSize,
                                             'font-family': settings.yAxis.fontFamily,
                                             'fill': settings.yAxis.fontColor,
                                             'stroke-width' : 1 /** TODO: Config */
@@ -307,7 +307,7 @@ module powerbi.extensibility.visual {
                                         })
                                         .style({
                                             'text-anchor': 'middle',
-                                            'font-size': settings.yAxis.titleFontSize,
+                                            'font-size': viewModel.layout.yAxis.title.textProperties.fontSize,
                                             'font-family': settings.yAxis.titleFontFamily,
                                             'fill': settings.yAxis.titleColor,
                                         })
@@ -475,6 +475,17 @@ module powerbi.extensibility.visual {
                                                 });
                                             });
 
+                                            // function wrap() {
+                                            //     var self = d3.select(this),
+                                            //         textLength = self.node().getComputedTextLength(),
+                                            //         text = self.text();
+                                            //     while (textLength > (width - 2 * padding) && text.length > 0) {
+                                            //         text = text.slice(0, -1);
+                                            //         self.text(text + '...');
+                                            //         textLength = self.node().getComputedTextLength();
+                                            //     }
+                                            // } 
+
                             /** Apply our text label */
                                 if(settings.smallMultiple.showMultipleLabel) {
                                     multiple.append('text')
@@ -521,7 +532,7 @@ module powerbi.extensibility.visual {
                                         'alignment-baseline': 'text-after-edge'
                                     })
                                     .style({
-                                        'font-size': `${settings.smallMultiple.fontSize}px`,
+                                        'font-size': viewModel.layout.multiples.label.textProperties.fontSize,
                                         'font-family': settings.smallMultiple.fontFamily,
                                         fill: function(d, i) {
                                             return i % 2 && settings.smallMultiple.bandedMultiples 
