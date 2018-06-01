@@ -48,16 +48,8 @@ module powerbi.extensibility.visual {
         import LegendPosition = powerbi.extensibility.utils.chart.legend.LegendPosition;
 
     /** SmallMultipleViewModel */
-        import ISmallMultipleData = SmallMultipleLineChartViewModel.ISmallMultipleData;
         import ISmallMultipleMeasure = SmallMultipleLineChartViewModel.ISmallMultipleMeasure;
         import IViewModel = SmallMultipleLineChartViewModel.IViewModel;
-        import ILayout = SmallMultipleLineChartViewModel.ILayout;
-        import IViewport = SmallMultipleLineChartViewModel.IViewport;
-        import IMultiple = SmallMultipleLineChartViewModel.IMultiple;
-        import IChart = SmallMultipleLineChartViewModel.IChart;
-        import IAxis = SmallMultipleLineChartViewModel.IAxis;
-        import IAxisValue = SmallMultipleLineChartViewModel.IAxisValue;
-        import IPaddingConfiguration = SmallMultipleLineChartViewModel.IPaddingConfiguration;
         import visualTransform = SmallMultipleLineChartViewModel.visualTransform;
         import mapLayout = SmallMultipleLineChartViewModel.mapLayout;
 
