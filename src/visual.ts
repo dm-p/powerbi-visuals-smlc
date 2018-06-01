@@ -46,124 +46,24 @@ module powerbi.extensibility.visual {
         import LegendData = powerbi.extensibility.utils.chart.legend.LegendData;
         import LegendIcon = powerbi.extensibility.utils.chart.legend.LegendIcon;
         import LegendPosition = powerbi.extensibility.utils.chart.legend.LegendPosition;
-        
-    /**
-     * Function that converts queried data into a view model that will be used by the visual
-     *
-     * @function
-     * @param {VisualUpdateOptions} options - Contains references to the size of the container
-     *                                        and the dataView which contains all the data
-     *                                        the visual had queried.
-     * @param {IVisualHost} host            - Contains references to the host which contains services
-     */
-    function visualTransform(options: VisualUpdateOptions, host: IVisualHost): LineChartSmallMultipleViewModel {
-        let dataViews = options.dataViews;
 
-        // /* Instantiate empty model, just in case we have nothing supplied to our visual */
-        let viewModel: LineChartSmallMultipleViewModel = {
-            multiples: [],
-            yMax: 0,
-            yMin: 0,
-            xMax: 0,
-            xMaxFormatted: '',
-            xMin: 0,
-            xMinFormatted: ''
-        };
-
-        if (!dataViews
-            || !dataViews[0]
-            || !dataViews[0].matrix
-            || !dataViews[0].matrix.columns
-            || !dataViews[0].matrix.rows
-            || !dataViews[0].matrix.valueSources
-            || !dataViews[0].metadata
-        ) {
-            return viewModel;
-        }
-
-        let matrix = dataViews[0].matrix,
-            columns = dataViews[0].matrix.columns,
-            rows = dataViews[0].matrix.rows,
-            valueSources = dataViews[0].matrix.valueSources,
-            metadata = dataViews[0].metadata,
-            smallMultipleFacetMetadata = metadata.columns.filter(c => c.roles['smallMultiple'])[0],
-            categoryMetadata = metadata.columns.filter(c => c.roles['category'])[0],
-            colorPalette: IColorPalette = host.colorPalette,
-            lineChartSmallMultiples: LineChartSeriesSmallMultiple[] = [],
-            yMax: number = 0,
-            yMin: number = 0,
-            xMax: number,
-            xMaxFormatted: string,
-            xMin: number,
-            xMinFormatted: string;
-
-
-        // TODO: We might be able to do this better now that we know how to traverse metadata (see smallMultipleFacetName etc.)
-        let multiples = columns.root.children.map(function(multiple, multipleIndex) {
-            lineChartSmallMultiples.push({
-                facet: multiple.value.toString(),
-                measures: valueSources.map(function(measure, measureIndex) {
-                    /** Obtain the default colour based on the measure */
-                        let defaultColor: Fill = {
-                            solid: {
-                                color: colorPalette.getColor(measure.displayName + '').value
-                            }
-                        };
-                    /** Get measure metadata from datview, so we can do formatting etc. later on */
-                        let measureMetadata = valueSources[measureIndex];
-                    return {                        
-                        name: measure.displayName,
-                        queryName: measureMetadata.queryName,
-                        selectionId: host.createSelectionIdBuilder()
-                            .withMeasure(measureMetadata.queryName)
-                            .createSelectionId(),
-                        categories: rows.root.children.map(function(category, categoryIndex) {
-                            let targetKey = multipleIndex * valueSources.length + measureIndex
-                            let categoryValue = <number>category.value; //TODO: This should manage different types
-                            let value = <number>category.values[targetKey].value; // TODO: Manage data types for measure
-                            /** Get highest/lowest x/y values */
-                                yMax = Math.max(isNaN(yMax) ? value : yMax, value);
-                                yMin = Math.min(isNaN(yMin) ? value : yMin, value);
-                                /** TODO: handle categorical vs. continuous for x */
-                                xMax = Math.max(isNaN(xMax) ? categoryValue: xMax, categoryValue);
-                                xMaxFormatted = categoryValue >= xMax ? valueFormatter.format(categoryValue, categoryMetadata.format) : xMaxFormatted;
-                                xMin = Math.min(isNaN(xMin) ? categoryValue: xMin, categoryValue);
-                                xMinFormatted = categoryValue <= xMin ? valueFormatter.format(categoryValue, categoryMetadata.format) : xMinFormatted;
-                            return {
-                                name: categoryValue,
-                                value: value,
-                                tooltips: [
-                                    {
-                                        header: `${multiple.value} - ${valueFormatter.format(category.value, categoryMetadata.format)}`,
-                                        displayName: measureMetadata.displayName,
-                                        value: `${valueFormatter.format(value, measureMetadata.format)}`,
-                                        color: smallMultipleLineChartUtils.getValue<Fill>(valueSources[measureIndex].objects, 'colorSelector', 'fill', defaultColor).solid.color
-                                    }
-                                ]
-                            }   
-                        }),
-                        color: smallMultipleLineChartUtils.getValue<Fill>(valueSources[measureIndex].objects, 'colorSelector', 'fill', defaultColor).solid.color
-                    }
-                })
-            })
-        });
-
-        return {
-            multiples: lineChartSmallMultiples,
-            yMax: yMax,
-            yMin: yMin,
-            xMax: xMax,
-            xMaxFormatted: xMaxFormatted,
-            xMin: xMin,
-            xMinFormatted: xMinFormatted
-        };
-
-    }
+    /** SmallMultipleViewModel */
+        import ISmallMultipleData = SmallMultipleLineChartViewModel.ISmallMultipleData;
+        import ISmallMultipleMeasure = SmallMultipleLineChartViewModel.ISmallMultipleMeasure;
+        import IViewModel = SmallMultipleLineChartViewModel.IViewModel;
+        import ILayout = SmallMultipleLineChartViewModel.ILayout;
+        import IViewport = SmallMultipleLineChartViewModel.IViewport;
+        import IMultiple = SmallMultipleLineChartViewModel.IMultiple;
+        import IChart = SmallMultipleLineChartViewModel.IChart;
+        import IAxis = SmallMultipleLineChartViewModel.IAxis;
+        import IAxisValue = SmallMultipleLineChartViewModel.IAxisValue;
+        import IPaddingConfiguration = SmallMultipleLineChartViewModel.IPaddingConfiguration;
+        import visualTransform = SmallMultipleLineChartViewModel.visualTransform;
+        import mapLayout = SmallMultipleLineChartViewModel.mapLayout;
 
     export class SmallMultipleLineChart implements IVisual {
         private settings: VisualSettings;
-        private viewModel: LineChartSmallMultipleViewModel;
-        private measures: LineChartSeriesSmallMultipleMeasure[]
+        private measureMetadata: ISmallMultipleMeasure[]
         private element: HTMLElement;
         private container: d3.Selection<{}>;
         private chartWrapper: d3.Selection<{}>;
@@ -171,23 +71,6 @@ module powerbi.extensibility.visual {
         private viewport: IViewport;
         private legend: ILegend;
         private legendData: LegendData;
-
-        static Config = {
-            chartAreaPadding: {
-                top: 10,
-                right: 10,
-                bottom: 10,
-                left: 10,
-            },
-            chartSeriesPadding: {
-                left: 3,
-                right: 4
-            },
-            chartAxisTitlePadding: {
-                left: 5,
-                right: 5,
-            }
-        };
 
         constructor(options: VisualConstructorOptions) {
             options.element.style.overflow = 'auto';
@@ -212,26 +95,27 @@ module powerbi.extensibility.visual {
         }
 
         public update(options: VisualUpdateOptions) {
-            this.viewModel = visualTransform(options, this.host);
-            let dataView: DataView = options.dataViews[0];
-            let settings = this.settings = SmallMultipleLineChart.parseSettings(options && options.dataViews && options.dataViews[0]);
-            let element = this.element;
-            this.measures = this.viewModel.multiples[0].measures;
-            this.viewport = options.viewport;
+            console.clear();
             
-            /** Construct legend from measures */
+            let settings = this.settings = SmallMultipleLineChart.parseSettings(options && options.dataViews && options.dataViews[0]),
+                viewModel = visualTransform(options, this.host, this.settings),
+                element = this.element;
+            this.measureMetadata = viewModel.multiples[0].measures;
+            this.viewport = options.viewport;
+
+            /** Construct legend from measures. We need our legend before we can size the rest of the chart, so we'll do this first. */
                 this.legendData = {
-                    title: (settings.legend.showTitle ? 
-                        settings.legend.titleText 
-                            + (settings.legend.includeRanges ?
-                                ` (${this.viewModel.xMinFormatted} - ${this.viewModel.xMaxFormatted})`:
-                                '' 
-                            ):
-                        null
+                    title: (settings.legend.showTitle 
+                                ? settings.legend.titleText 
+                                    + (settings.legend.includeRanges 
+                                        ? ` (${viewModel.layout.xAxis.minValue.textProperties.text} - ${viewModel.layout.xAxis.maxValue.textProperties.text})`
+                                        : '' 
+                                    )
+                                : null
                     ),
                     fontSize: settings.legend.fontSize,
                     labelColor: settings.legend.fontColor,
-                    dataPoints: this.measures.map(function(m, i) {
+                    dataPoints: this.measureMetadata.map(function(m, i) {
                         return {
                             label: m.name,
                             color: m.color,
@@ -242,162 +126,28 @@ module powerbi.extensibility.visual {
                     })
                 }
                 this.renderLegend();
+
+            /** Complete mapping our view model layout */
+                viewModel = mapLayout(options, this.settings, viewModel)
             
             /** For debugging purposes - remove later on */
                 if (settings.debug.show) {
-                    console.clear();
-                    console.log('Visual update', options, 'View model', this.viewModel, 'Settings', settings);
+                    // console.clear();
+                    console.log('Visual update', options, '\nView model', viewModel, '\nSettings', settings);
                 }
-                
+
             /** Clear down our existing plot data as we need to re-draw the whole thing */
                 this.container.selectAll('*').remove();
-
-            /** We need to start figuring things out in terms of layout:
-             *  - Determine if we need a y-axis and calculate how much space we'll need, based on the axis number format.
-             *  - Get the minimum/maximum multiple sizes 
-             *  - Get other dimensions as required for drawing our charts 
-             * 
-             *  TODO: This could probably be done in a view model or the configuration view model
-             */
                 
-                /** Get the viewport dimensions and cater for padding */
-                    let entireChartWidth = options.viewport.width,
-                        entireChartHeight = options.viewport.height * 0.99; /** Setting this to 99% avoids some overflow problems of using 100% of the viewport */
-
-                /** Work out the horizontal space that a y-axis would take, based on our configuration, and we might as well prep it while we're at it... */
-                    if(settings.yAxis.show) {
-
-                        /** Get desired number format for measures based on settings. We always use the first measure for this (like inbuilt charts seem to do) */
-                            settings.yAxis.numberFormat = valueFormatter.create({
-                                format: valueFormatter.getFormatStringByColumn(dataView.metadata.columns[2]),
-                                value : (settings.yAxis.labelDisplayUnits == 0 
-                                    ? this.viewModel.yMax
-                                    : settings.yAxis.labelDisplayUnits
-                                ),
-                                precision: (settings.yAxis.precision != null
-                                    ? settings.yAxis.precision
-                                    : null
-                                )
-                            });
-
-                        /** Resolve our y-axis title based on settings:
-                         *   - If we specify placeholder (auto) then create a nice list of measures, split with commas but using 'and' on the last item
-                         *   - Also, look at what we want to show - either title, unit or both and resolve accordingly
-                         *   - We will need the derived size of the text to work our spacing for axis width below                         * 
-                         */
-                            
-                            /** Title text resolved for measures */
-                                let titleForMeasures =
-                                    !settings.yAxis.titleText ?
-                                        this.measures.map(function(m, i) {
-                                                return m.name
-                                            })
-                                            .join(', ')
-                                            .replace(/, ([^,]*)$/, ' and $1'):
-                                        settings.yAxis.titleText;
-
-                            /** Actual title text, resolved for style */
-                                switch (settings.yAxis.titleStyle) {
-                                    case 'title': {
-                                        settings.yAxis.resolvedTitleText = titleForMeasures;
-                                        break;
-                                    }
-                                    case 'unit': {
-                                        settings.yAxis.resolvedTitleText = settings.yAxis.numberFormat.displayUnit.title;
-                                        break;
-                                    }
-                                    case 'both': {
-                                        settings.yAxis.resolvedTitleText = `${titleForMeasures} (${settings.yAxis.numberFormat.displayUnit.title})`;
-                                        break;
-                                    }
-                                }
-
-                            /** Calculate observed width of title (actually height, as it's going to be rotated) */
-                                if (settings.yAxis.showTitle) {
-                                    let yAxisTitleTextProperties: TextProperties = {
-                                        text: settings.yAxis.resolvedTitleText,
-                                        fontFamily: settings.yAxis.titleFontFamily,
-                                        fontSize: PixelConverter.toString(settings.yAxis.titleFontSize)
-                                    };
-                                    settings.yAxis.titleWidth = 
-                                        SmallMultipleLineChart.Config.chartAxisTitlePadding.left
-                                        + textMeasurementService.measureSvgTextHeight(yAxisTitleTextProperties, settings.yAxis.resolvedTitleText)
-                                        + SmallMultipleLineChart.Config.chartAxisTitlePadding.right;
-                                } else {
-                                    settings.yAxis.titleWidth = 0;
-                                }
-
-                        /** Calculate the width that the ticks will take up, once resolved for font size/family/display unit.
-                         *  We need min and max values, as if we go negative then we may need to accomodate a minus symbol.
-                         */
-                            let yAxisTextPropertiesMin: TextProperties = {
-                                    text: settings.yAxis.numberFormat.format(this.viewModel.yMin),
-                                    fontFamily: settings.yAxis.fontFamily,
-                                    fontSize: PixelConverter.toString(settings.yAxis.fontSize)
-                                },
-                                yAxisTextPropertiesMax: TextProperties = {
-                                    text: settings.yAxis.numberFormat.format(this.viewModel.yMax),
-                                    fontFamily: settings.yAxis.fontFamily,
-                                    fontSize: PixelConverter.toString(settings.yAxis.fontSize)
-                                };
-            
-                            settings.yAxis.width = settings.yAxis.titleWidth                                
-                                + Math.round(
-                                        Math.max(
-                                            textMeasurementService.measureSvgTextWidth(yAxisTextPropertiesMin),
-                                            textMeasurementService.measureSvgTextWidth(yAxisTextPropertiesMax)
-                                        )
-                                    ) 
-                                + 10;
-
-                    } else {
-                         settings.yAxis.width = 0;
-                    }
-
-                /** Work out the vertical space that the small multiple would take up, based on font configuration */
-                    if(settings.smallMultiple.showMultipleLabel) {
-                        let smallMultipleTextProperties: TextProperties = {
-                            text: dataView.categorical.categories[0].values[0].toString(),
-                            fontFamily: settings.smallMultiple.fontFamily,
-                            fontSize: PixelConverter.toString(settings.smallMultiple.fontSize)
-                        }
-                        settings.smallMultiple.labelHeight = textMeasurementService.measureSvgTextHeight(smallMultipleTextProperties);
-                    } else {
-                        settings.smallMultiple.labelHeight = 0;
-                    }
+            /** Calculate all necessary dimensions for components */
 
                 /** Size our initial container to match the viewport */
                     this.container.attr({
-                        width: entireChartWidth,
-                        height: entireChartHeight,
+                        width: viewModel.layout.chart.width,
+                        height: viewModel.layout.chart.height,
                     });
 
-                /** Calculate our row width, after the Y-Axis has been taken into consideration */
-                    let multipleAvailableRowWidth: number = entireChartWidth - settings.yAxis.width; // TODO: I've hardcoded enough space for a scrolbar for now; fix when we determine overflow
-
-                /** And the height for the whole chart, as we might need to overflow based on configuration. This is abstracted as we might
-                    want to pad it later on and this will make it easier. */
-                    let multipleAvailableChartHeight: number = entireChartHeight;
-
                 /** Resolve our number of columns, based on configuration and calculate how much space we have available for each small multiple */
-                    let multipleCount: number = this.viewModel.multiples.length,
-                        multipleColumns: number,
-                        multipleIndividualWidth: number,
-                        multipleRows: number,
-                        multipleIndividualRowHeight: number;
-
-                    if (!settings.smallMultiple.maximumMultiplesPerRow
-                        || settings.smallMultiple.maximumMultiplesPerRow > multipleCount
-                    ) {
-                        multipleColumns = multipleCount
-                    } else {
-                        multipleColumns = settings.smallMultiple.maximumMultiplesPerRow
-                    }
-
-                    multipleIndividualWidth = multipleAvailableRowWidth / multipleColumns;
-                    multipleRows = Math.ceil(multipleCount / multipleColumns);
-
-                    multipleIndividualRowHeight = multipleAvailableChartHeight / multipleRows;
 
                     /** TODO: at this point, we should determine if we need to overflow, based on minimum height, which we will need to also work out
                      * in accordance with height reserved for the multiple text
@@ -408,15 +158,15 @@ module powerbi.extensibility.visual {
                         console.log(`Grid:\n`,
                             `Viewport Width: ${options.viewport.width}\n`,
                             `Viewport Height: ${options.viewport.height}\n`,
-                            `Y-Axis Label Width: ${settings.yAxis.width}\n`,
-                            `Width Available for Multiples: ${multipleAvailableRowWidth}\n`,
-                            `Height Available for Multiples: ${multipleAvailableChartHeight}\n`,
-                            `Multiple Count: ${multipleCount}\n`,
-                            `Multiple Columns Per Row: ${multipleColumns}\n`,
-                            `Multiple Columns Individual Width: ${multipleIndividualWidth}\n`,
-                            `Required Multiple Rows: ${multipleRows}\n`,
-                            `Multiple Rows Individual Height: ${multipleIndividualRowHeight}\n`,
-                            `Multiple Label Height: ${settings.smallMultiple.labelHeight}\n`,
+                            `Y-Axis Label Width: ${viewModel.layout.yAxis.width}\n`,
+                            `Width Available for Multiples: ${viewModel.layout.multiples.rows.width}\n`,
+                            `Height Available for Multiples: ${viewModel.layout.multiples.availableHeight}\n`,
+                            `Multiple Count: ${viewModel.layout.multiples.count}\n`,
+                            `Multiple Columns Per Row: ${viewModel.layout.multiples.columns.count}\n`,
+                            `Multiple Columns Individual Width: ${viewModel.layout.multiples.columns.width}\n`,
+                            `Required Multiple Rows: ${viewModel.layout.multiples.rows.count}\n`,
+                            `Multiple Rows Individual Height: ${viewModel.layout.multiples.rows.height}\n`,
+                            `Multiple Label Height: ${viewModel.layout.multiples.label.height}\n`,
                         );
                     }
 
@@ -424,52 +174,31 @@ module powerbi.extensibility.visual {
 
                 /** Y-axis setup */
 
-                    /** Scaling */
-
-                        /** Get upper/lower bounds based on label configuration for multiple */
-                            let yRangeLower: number,
-                                yRangeUpper: number;
-
-                            switch(settings.smallMultiple.labelPosition) {
-                                case 'top': {
-                                    yRangeLower = multipleIndividualRowHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom;
-                                    yRangeUpper = SmallMultipleLineChart.Config.chartAreaPadding.top + settings.smallMultiple.labelHeight;
-                                    break;
-                                }
-                                case 'bottom': {
-                                    yRangeLower = multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom;
-                                    yRangeUpper = SmallMultipleLineChart.Config.chartAreaPadding.top;
-                                    break;
-                                }
-                            }
-                            
+                    /** Scaling */                            
                         let yScale = d3.scale.linear()
-                            .domain([
-                                settings.yAxis.start != null ? settings.yAxis.start : this.viewModel.yMin, 
-                                settings.yAxis.end != null ? settings.yAxis.end : this.viewModel.yMax, 
-                            ])
-                            .range([yRangeLower, yRangeUpper]);
+                            .domain(viewModel.layout.yAxis.domain)
+                            .range(viewModel.layout.yAxis.range);
 
                     /** Ticks and labels */
                         let yAxis = d3.svg.axis()
                             .scale(yScale)
                             .orient('left')
-                            .ticks(axisHelper.getRecommendedNumberOfTicksForYAxis(multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom))
-                            .tickFormat(d => (settings.yAxis.numberFormat.format(d)))
-                            .tickSize(-multipleAvailableRowWidth, 0);
+                            .ticks(axisHelper.getRecommendedNumberOfTicksForYAxis(viewModel.layout.yAxis.height))
+                            .tickFormat(d => (viewModel.layout.yAxis.numberFormat.format(d)))
+                            .tickSize(-viewModel.layout.multiples.rows.width, 0);
 
                 /** X-axis setup */
 
                     /** Scaling */
                         let xScale = d3.scale.linear()
-                            .domain([this.viewModel.xMin, this.viewModel.xMax])
-                            .rangeRound([SmallMultipleLineChart.Config.chartSeriesPadding.left, multipleIndividualWidth - SmallMultipleLineChart.Config.chartSeriesPadding.right]);
+                            .domain(viewModel.layout.xAxis.domain)
+                            .rangeRound(viewModel.layout.xAxis.range);
                     
                     /** Pass the scale to our utils module for reuse in the chart */
                         smallMultipleLineChartUtils.xScale = xScale;
 
                 /** Line series generation function */
-                    let lineGen = d3.svg.line<LineChartSeriesSmallMultipleCategoryDataPoint>()
+                    let lineGen = d3.svg.line<SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint>()
                         .x(function(d) { 
                             return xScale(d.name); 
                         })
@@ -481,14 +210,14 @@ module powerbi.extensibility.visual {
                     smallMultipleLineChartUtils.tooltipService = this.host.tooltipService;
 
                 /** Create as many rows as we need for our multiples based on the configuration of how manay we want per row */
-                    for(let i = 0, len = multipleRows; i < len; i++) {
+                    for(let i = 0, len = viewModel.layout.multiples.rows.count; i < len; i++) {
 
                         /** We can filter the source data when drawing but this creates empty elements; this step creates a subset of our
                          *  data for the row in question
                          */
-                            let eligibleMultipleFacets: LineChartSeriesSmallMultiple[] = this.viewModel.multiples.map(function(o) {
+                            let eligibleMultipleFacets: SmallMultipleLineChartViewModel.ISmallMultipleData[] = viewModel.multiples.map(function(o) {
                                 return o;
-                            }).slice(i * multipleColumns, (i * multipleColumns) + multipleColumns);
+                            }).slice(i * viewModel.layout.multiples.columns.count, (i * viewModel.layout.multiples.columns.count) + viewModel.layout.multiples.columns.count);
                 
                         /** Container for entire row of multiples */
                             let multipleRow = this.container
@@ -497,8 +226,8 @@ module powerbi.extensibility.visual {
                                         smallMultipleRowContainer: true
                                     })
                                     .attr({
-                                        height: multipleIndividualRowHeight,
-                                        width: entireChartWidth
+                                        height: viewModel.layout.multiples.rows.height,
+                                        width: viewModel.layout.chart.width
                                     });
 
                         /** Definition for clip container */
@@ -513,14 +242,14 @@ module powerbi.extensibility.visual {
                                         })
                                         .append('rect')
                                             .attr({
-                                                width: multipleIndividualWidth,
-                                                height: multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom,
+                                                width: viewModel.layout.multiples.columns.width,
+                                                height: viewModel.layout.yAxis.height,
                                                 transform: function() {
                                                     let x = 0,
                                                         y: number;
                                                     switch(settings.smallMultiple.labelPosition) {
                                                         case 'top': {
-                                                            y = settings.smallMultiple.labelHeight;
+                                                            y = viewModel.layout.multiples.label.height;
                                                             break;
                                                         }
                                                         case 'bottom': {
@@ -554,10 +283,10 @@ module powerbi.extensibility.visual {
                                         .call(yAxis)
                                         .attr({
                                             transform: function(d) {
-                                                return `translate(${settings.yAxis.width}, 0)`;
+                                                return `translate(${viewModel.layout.yAxis.width}, 0)`;
                                             }
                                         });
-                                
+
                                 /** This prevents fuzzing of the text if we have gridlines */
                                     axisTicks.selectAll('text')
                                         .style({
@@ -568,7 +297,9 @@ module powerbi.extensibility.visual {
                                     axisTicks.selectAll('line')
                                         .attr({
                                             stroke: settings.yAxis.gridlineColor,
-                                            'stroke-width': settings.yAxis.gridlines? settings.yAxis.gridlineStrokeWidth : 0
+                                            'stroke-width': settings.yAxis.gridlines
+                                                ? settings.yAxis.gridlineStrokeWidth 
+                                                : 0
                                         })
                                         .classed(settings.yAxis.gridlineStrokeLineStyle, true);
 
@@ -578,8 +309,8 @@ module powerbi.extensibility.visual {
                                         .append('text')
                                         .attr({
                                             transform: 'rotate(-90)',
-                                            y: 0 + (settings.yAxis.titleWidth / 2),
-                                            x: 0 - (multipleIndividualRowHeight / 2),
+                                            y: 0 + (viewModel.layout.yAxis.title.width / 2),
+                                            x: 0 - (viewModel.layout.multiples.rows.height / 2),
                                             dy: '1em'
                                         })
                                         .style({
@@ -588,7 +319,7 @@ module powerbi.extensibility.visual {
                                             'font-family': settings.yAxis.titleFontFamily,
                                             'fill': settings.yAxis.titleColor,
                                         })
-                                        .text(settings.yAxis.resolvedTitleText);
+                                        .text(viewModel.layout.yAxis.title.textProperties.text);
                                     }
                             }
 
@@ -602,7 +333,7 @@ module powerbi.extensibility.visual {
                                     })
                                     .attr({
                                         transform: function(d, i) {
-                                            return `translate(${(i * multipleIndividualWidth) + settings.yAxis.width}, ${0})`;
+                                            return `translate(${(i * viewModel.layout.multiples.columns.width) + viewModel.layout.yAxis.width}, ${0})`;
                                         }
                                     });
 
@@ -613,14 +344,14 @@ module powerbi.extensibility.visual {
                                             multipleBackground: true
                                         })
                                         .attr({
-                                            height: multipleIndividualRowHeight,
-                                            width: multipleIndividualWidth,
+                                            height: viewModel.layout.multiples.rows.height,
+                                            width: viewModel.layout.multiples.columns.width,
                                             fill: function(d, i) {
-                                                return i % 2 && settings.smallMultiple.bandedMultiples ? 
-                                                settings.smallMultiple.backgroundColorAlternate : 
-                                                !settings.smallMultiple.backgroundColor ? 
-                                                    'transparent' : 
-                                                    settings.smallMultiple.backgroundColor;
+                                                return i % 2 && settings.smallMultiple.bandedMultiples 
+                                                    ? settings.smallMultiple.backgroundColorAlternate 
+                                                    : !settings.smallMultiple.backgroundColor 
+                                                        ? 'transparent' 
+                                                        : settings.smallMultiple.backgroundColor;
                                             },
                                             'fill-opacity': 1 - (settings.smallMultiple.backgroundTransparency / 100)                                
                                         });
@@ -640,14 +371,14 @@ module powerbi.extensibility.visual {
                                             overlay: true
                                         })
                                         .attr({
-                                            width: multipleIndividualWidth - SmallMultipleLineChart.Config.chartSeriesPadding.right,
-                                            height: multipleIndividualRowHeight - settings.smallMultiple.labelHeight - SmallMultipleLineChart.Config.chartAreaPadding.bottom,
+                                            width: viewModel.layout.xAxis.width,
+                                            height: viewModel.layout.yAxis.height,
                                             transform: function() {
-                                                let x = SmallMultipleLineChart.Config.chartSeriesPadding.left,
+                                                let x = viewModel.layout.padding.chartSeries.left,
                                                     y: number;
                                                 switch(settings.smallMultiple.labelPosition) {
                                                     case 'top': {
-                                                        y = settings.smallMultiple.labelHeight;
+                                                        y = viewModel.layout.multiples.label.height;
                                                         break;
                                                     }
                                                     case 'bottom': {
@@ -682,7 +413,7 @@ module powerbi.extensibility.visual {
                                             });                                    
 
                                 /** For each measure, add a line plot and a tooltip node */
-                                    this.measures.map(function(measure, measureIndex) {
+                                    this.measureMetadata.map(function(measure, measureIndex) {
                                         paths
                                             .append('path')
                                                 .classed({
@@ -690,7 +421,7 @@ module powerbi.extensibility.visual {
                                                 })
                                                 .attr({
                                                     d: function(d) {
-                                                        return lineGen(d.measures[measureIndex].categories);
+                                                        return lineGen(d.measures[measureIndex].categoryData);
                                                     },
                                                     transform: 'translate(0, 0)',
                                                     stroke: measure.color
@@ -765,20 +496,20 @@ module powerbi.extensibility.visual {
                                                     return 0;
                                                 }
                                                 case 'center': {
-                                                    return multipleIndividualWidth / 2;
+                                                    return viewModel.layout.multiples.columns.width / 2;
                                                 }
                                                 case 'right': {
-                                                    return multipleIndividualWidth;
+                                                    return viewModel.layout.multiples.columns.width;
                                                 }
                                             }
                                         },
                                         'y': function(){
                                             switch(settings.smallMultiple.labelPosition) {
                                                 case 'top': {
-                                                    return 0 + settings.smallMultiple.labelHeight;
+                                                    return 0 + viewModel.layout.multiples.label.height;
                                                 }
                                                 case  'bottom': {
-                                                    return multipleIndividualRowHeight;
+                                                    return viewModel.layout.multiples.rows.height;
                                                 }
                                             }                                        
                                         },
@@ -801,13 +532,13 @@ module powerbi.extensibility.visual {
                                         'font-size': `${settings.smallMultiple.fontSize}px`,
                                         'font-family': settings.smallMultiple.fontFamily,
                                         fill: function(d, i) {
-                                            return i % 2 && settings.smallMultiple.bandedMultiples ? 
-                                                    settings.smallMultiple.fontColorAlternate : 
-                                                    settings.smallMultiple.fontColor;
+                                            return i % 2 && settings.smallMultiple.bandedMultiples 
+                                                ? settings.smallMultiple.fontColorAlternate 
+                                                : settings.smallMultiple.fontColor;
                                         }
                                     })
                                     .text(function(d) { 
-                                        return d.facet; 
+                                        return d.name; 
                                     });
                                 }
                     }
@@ -817,7 +548,7 @@ module powerbi.extensibility.visual {
 
         /** Renders the legend, based on the properties supplied in the update method */
         private renderLegend(): void {
-            if (!this.measures) {
+            if (!this.measureMetadata) {
                 return;
             }
 
@@ -875,6 +606,10 @@ module powerbi.extensibility.visual {
                         delete instances[0].properties['titleFontSize'];
                         delete instances[0].properties['titleFontFamily'];
                     }
+                    /** Title style toggle if units are none */
+                    if (this.settings.yAxis.labelDisplayUnits == 1) {
+                        instances[0].properties['titleStyle'] = 'title'; /** TODO: Delete entries from list */
+                    }
                     break;
                 }
                 case 'smallMultiple': {
@@ -903,7 +638,7 @@ module powerbi.extensibility.visual {
                 }
                 case 'colorSelector': {
                     /** Enumerate measures and create colour pickers */
-                    for (let measure of this.measures) {
+                    for (let measure of this.measureMetadata) {
                         instances.push({
                             objectName: objectName,
                             displayName: measure.name,

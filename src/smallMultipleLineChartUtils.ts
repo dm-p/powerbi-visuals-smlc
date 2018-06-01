@@ -32,10 +32,10 @@ module powerbi.extensibility.visual {
         /**
          * Gets the multiple, category and measure data from the data model
          * 
-         * @param {LineChartSeriesSmallMultiple[]} dataPoints - Data points to extract values from
+         * @param {SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint[]} dataPoints - Data points to extract values from
          * @returns {VisualTooltipDataItem[]}                 - Array of tooltip data items
          */
-        export function getTooltipData(dataPoints: LineChartSeriesSmallMultipleCategoryDataPoint[]): VisualTooltipDataItem[] {
+        export function getTooltipData(dataPoints: SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint[]): VisualTooltipDataItem[] {
             let tooltipData: VisualTooltipDataItem[] = [];
             dataPoints.map(function(dataPoint, dataPointIndex){
                 dataPoint.tooltips.map(function(tooltip, tooltipIndex){
@@ -52,19 +52,17 @@ module powerbi.extensibility.visual {
          * @property {any} overlay                                      - The specified overlay element to retrieve the data points from
          * @returns {LineChartSeriesSmallMultipleCategoryDataPoint[]}   - Array of data points across measures for category
          */
-        export function getHighlightedDataPoints(overlay: any): LineChartSeriesSmallMultipleCategoryDataPoint[] {
-
+        export function getHighlightedDataPoints(overlay: any): SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint[] {
             let focus = d3.select(overlay.parentNode).select('.tooltipFocus'),
                 xData = xScale.invert(d3.mouse(overlay)[0]),
-                bisectValue = d3.bisector(function(d: LineChartSeriesSmallMultipleCategoryDataPoint) { 
+                bisectValue = d3.bisector(function(d: SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint) { 
                     return d.name; 
-                }).left;
-    
-            let dataPoints: LineChartSeriesSmallMultipleCategoryDataPoint[] = [];
-    
+                }).left,                   
+                dataPoints: SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint[] = [];
+            
             focus.selectAll('circle')
                 .each(function(d, j) {
-                    let data = d.measures[j].categories,
+                    let data = d.measures[j].categoryData,
                         idx = bisectValue(data, xData, 1),
                         d0 = data[idx - 1],
                         d1 = data[idx],
