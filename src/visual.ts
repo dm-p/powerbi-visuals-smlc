@@ -475,74 +475,80 @@ module powerbi.extensibility.visual {
                                                 });
                                             });
 
-                                            // function wrap() {
-                                            //     var self = d3.select(this),
-                                            //         textLength = self.node().getComputedTextLength(),
-                                            //         text = self.text();
-                                            //     while (textLength > (width - 2 * padding) && text.length > 0) {
-                                            //         text = text.slice(0, -1);
-                                            //         self.text(text + '...');
-                                            //         textLength = self.node().getComputedTextLength();
-                                            //     }
-                                            // } 
-
                             /** Apply our text label */
                                 if(settings.smallMultiple.showMultipleLabel) {
-                                    multiple.append('text')
-                                    .classed({
-                                        smallMultipleLabel: true
-                                    })
-                                    .attr({
-                                        'x': function(d) {
-                                            switch(settings.smallMultiple.labelAlignment) {
-                                                case 'left': {
-                                                    return 0;
+                                    multiple
+                                        .append('text')
+                                            .classed({
+                                                smallMultipleLabel: true
+                                            })
+                                            .attr({
+                                                'x': function(d) {
+                                                    switch(settings.smallMultiple.labelAlignment) {
+                                                        case 'left': {
+                                                            return 0;
+                                                        }
+                                                        case 'center': {
+                                                            return viewModel.layout.multiples.columns.width / 2;
+                                                        }
+                                                        case 'right': {
+                                                            return viewModel.layout.multiples.columns.width;
+                                                        }
+                                                    }
+                                                },
+                                                'y': function(){
+                                                    switch(settings.smallMultiple.labelPosition) {
+                                                        case 'top': {
+                                                            return 0 + viewModel.layout.multiples.label.height;
+                                                        }
+                                                        case  'bottom': {
+                                                            return viewModel.layout.multiples.rows.height;
+                                                        }
+                                                    }                                        
+                                                },
+                                                'text-anchor': function(d) {
+                                                    switch(settings.smallMultiple.labelAlignment) {
+                                                        case 'left': {
+                                                            return 'start';
+                                                        }
+                                                        case 'center': {
+                                                            return 'middle';
+                                                        }
+                                                        case 'right': {
+                                                            return 'end';
+                                                        }
+                                                    }
+                                                },
+                                                'alignment-baseline': 'text-after-edge'
+                                            })
+                                            .style({
+                                                'font-size': viewModel.layout.multiples.label.textProperties.fontSize,
+                                                'font-family': settings.smallMultiple.fontFamily,
+                                                fill: function(d, i) {
+                                                    return i % 2 && settings.smallMultiple.bandedMultiples 
+                                                        ? settings.smallMultiple.fontColorAlternate 
+                                                        : settings.smallMultiple.fontColor;
                                                 }
-                                                case 'center': {
-                                                    return viewModel.layout.multiples.columns.width / 2;
+                                            })
+                                            .text(function(d) {
+                                                return d.name;
+                                            })
+                                            .each(function() {
+                                                var self = d3.select(this),
+                                                    textLength = textMeasurementService.measureSvgTextWidth(
+                                                        viewModel.layout.multiples.label.textProperties,
+                                                        self.text()
+                                                    ),
+                                                    text = self.text();
+                                                while (textLength > (viewModel.layout.xAxis.width) && text.length > 0) {
+                                                    text = text.slice(0, -1);
+                                                    self.text(text + '...');
+                                                    textLength = textLength = textMeasurementService.measureSvgTextWidth(
+                                                        viewModel.layout.multiples.label.textProperties,
+                                                        self.text()
+                                                    );
                                                 }
-                                                case 'right': {
-                                                    return viewModel.layout.multiples.columns.width;
-                                                }
-                                            }
-                                        },
-                                        'y': function(){
-                                            switch(settings.smallMultiple.labelPosition) {
-                                                case 'top': {
-                                                    return 0 + viewModel.layout.multiples.label.height;
-                                                }
-                                                case  'bottom': {
-                                                    return viewModel.layout.multiples.rows.height;
-                                                }
-                                            }                                        
-                                        },
-                                        'text-anchor': function(d) {
-                                            switch(settings.smallMultiple.labelAlignment) {
-                                                case 'left': {
-                                                    return 'start';
-                                                }
-                                                case 'center': {
-                                                    return 'middle';
-                                                }
-                                                case 'right': {
-                                                    return 'end';
-                                                }
-                                            }
-                                        },
-                                        'alignment-baseline': 'text-after-edge'
-                                    })
-                                    .style({
-                                        'font-size': viewModel.layout.multiples.label.textProperties.fontSize,
-                                        'font-family': settings.smallMultiple.fontFamily,
-                                        fill: function(d, i) {
-                                            return i % 2 && settings.smallMultiple.bandedMultiples 
-                                                ? settings.smallMultiple.fontColorAlternate 
-                                                : settings.smallMultiple.fontColor;
-                                        }
-                                    })
-                                    .text(function(d) { 
-                                        return d.name; 
-                                    });
+                                            });
                                 }
                     }
 
