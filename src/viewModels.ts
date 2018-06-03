@@ -132,12 +132,16 @@ module powerbi.extensibility.visual {
          * @property {string[]} measureNames                            -   Array of all distinct measure names contained in the multiples
          * @property {TextProperties} textProperties                    -   Properties for title, including formatted value for supplied font configuration
          * @property {number} width                                     -   Calculated width of title, based on text properties (for Y-axis this is actually the height due to 90 degree rotation)
+         * @property {number} x                                         -   Calculated x-position of title
+         * @property {number} y                                         -   Calculated y-position of title
          */
         export interface IAxisTitle {
             style: string;
             measureNames: string[];
             textProperties: TextProperties;
             width: number;
+            x: number;
+            y: number;
         }
 
         /** 
@@ -526,6 +530,10 @@ module powerbi.extensibility.visual {
                                 )
                             + layout.padding.chartAxisTitle.right 
                         : 0;
+
+                /** And x/y coordinates for title position */
+                    layout.yAxis.title.x = 0 - (layout.multiples.rows.height / 2);
+                    layout.yAxis.title.y = 0 + (layout.yAxis.title.width / 2);
     
                 /** We now have everything we need for our whole Y-axis */
                     

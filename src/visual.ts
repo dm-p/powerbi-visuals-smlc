@@ -301,8 +301,8 @@ module powerbi.extensibility.visual {
                                         .append('text')
                                         .attr({
                                             transform: 'rotate(-90)',
-                                            y: 0 + (viewModel.layout.yAxis.title.width / 2),
-                                            x: 0 - (viewModel.layout.multiples.rows.height / 2),
+                                            y: viewModel.layout.yAxis.title.y,
+                                            x: viewModel.layout.yAxis.title.x,
                                             dy: '1em'
                                         })
                                         .style({
