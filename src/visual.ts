@@ -236,21 +236,7 @@ module powerbi.extensibility.visual {
                                             .attr({
                                                 width: viewModel.layout.multiples.columns.width,
                                                 height: viewModel.layout.yAxis.height,
-                                                transform: function() {
-                                                    let x = 0,
-                                                        y: number;
-                                                    switch(settings.smallMultiple.labelPosition) {
-                                                        case 'top': {
-                                                            y = viewModel.layout.multiples.label.height;
-                                                            break;
-                                                        }
-                                                        case 'bottom': {
-                                                            y = 0;
-                                                            break;
-                                                        }
-                                                    }
-                                                    return `translate(${x}, ${y})`;
-                                                }
+                                                transform: viewModel.layout.multiples.translate
                                             });   
 
                         /** If we've determined that a Y-axis is required, add it in */
@@ -365,21 +351,7 @@ module powerbi.extensibility.visual {
                                         .attr({
                                             width: viewModel.layout.xAxis.width,
                                             height: viewModel.layout.yAxis.height,
-                                            transform: function() {
-                                                let x = viewModel.layout.padding.chartSeries.left,
-                                                    y: number;
-                                                switch(settings.smallMultiple.labelPosition) {
-                                                    case 'top': {
-                                                        y = viewModel.layout.multiples.label.height;
-                                                        break;
-                                                    }
-                                                    case 'bottom': {
-                                                        y = 0;
-                                                        break;
-                                                    }
-                                                }
-                                                return `translate(${x}, ${y})`;
-                                            }
+                                            transform: viewModel.layout.multiples.translate
                                         });
 
                             /** Add stuff for each measure */

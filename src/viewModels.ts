@@ -153,6 +153,7 @@ module powerbi.extensibility.visual {
          * @property {IMultipleRow} rows                                - Configuration for each row of multiples rendered inside the chart
          * @property {IMultipleColumn} columns                          - Configuration for each column of multiples rendered inside each row
          * @property {IMultipleLabel} label                             - Configuration for display of label in each small multiple
+         * @property {string} translate                                 - X/Y coordinates to translate clipping areas and overlays to match dimensions based on configuration
          */
         export interface IMultiple {
             availableHeight: number;
@@ -161,6 +162,7 @@ module powerbi.extensibility.visual {
             rows: IMultipleRow;
             columns: IMultipleColumn;
             label: IMultipleLabel;
+            translate: string;
         }
 
         /** 
@@ -452,9 +454,26 @@ module powerbi.extensibility.visual {
                     label: {
                         textProperties: multipleTextProperties,
                         height: (settings.smallMultiple.showMultipleLabel) ? textMeasurementService.measureSvgTextHeight(multipleTextProperties) : 0                    
-                    }                    
+                    }                 
                 } as IMultiple
     
+            /** Calculate overlay and clip X/Y coordinates */
+                layout.multiples.translate = function() {
+                    let x = layout.padding.chartSeries.left,
+                        y: number;
+                    switch(settings.smallMultiple.labelPosition) {
+                        case 'top': {
+                            y = layout.multiples.label.height;
+                            break;
+                        }
+                        case 'bottom': {
+                            y = 0;
+                            break;
+                        }
+                    }
+                    return `translate(${x}, ${y})`;
+                }();
+
             /** We now need to calculate our Y-axis and the space it'll take before we assign anything else */
                 layout.yAxis.height = layout.multiples.rows.height - layout.multiples.label.height - layout.padding.chartArea.bottom;   
                 layout.yAxis.title = {
