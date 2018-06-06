@@ -481,7 +481,7 @@ module powerbi.extensibility.visual {
                                                     text = self.text();
                                                 while (textLength > (viewModel.layout.xAxis.width) && text.length > 0) {
                                                     text = text.slice(0, -1);
-                                                    self.text(text + '...');
+                                                    self.text(text + '\u2026');
                                                     textLength = textLength = textMeasurementService.measureSvgTextWidth(
                                                         viewModel.layout.multiples.label.textProperties,
                                                         self.text()
