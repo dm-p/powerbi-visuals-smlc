@@ -27,7 +27,6 @@
 module powerbi.extensibility.visual {
     "use strict";
     
-    import axisHelper = powerbi.extensibility.utils.chart.axis;
     import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
     import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
     import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
@@ -169,13 +168,14 @@ module powerbi.extensibility.visual {
                     /** Scaling */                            
                         let yScale = d3.scale.linear()
                             .domain(viewModel.layout.yAxis.domain)
-                            .range(viewModel.layout.yAxis.range);
+                            .range(viewModel.layout.yAxis.range)
+                            .nice(viewModel.layout.yAxis.ticks);
 
                     /** Ticks and labels */
                         let yAxis = d3.svg.axis()
                             .scale(yScale)
                             .orient('left')
-                            .ticks(axisHelper.getRecommendedNumberOfTicksForYAxis(viewModel.layout.yAxis.height))
+                            .ticks(viewModel.layout.yAxis.ticks)
                             .tickFormat(d => (viewModel.layout.yAxis.numberFormat.format(d)))
                             .tickSize(-viewModel.layout.multiples.rows.width, 0);
 
