@@ -455,42 +455,9 @@ module powerbi.extensibility.visual {
                                                 smallMultipleLabel: true
                                             })
                                             .attr({
-                                                'x': function(d) {
-                                                    switch(settings.smallMultiple.labelAlignment) {
-                                                        case 'left': {
-                                                            return 0;
-                                                        }
-                                                        case 'center': {
-                                                            return viewModel.layout.multiples.columns.width / 2;
-                                                        }
-                                                        case 'right': {
-                                                            return viewModel.layout.multiples.columns.width;
-                                                        }
-                                                    }
-                                                },
-                                                'y': function(){
-                                                    switch(settings.smallMultiple.labelPosition) {
-                                                        case 'top': {
-                                                            return 0 + viewModel.layout.multiples.label.height;
-                                                        }
-                                                        case  'bottom': {
-                                                            return viewModel.layout.multiples.rows.height;
-                                                        }
-                                                    }                                        
-                                                },
-                                                'text-anchor': function(d) {
-                                                    switch(settings.smallMultiple.labelAlignment) {
-                                                        case 'left': {
-                                                            return 'start';
-                                                        }
-                                                        case 'center': {
-                                                            return 'middle';
-                                                        }
-                                                        case 'right': {
-                                                            return 'end';
-                                                        }
-                                                    }
-                                                },
+                                                x: viewModel.layout.multiples.label.x,
+                                                y: viewModel.layout.multiples.label.y,
+                                                'text-anchor': viewModel.layout.multiples.label.textAnchor,
                                                 'alignment-baseline': 'text-after-edge'
                                             })
                                             .style({

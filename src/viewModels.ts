@@ -194,10 +194,16 @@ module powerbi.extensibility.visual {
          * 
          * @property {number} height                                    - Height that multiple takes up, based on its text properties
          * @property {TextProperties} textProperties                    - Text properties, including multiple text and font configuration
+         * @property {number} x                                         - Calculated x-position of label
+         * @property {number} y                                         - Calculated y-position of label
+         * @property {string} textAnchor                                - Derived text-anchor based on visual properties
          */
         export interface IMultipleLabel {
             height: number;
             textProperties: TextProperties;
+            x: number;
+            y: number;
+            textAnchor: string;
         }
 
         /**
@@ -576,6 +582,44 @@ module powerbi.extensibility.visual {
                     layout.multiples.columns.width = layout.multiples.rows.width / layout.multiples.columns.count;
                     layout.xAxis.width = layout.multiples.columns.width - layout.padding.chartSeries.right;
     
+                /** Calculate small multiple label positioning */
+                    layout.multiples.label.x = function() {
+                        switch(settings.smallMultiple.labelAlignment) {
+                            case 'left': {
+                                return 0;
+                            }
+                            case 'center': {
+                                return layout.multiples.columns.width / 2;
+                            }
+                            case 'right': {
+                                return layout.multiples.columns.width;
+                            }
+                        }
+                    }();
+                    layout.multiples.label.y = function(){
+                        switch(settings.smallMultiple.labelPosition) {
+                            case 'top': {
+                                return 0 + layout.multiples.label.height;
+                            }
+                            case  'bottom': {
+                                return layout.multiples.rows.height;
+                            }
+                        }                                        
+                    }();
+                    layout.multiples.label.textAnchor = function() {
+                        switch(settings.smallMultiple.labelAlignment) {
+                            case 'left': {
+                                return 'start';
+                            }
+                            case 'center': {
+                                return 'middle';
+                            }
+                            case 'right': {
+                                return 'end';
+                            }
+                        }
+                    }();
+
                 /** And calculate the ranges for our d3 axes */
                     layout.xAxis.range = [layout.padding.chartSeries.left, layout.xAxis.width];
                     layout.yAxis.range = function() {
