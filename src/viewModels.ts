@@ -5,6 +5,7 @@ module powerbi.extensibility.visual {
     import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
     import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
     import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+    import axisHelper = powerbi.extensibility.utils.chart.axis;
 
     /**
      * Everything specific to our small multiple line chart
@@ -102,6 +103,7 @@ module powerbi.extensibility.visual {
          * @property {IAxisTitle} title                                 -   All properties for axis, based on visual properties
          * @property {number[]} range                                   -   2-value array of min/max axis values, used for setting d3 axis range
          * @property {number[]} domain                                  -   2-value array of min/max axis values, used for setting d3 axis domain
+         * @property {number} ticks                                     -   Number of ticks to use for the axis
          */
         export interface IAxis {
             width: number;
@@ -112,6 +114,7 @@ module powerbi.extensibility.visual {
             title: IAxisTitle;
             range: number[];
             domain: number[];
+            ticks: number;
         }
 
         /**
@@ -481,7 +484,8 @@ module powerbi.extensibility.visual {
                 }();
 
             /** We now need to calculate our Y-axis and the space it'll take before we assign anything else */
-                layout.yAxis.height = layout.multiples.rows.height - layout.multiples.label.height - layout.padding.chartArea.bottom;   
+                layout.yAxis.height = layout.multiples.rows.height - layout.multiples.label.height - layout.padding.chartArea.bottom;
+                layout.yAxis.ticks = axisHelper.getRecommendedNumberOfTicksForYAxis(layout.yAxis.height);
                 layout.yAxis.title = {
                     measureNames: multiples[0].measures.map(function(measure) {
                         return measure.name;
