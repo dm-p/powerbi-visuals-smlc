@@ -105,7 +105,7 @@ module powerbi.extensibility.visual {
                                     )
                                 : null
                     ),
-                    fontSize: PixelConverter.toPoint(settings.legend.fontSize),
+                    fontSize: settings.legend.fontSize,
                     labelColor: settings.legend.fontColor,
                     dataPoints: this.measureMetadata.map(function(m, i) {
                         return {
