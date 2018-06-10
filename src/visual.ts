@@ -27,17 +27,8 @@
 module powerbi.extensibility.visual {
     "use strict";
     
-    import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
     import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
-    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
-    import ISelectionId = powerbi.visuals.ISelectionId;
-    import SelectionId = powerbi.visuals.ISelectionIdBuilder;
-    import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
-    import createTooltipServiceWrapper = powerbi.extensibility.utils.tooltip.createTooltipServiceWrapper;
-
-    /** powerbi.extensibility.utils.type */
-        import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
-
+    
     /** powerbi.extensibility.utils.chart.legend */
         import createLegend = powerbi.extensibility.utils.chart.legend.createLegend;
         import ILegend = powerbi.extensibility.utils.chart.legend.ILegend;
@@ -48,7 +39,6 @@ module powerbi.extensibility.visual {
 
     /** SmallMultipleViewModel */
         import ISmallMultipleMeasure = SmallMultipleLineChartViewModel.ISmallMultipleMeasure;
-        import IViewModel = SmallMultipleLineChartViewModel.IViewModel;
         import visualTransform = SmallMultipleLineChartViewModel.visualTransform;
         import mapLayout = SmallMultipleLineChartViewModel.mapLayout;
 

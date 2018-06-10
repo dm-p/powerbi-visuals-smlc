@@ -312,8 +312,7 @@ module powerbi.extensibility.visual {
 
             /** Assuming we're good after that, let's traverse the data view and metadata to populate our view model */
 
-                let matrix = dataViews[0].matrix,
-                    columns = dataViews[0].matrix.columns,
+                let columns = dataViews[0].matrix.columns,
                     rows = dataViews[0].matrix.rows,
                     valueSources = dataViews[0].matrix.valueSources,
                     metadata = dataViews[0].metadata,

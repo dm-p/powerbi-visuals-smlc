@@ -27,7 +27,6 @@
 module powerbi.extensibility.visual {
     "use strict";
     import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
-    import ValueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
 
     let defaultFontSize: number = 11;
     let defaultFontSizeSmall: number = 8;
