@@ -309,8 +309,9 @@ module powerbi.extensibility.visual {
                                 multiple
                                     .append('rect')
                                         .classed({
-                                            multipleBackground: true
+                                            multipleBackground: true,
                                         })
+                                        .classed(settings.smallMultiple.borderStyle, true)
                                         .attr({
                                             height: viewModel.layout.multiples.rows.height,
                                             width: viewModel.layout.multiples.columns.width,
@@ -321,7 +322,11 @@ module powerbi.extensibility.visual {
                                                         ? 'transparent' 
                                                         : settings.smallMultiple.backgroundColor;
                                             },
-                                            'fill-opacity': 1 - (settings.smallMultiple.backgroundTransparency / 100)                                
+                                            'fill-opacity': 1 - (settings.smallMultiple.backgroundTransparency / 100),
+                                            stroke: settings.smallMultiple.border 
+                                                ? settings.smallMultiple.borderColor
+                                                : null,
+                                            'stroke-width': viewModel.layout.multiples.borderStrokeWidth
                                         });
 
                             /** Canvas for lines and points this will overlay the clip-path */
