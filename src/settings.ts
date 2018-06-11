@@ -36,6 +36,7 @@ module powerbi.extensibility.visual {
     let defaultAxisGridlineColor: string = '#EAEAEA';
     let defaultBackgroundColor: string = null;
     let defaultBackgroundColorAlternate: string = '#F3F3F3';
+    let defaultMultipleBorderColor: string = '#999999';
 
     export class VisualSettings extends DataViewObjectsParser {
       public debug: debugSettings = new debugSettings();
@@ -96,7 +97,7 @@ module powerbi.extensibility.visual {
       // Border
       public border: boolean = false;
       // Border colour
-      public borderColor: string = defaultAxisGridlineColor;
+      public borderColor: string = defaultMultipleBorderColor;
       // Border stroke width
       public borderStrokeWidth: number = 1;
       // Border line style
