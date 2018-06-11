@@ -230,6 +230,47 @@
                             }
                         }
                     }
+                },
+                "border": {
+                    "displayName": "Border",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "borderColor": {
+                    "displayName": "Border color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "borderStrokeWidth": {
+                    "displayName": "Border stroke width",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "borderStyle": {
+                    "displayName": "Border style",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Dashed",
+                                "value": "dashed"
+                            },
+                            {
+                                "displayName": "Solid",
+                                "value": "solid"
+                            },
+                            {
+                                "displayName": "Dotted",
+                                "value": "dotted"
+                            }
+                        ]
+                    }
                 }
             }
         },

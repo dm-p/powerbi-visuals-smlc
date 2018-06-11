@@ -93,9 +93,15 @@ module powerbi.extensibility.visual {
       public backgroundColorAlternate: string = defaultBackgroundColorAlternate;
       // Alternate font color
       public fontColorAlternate: string = defaultAxisFontColor;
-    }
-
-    
+      // Border
+      public border: boolean = false;
+      // Border colour
+      public borderColor: string = defaultAxisGridlineColor;
+      // Border stroke width
+      public borderStrokeWidth: number = 1;
+      // Border line style
+      public borderStyle: string = 'solid';
+    }    
 
     export class axisSettings {
       // Show whole axis

@@ -564,6 +564,12 @@ module powerbi.extensibility.visual {
                         delete instances[0].properties['fontColorAlternate'];
                         delete instances[0].properties['backgroundColorAlternate'];
                     }
+                    /** Border toggle */
+                    if(!this.settings.smallMultiple.border) {
+                        delete instances[0].properties['borderColor'];
+                        delete instances[0].properties['borderStrokeWidth'];
+                        delete instances[0].properties['borderStyle'];
+                    }
                     break;
                 }
                 case 'legend': {
