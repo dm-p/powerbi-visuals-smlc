@@ -157,6 +157,7 @@ module powerbi.extensibility.visual {
          * @property {IMultipleColumn} columns                          - Configuration for each column of multiples rendered inside each row
          * @property {IMultipleLabel} label                             - Configuration for display of label in each small multiple
          * @property {string} translate                                 - X/Y coordinates to translate clipping areas and overlays to match dimensions based on configuration
+         * @property {number} borderStrokeWidth                         - Resolved stroke width of border, based on properties
          */
         export interface IMultiple {
             availableHeight: number;
@@ -166,6 +167,7 @@ module powerbi.extensibility.visual {
             columns: IMultipleColumn;
             label: IMultipleLabel;
             translate: string;
+            borderStrokeWidth: number;
         }
 
         /** 
@@ -462,7 +464,10 @@ module powerbi.extensibility.visual {
                     label: {
                         textProperties: multipleTextProperties,
                         height: (settings.smallMultiple.showMultipleLabel) ? textMeasurementService.measureSvgTextHeight(multipleTextProperties) : 0                    
-                    }                 
+                    },
+                    borderStrokeWidth: settings.smallMultiple.border
+                        ? settings.smallMultiple.borderStrokeWidth
+                        : 0
                 } as IMultiple
     
             /** Calculate overlay and clip X/Y coordinates */
