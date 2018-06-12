@@ -104,6 +104,9 @@ module powerbi.extensibility.visual {
          * @property {number[]} range                                   -   2-value array of min/max axis values, used for setting d3 axis range
          * @property {number[]} domain                                  -   2-value array of min/max axis values, used for setting d3 axis domain
          * @property {number} ticks                                     -   Number of ticks to use for the axis
+         * @property {any} scale                                        -   D3 scale used for the axis
+         * @property {d3.svg.Axis} majorAxis                            -   D3 axis generation for major axis (e.g. row-level, applied outside all multiples in a row)
+         * @property {d3.svg.Axis} minorAxis                            -   D3 axis generation for minor axis (e.g. the axis to be shown within each small multiple)
          */
         export interface IAxis {
             width: number;
@@ -115,6 +118,9 @@ module powerbi.extensibility.visual {
             range: number[];
             domain: number[];
             ticks: number;
+            scale: any;
+            majorAxis: d3.svg.Axis;
+            minorAxis: d3.svg.Axis;
         }
 
         /**
@@ -672,7 +678,25 @@ module powerbi.extensibility.visual {
                                 ? settings.yAxis.end
                                 : layout.yAxis.maxValue.value
                         ]
-                    }();                    
+                    }();
+
+                /** Y-axis generation */
+
+                    /** Scale */
+                        layout.yAxis.scale = d3.scale.linear()
+                            .domain(layout.yAxis.domain)
+                            .range(layout.yAxis.range)
+                            .nice(layout.yAxis.ticks);
+
+                    /** Major */
+                        layout.yAxis.majorAxis = d3.svg.axis()
+                            .scale(layout.yAxis.scale)
+                            .orient('left')
+                            .ticks(layout.yAxis.ticks)
+                            .tickFormat(d => (layout.yAxis.numberFormat.format(d)))
+                            .tickSize(0, 0);
+
+                    /** Minor */
     
             return {
                 multiples: multiples,
