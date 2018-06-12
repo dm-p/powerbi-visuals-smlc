@@ -470,20 +470,11 @@ module powerbi.extensibility.visual {
                                                 return d.name;
                                             })
                                             .each(function() {
-                                                var self = d3.select(this),
-                                                    textLength = textMeasurementService.measureSvgTextWidth(
-                                                        viewModel.layout.multiples.label.textProperties,
-                                                        self.text()
-                                                    ),
-                                                    text = self.text();
-                                                while (textLength > (viewModel.layout.xAxis.width) && text.length > 0) {
-                                                    text = text.slice(0, -1);
-                                                    self.text(text + '\u2026');
-                                                    textLength = textLength = textMeasurementService.measureSvgTextWidth(
-                                                        viewModel.layout.multiples.label.textProperties,
-                                                        self.text()
-                                                    );
-                                                }
+                                                smallMultipleLineChartUtils.wrapText(
+                                                    d3.select(this),
+                                                    viewModel.layout.multiples.label.textProperties,
+                                                    viewModel.layout.xAxis.width
+                                                );
                                             });
                                 }
                     }

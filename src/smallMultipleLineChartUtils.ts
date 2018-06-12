@@ -6,6 +6,8 @@ module powerbi.extensibility.visual {
         export declare var xScale: d3.scale.Linear<number, number>;
         export declare var tooltipService: ITooltipService;
         export declare var visualContainerElement: HTMLElement;
+        import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
+        import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
 
         /**
          * Gets property value for a particular object.
@@ -71,6 +73,33 @@ module powerbi.extensibility.visual {
                 });
     
             return dataPoints;
+        }
+
+        /**
+         * For supplied selection, textProperties and width, try to concatenate the text with ellipses if it overflows the specified width
+         * 
+         * @param selection             - D3 selection to apply formatting to
+         * @param textProperties        - Properties of the text to assess
+         * @param width                 - Width to fit the text
+         */
+        export function wrapText(selection: d3.Selection<any>, textProperties: TextProperties, width?: number): void {
+            var width = width || 0,
+                textLength = textMeasurementService.measureSvgTextWidth(
+                    textProperties,
+                    selection.text()
+                ),
+                text = selection.text();
+            while (textLength > (width) && text.length > 0) {
+                text = text.slice(0, -1);
+                selection.text(text + '\u2026');
+                textLength = textLength = textMeasurementService.measureSvgTextWidth(
+                    textProperties,
+                    selection.text()
+                );
+            }
+            if (textLength > width) {
+                selection.text('');
+            }
         }
 
     }
