@@ -47,7 +47,7 @@ module powerbi.extensibility.visual {
         private measureMetadata: ISmallMultipleMeasure[]
         private element: HTMLElement;
         private container: d3.Selection<{}>;
-        private chartWrapper: d3.Selection<{}>;
+        private viewModel: SmallMultipleLineChartViewModel.IViewModel;
         private host: IVisualHost;
         private viewport: IViewport;
         private legend: ILegend;
@@ -79,9 +79,9 @@ module powerbi.extensibility.visual {
             console.clear();
             
             let settings = this.settings = SmallMultipleLineChart.parseSettings(options && options.dataViews && options.dataViews[0]),
-                viewModel = visualTransform(options, this.host, this.settings),
                 element = this.element;
-            this.measureMetadata = viewModel.multiples[0].measures;
+            this.viewModel = visualTransform(options, this.host, this.settings)
+            this.measureMetadata = this.viewModel.multiples[0].measures;
             this.viewport = options.viewport;
 
             /** Construct legend from measures. We need our legend before we can size the rest of the chart, so we'll do this first. */
@@ -89,7 +89,7 @@ module powerbi.extensibility.visual {
                     title: (settings.legend.showTitle 
                                 ? settings.legend.titleText 
                                     + (settings.legend.includeRanges 
-                                        ? ` (${viewModel.layout.xAxis.minValue.textProperties.text} - ${viewModel.layout.xAxis.maxValue.textProperties.text})`
+                                        ? ` (${this.viewModel.layout.xAxis.minValue.textProperties.text} - ${this.viewModel.layout.xAxis.maxValue.textProperties.text})`
                                         : '' 
                                     )
                                 : null
@@ -109,11 +109,12 @@ module powerbi.extensibility.visual {
                 this.renderLegend();
 
             /** Complete mapping our view model layout */
-                viewModel = mapLayout(options, this.settings, viewModel)
+                this.viewModel = mapLayout(options, this.settings, this.viewModel);
+                let viewModel = this.viewModel;
             
             /** For debugging purposes - remove later on */
                 if (settings.debug.show) {
-                    // console.clear();
+                    console.clear();
                     console.log('Visual update', options, '\nView model', viewModel, '\nSettings', settings);
                 }
 
