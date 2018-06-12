@@ -578,7 +578,6 @@ module powerbi.extensibility.visual {
                     layout.yAxis.title.y = 0 + (layout.yAxis.title.width / 2);
     
                 /** We now have everything we need for our whole Y-axis */
-                    
                     layout.yAxis.width = function(){
                         if (settings.yAxis.show) {
                             return layout.yAxis.title.width
@@ -596,7 +595,7 @@ module powerbi.extensibility.visual {
     
                 /** Now we have our Y-axis width we can calcluate the widths of everything else */
                     layout.multiples.rows.width = layout.chart.width - layout.yAxis.width;
-                    layout.multiples.columns.width = layout.multiples.rows.width / layout.multiples.columns.count;
+                    layout.multiples.columns.width = (layout.multiples.rows.width / layout.multiples.columns.count) - layout.multiples.columns.spacing;
                     layout.xAxis.width = layout.multiples.columns.width - layout.padding.chartSeries.right;
     
                 /** Calculate small multiple label positioning */
