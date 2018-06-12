@@ -453,13 +453,12 @@ module powerbi.extensibility.visual {
                 let multipleCount = multiples.length,
                     multipleMaxPerRow = settings.smallMultiple.maximumMultiplesPerRow,
                     multipleColumnsPerRow = (!multipleMaxPerRow ||  multipleMaxPerRow > multipleCount) ? multipleCount : multipleMaxPerRow,
-                    multipleRowcount = Math.ceil(multipleCount / multipleColumnsPerRow),
+                    multipleRowCount = Math.ceil(multipleCount / multipleColumnsPerRow),
                     multipleTextProperties = {
                         text: multiples[0].name,
                         fontFamily: settings.smallMultiple.fontFamily,
                         fontSize: PixelConverter.toString(settings.smallMultiple.fontSize)
                     };
-    
                 layout.multiples = {
                     availableHeight: layout.chart.height,
                     count: multipleCount,
@@ -468,8 +467,10 @@ module powerbi.extensibility.visual {
                         count: multipleColumnsPerRow
                     },
                     rows: {
-                        count: multipleRowcount,
-                        height: layout.chart.height / multipleRowcount
+                        count: multipleRowCount,
+                        spacing: multipleRowCount > 1 && settings.smallMultiple.spacingBetweenRows
+                            ? Math.min(layout.padding.smallMultipleMaximums.bottom, Math.max(0, settings.smallMultiple.spacingBetweenRows))
+                            : 0
                     },
                     label: {
                         textProperties: multipleTextProperties,
@@ -479,6 +480,9 @@ module powerbi.extensibility.visual {
                         ? settings.smallMultiple.borderStrokeWidth
                         : 0
                 } as IMultiple
+
+            /** Adjust multiple height for spacing between rows */
+                layout.multiples.rows.height = (layout.chart.height / multipleRowCount) - layout.multiples.rows.spacing;
     
             /** Calculate overlay and clip X/Y coordinates */
                 layout.multiples.translate = function() {

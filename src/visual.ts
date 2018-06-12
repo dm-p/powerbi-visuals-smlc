@@ -210,6 +210,9 @@ module powerbi.extensibility.visual {
                                     .attr({
                                         height: viewModel.layout.multiples.rows.height,
                                         width: viewModel.layout.chart.width
+                                    })
+                                    .style({
+                                        'padding-bottom': viewModel.layout.multiples.rows.spacing
                                     });
 
                         /** Definition for clip container */
@@ -563,6 +566,14 @@ module powerbi.extensibility.visual {
                         delete instances[0].properties['fontFamily'];
                         delete instances[0].properties['labelPosition'];
                         delete instances[0].properties['labelAlignment'];
+                    }
+                    /** Add padding between rows if we specify multiples per row */
+                    if(!this.settings.smallMultiple.maximumMultiplesPerRow) {
+                        delete instances[0].properties['spacingBetweenRows'];
+                    }
+                    /** Range validation on multiple spacing */
+                    if(this.settings.smallMultiple.maximumMultiplesPerRow && this.settings.smallMultiple.spacingBetweenRows) {
+                        instances[0].properties['spacingBetweenRows'] = Math.min(this.viewModel.layout.padding.smallMultipleMaximums.bottom, Math.max(0, this.settings.smallMultiple.spacingBetweenRows));
                     }
                     /** Banded multiples toggle */
                     if(!this.settings.smallMultiple.bandedMultiples) {
