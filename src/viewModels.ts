@@ -48,11 +48,13 @@ module powerbi.extensibility.visual {
          * @property {IPaddingValues} chartArea                         -   Dimensions for padding the entire chart area
          * @property {IPaddingValues} chartSeries                       -   Dimensions for padding a small multiple
          * @property {IPaddingValues} chartAxisTitle                    -   Dimensions for padding an axis title
+         * @property {IPaddingValues} smallMultipleMaximums             -   Maximum padding to apply to particular parts of small multiples
          */
         export interface IPaddingConfiguration {
             chartArea: IPaddingValues;
             chartSeries: IPaddingValues;
             chartAxisTitle: IPaddingValues;
+            smallMultipleMaximums: IPaddingValues;
         }
 
         /**
@@ -290,6 +292,12 @@ module powerbi.extensibility.visual {
                                 right: 5,
                                 bottom: 0,
                                 left: 5
+                            },
+                            smallMultipleMaximums: {
+                                top: 0,
+                                right: 20,
+                                bottom: 20,
+                                left: 0
                             }
                         },
                         multiples: {} as IMultiple,
