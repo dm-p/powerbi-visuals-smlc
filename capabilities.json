@@ -45,7 +45,13 @@
                     "placeHolderText": "All"
                 },
                 "spacingBetweenRows": {
-                    "displayName": "Spacing between rows",
+                    "displayName": "Row spacing",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "spacingBetweenColumns": {
+                    "displayName": "Column spacing",
                     "type": {
                         "numeric": true
                     }

@@ -568,11 +568,13 @@ module powerbi.extensibility.visual {
                         delete instances[0].properties['labelPosition'];
                         delete instances[0].properties['labelAlignment'];
                     }
+                    /** Range validation on multiple column spacing */
+                    instances[0].properties['spacingBetweenColumns'] = Math.min(this.viewModel.layout.padding.smallMultipleMaximums.right, Math.max(0, this.settings.smallMultiple.spacingBetweenColumns));
                     /** Add padding between rows if we specify multiples per row */
                     if(!this.settings.smallMultiple.maximumMultiplesPerRow) {
                         delete instances[0].properties['spacingBetweenRows'];
                     }
-                    /** Range validation on multiple spacing */
+                    /** Range validation on multiple row spacing */
                     if(this.settings.smallMultiple.maximumMultiplesPerRow && this.settings.smallMultiple.spacingBetweenRows) {
                         instances[0].properties['spacingBetweenRows'] = Math.min(this.viewModel.layout.padding.smallMultipleMaximums.bottom, Math.max(0, this.settings.smallMultiple.spacingBetweenRows));
                     }
