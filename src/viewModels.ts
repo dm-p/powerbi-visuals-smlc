@@ -48,13 +48,11 @@ module powerbi.extensibility.visual {
          * @property {IPaddingValues} chartArea                         -   Dimensions for padding the entire chart area
          * @property {IPaddingValues} chartSeries                       -   Dimensions for padding a small multiple
          * @property {IPaddingValues} chartAxisTitle                    -   Dimensions for padding an axis title
-         * @property {IPaddingValues} smallMultipleMaximums             -   Maximum padding to apply to particular parts of small multiples
          */
         export interface IPaddingConfiguration {
             chartArea: IPaddingValues;
             chartSeries: IPaddingValues;
             chartAxisTitle: IPaddingValues;
-            smallMultipleMaximums: IPaddingValues;
         }
 
         /**
@@ -192,10 +190,12 @@ module powerbi.extensibility.visual {
          * 
          * @property {number} count                                     - Number of columns to render inside a small multiple row
          * @property {number} width                                     - The calcluated width of the multiple column, with respect to its parent row
+         * @property {number} spacing                                   - Spacing between columns (in px)
          */
         export interface IMultipleColumn {
             count: number;
             width: number;
+            spacing: number;
         }
 
         /**
@@ -294,12 +294,6 @@ module powerbi.extensibility.visual {
                                 right: 5,
                                 bottom: 0,
                                 left: 5
-                            },
-                            smallMultipleMaximums: {
-                                top: 0,
-                                right: 20,
-                                bottom: 20,
-                                left: 0
                             }
                         },
                         multiples: {} as IMultiple,
@@ -464,12 +458,13 @@ module powerbi.extensibility.visual {
                     count: multipleCount,
                     maxPerRow: multipleMaxPerRow,
                     columns: {
-                        count: multipleColumnsPerRow
+                        count: multipleColumnsPerRow,
+                        spacing: settings.smallMultiple.spacingBetweenColumns
                     },
                     rows: {
                         count: multipleRowCount,
                         spacing: multipleRowCount > 1 && settings.smallMultiple.spacingBetweenRows
-                            ? Math.min(layout.padding.smallMultipleMaximums.bottom, Math.max(0, settings.smallMultiple.spacingBetweenRows))
+                            ? settings.smallMultiple.spacingBetweenRows
                             : 0
                     },
                     label: {

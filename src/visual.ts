@@ -47,7 +47,6 @@ module powerbi.extensibility.visual {
         private measureMetadata: ISmallMultipleMeasure[]
         private element: HTMLElement;
         private container: d3.Selection<{}>;
-        private viewModel: SmallMultipleLineChartViewModel.IViewModel;
         private host: IVisualHost;
         private viewport: IViewport;
         private legend: ILegend;
@@ -75,13 +74,11 @@ module powerbi.extensibility.visual {
 
         }
 
-        public update(options: VisualUpdateOptions) {
-            console.clear();
-            
+        public update(options: VisualUpdateOptions) {            
             let settings = this.settings = SmallMultipleLineChart.parseSettings(options && options.dataViews && options.dataViews[0]),
-                element = this.element;
-            this.viewModel = visualTransform(options, this.host, this.settings)
-            this.measureMetadata = this.viewModel.multiples[0].measures;
+                element = this.element,
+                viewModel = visualTransform(options, this.host, settings)
+            this.measureMetadata = viewModel.multiples[0].measures;
             this.viewport = options.viewport;
 
             /** Construct legend from measures. We need our legend before we can size the rest of the chart, so we'll do this first. */
@@ -89,7 +86,7 @@ module powerbi.extensibility.visual {
                     title: (settings.legend.showTitle 
                                 ? settings.legend.titleText 
                                     + (settings.legend.includeRanges 
-                                        ? ` (${this.viewModel.layout.xAxis.minValue.textProperties.text} - ${this.viewModel.layout.xAxis.maxValue.textProperties.text})`
+                                        ? ` (${viewModel.layout.xAxis.minValue.textProperties.text} - ${viewModel.layout.xAxis.maxValue.textProperties.text})`
                                         : '' 
                                     )
                                 : null
@@ -109,8 +106,7 @@ module powerbi.extensibility.visual {
                 this.renderLegend();
 
             /** Complete mapping our view model layout */
-                this.viewModel = mapLayout(options, this.settings, this.viewModel);
-                let viewModel = this.viewModel;
+                viewModel = mapLayout(options, this.settings, viewModel);
             
             /** For debugging purposes - remove later on */
                 if (settings.debug.show) {
@@ -568,15 +564,24 @@ module powerbi.extensibility.visual {
                         delete instances[0].properties['labelPosition'];
                         delete instances[0].properties['labelAlignment'];
                     }
-                    /** Range validation on multiple column spacing */
-                    instances[0].properties['spacingBetweenColumns'] = Math.min(this.viewModel.layout.padding.smallMultipleMaximums.right, Math.max(0, this.settings.smallMultiple.spacingBetweenColumns));
+                    /** Range validation on multiple column spacing and row spacing */
+                    instances[0].validValues
+                    instances[0].validValues = instances[0].validValues || {};
+                    instances[0].validValues.spacingBetweenColumns = {
+                        numberRange: {
+                            min: 0,
+                            max: 20
+                        }
+                    };
+                    instances[0].validValues.spacingBetweenRows = {
+                        numberRange: {
+                            min: 0,
+                            max: 20
+                        }
+                    };
                     /** Add padding between rows if we specify multiples per row */
                     if(!this.settings.smallMultiple.maximumMultiplesPerRow) {
                         delete instances[0].properties['spacingBetweenRows'];
-                    }
-                    /** Range validation on multiple row spacing */
-                    if(this.settings.smallMultiple.maximumMultiplesPerRow && this.settings.smallMultiple.spacingBetweenRows) {
-                        instances[0].properties['spacingBetweenRows'] = Math.min(this.viewModel.layout.padding.smallMultipleMaximums.bottom, Math.max(0, this.settings.smallMultiple.spacingBetweenRows));
                     }
                     /** Banded multiples toggle */
                     if(!this.settings.smallMultiple.bandedMultiples) {

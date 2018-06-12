@@ -54,7 +54,7 @@
                     "displayName": "Column spacing",
                     "type": {
                         "numeric": true
-                    }
+                    }                    
                 },
                 "labelPosition": {
                     "displayName": "Position",
