@@ -84,6 +84,8 @@ module powerbi.extensibility.visual {
       public fontFamily: string = defaultFontFamily;
       // Maximum multiples per row
       public maximumMultiplesPerRow: number = null;
+      // Spacing between rows
+      public spacingBetweenRows: number = 5;
       // Background color
       public backgroundColor: string = defaultBackgroundColor;
       // Background transparency

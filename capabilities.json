@@ -44,6 +44,12 @@
                     },
                     "placeHolderText": "All"
                 },
+                "spacingBetweenRows": {
+                    "displayName": "Spacing between rows",
+                    "type": {
+                        "numeric": true
+                    }
+                },
                 "labelPosition": {
                     "displayName": "Position",
                     "type": {
