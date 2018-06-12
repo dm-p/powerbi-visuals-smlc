@@ -152,19 +152,6 @@ module powerbi.extensibility.visual {
 
                 /** Y-axis setup */
 
-                    /** Scaling */                            
-                        let yScale = d3.scale.linear()
-                            .domain(viewModel.layout.yAxis.domain)
-                            .range(viewModel.layout.yAxis.range)
-                            .nice(viewModel.layout.yAxis.ticks);
-
-                    /** Ticks and labels */
-                        let yAxis = d3.svg.axis()
-                            .scale(yScale)
-                            .orient('left')
-                            .ticks(viewModel.layout.yAxis.ticks)
-                            .tickFormat(d => (viewModel.layout.yAxis.numberFormat.format(d)))
-                            .tickSize(-viewModel.layout.multiples.rows.width, 0);
 
                 /** X-axis setup */
 
@@ -182,7 +169,7 @@ module powerbi.extensibility.visual {
                             return xScale(d.name); 
                         })
                         .y(function(d) { 
-                            return yScale(d.value); 
+                            return viewModel.layout.yAxis.scale(d.value); 
                         });
 
                 /** Assign tooltip service wrapper to utility module */
@@ -229,7 +216,7 @@ module powerbi.extensibility.visual {
                                                 transform: viewModel.layout.multiples.translate
                                             });   
 
-                        /** If we've determined that a Y-axis is required, add it in */
+                        /** If we've determined that a Y-axis is required, add it in a the start of the row */
                             if(settings.yAxis.show) {
                                 let axisContainer = multipleRow
                                     .append('g')
@@ -248,7 +235,7 @@ module powerbi.extensibility.visual {
                                         .classed({
                                             'grid': true
                                         })
-                                        .call(yAxis)
+                                        .call(viewModel.layout.yAxis.majorAxis)
                                         .attr({
                                             transform: function(d) {
                                                 return `translate(${viewModel.layout.yAxis.width}, 0)`;
@@ -266,7 +253,7 @@ module powerbi.extensibility.visual {
                                         .attr({
                                             stroke: settings.yAxis.gridlineColor,
                                             'stroke-width': settings.yAxis.gridlines
-                                                ? settings.yAxis.gridlineStrokeWidth 
+                                                ? settings.yAxis.gridlineStrokeWidth
                                                 : 0
                                         })
                                         .classed(settings.yAxis.gridlineStrokeLineStyle, true);
@@ -432,7 +419,7 @@ module powerbi.extensibility.visual {
                                                 focus.selectAll('circle')
                                                     .attr({
                                                         transform: function(d, j) {
-                                                            return `translate(${xScale(dataPoints[j].name)}, ${yScale(dataPoints[j].value)})`;
+                                                            return `translate(${xScale(dataPoints[j].name)}, ${viewModel.layout.yAxis.scale(dataPoints[j].value)})`;
                                                         }
                                                     });
 
