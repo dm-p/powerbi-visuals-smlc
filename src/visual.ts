@@ -301,7 +301,9 @@ module powerbi.extensibility.visual {
                                     })
                                     .attr({
                                         transform: function(d, i) {
-                                            return `translate(${(i * viewModel.layout.multiples.columns.width) + viewModel.layout.yAxis.width}, ${0})`;
+                                            let xOffset = (i * (viewModel.layout.multiples.columns.width + viewModel.layout.multiples.columns.spacing))
+                                                            + viewModel.layout.yAxis.width
+                                            return `translate(${xOffset}, ${0})`;
                                         }
                                     });
 
@@ -532,7 +534,7 @@ module powerbi.extensibility.visual {
         public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] {
             const instances: VisualObjectInstance[] = (VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options) as VisualObjectInstanceEnumerationObject).instances;
             let objectName = options.objectName;
-            
+
             switch (objectName) {
                 case 'yAxis': {
                     /** Gridline toggle */
@@ -571,7 +573,7 @@ module powerbi.extensibility.visual {
                         numberRange: {
                             min: 0,
                             max: 20
-                        }
+                        },
                     };
                     instances[0].validValues.spacingBetweenRows = {
                         numberRange: {
