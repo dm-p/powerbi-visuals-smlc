@@ -178,11 +178,13 @@ module powerbi.extensibility.visual {
          * @property {number} count                                     - The number of multiple rows in our chart
          * @property {number} height                                    - The calculated height of the multiple row, with respect to the available height for all multiples and the number of rows
          * @property {number} width                                     - The calculated width of the multiple row, with respect to the Y-axis width (if applicable)
+         * @property {number} spacing                                   - Spacing between rows (in px)
          */
         export interface IMultipleRow {
             count: number;
             height: number;
             width: number;
+            spacing: number;
         }
 
         /**
