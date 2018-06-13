@@ -107,8 +107,7 @@ module powerbi.extensibility.visual {
          * @property {number[]} domain                                  -   2-value array of min/max axis values, used for setting d3 axis domain
          * @property {number} ticks                                     -   Number of ticks to use for the axis
          * @property {any} scale                                        -   D3 scale used for the axis
-         * @property {d3.svg.Axis} majorAxis                            -   D3 axis generation for major axis (e.g. row-level, applied outside all multiples in a row)
-         * @property {d3.svg.Axis} minorAxis                            -   D3 axis generation for minor axis (e.g. the axis to be shown within each small multiple)
+         * @property {d3.svg.Axis} generator                            -   D3 axis generation for axis
          */
         export interface IAxis {
             width: number;
@@ -121,8 +120,7 @@ module powerbi.extensibility.visual {
             domain: number[];
             ticks: number;
             scale: any;
-            majorAxis: d3.svg.Axis;
-            minorAxis: d3.svg.Axis;
+            generator: d3.svg.Axis;
         }
 
         /**
@@ -145,6 +143,7 @@ module powerbi.extensibility.visual {
          * @property {number} width                                     -   Calculated width of title, based on text properties (for Y-axis this is actually the height due to 90 degree rotation)
          * @property {number} x                                         -   Calculated x-position of title
          * @property {number} y                                         -   Calculated y-position of title
+         * @property {boolean} show                                     -   Whether to actually display title or not
          */
         export interface IAxisTitle {
             style: string;
@@ -153,6 +152,7 @@ module powerbi.extensibility.visual {
             width: number;
             x: number;
             y: number;
+            show: boolean;
         }
 
         /** 
@@ -306,6 +306,7 @@ module powerbi.extensibility.visual {
                         },
                         multiples: {} as IMultiple,
                         yAxis: {} as IAxis,
+                        yAxisRow: {} as IAxis,
                         xAxis: {} as IAxis
                     }
 
@@ -408,10 +409,10 @@ module powerbi.extensibility.visual {
                     } as IAxisValue;
 
                 /** Y-axis min/max */
-                    layout.yAxis.minValue = {
+                    layout.yAxisRow.minValue = layout.yAxis.minValue = {
                         value: yMin
                     } as IAxisValue;
-                    layout.yAxis.maxValue = {
+                    layout.yAxisRow.maxValue = layout.yAxis.maxValue = {
                         value: yMax
                     } as IAxisValue;
 
@@ -505,9 +506,10 @@ module powerbi.extensibility.visual {
                 }();
 
             /** We now need to calculate our Y-axis and the space it'll take before we assign anything else */
-                layout.yAxis.height = layout.multiples.rows.height - layout.multiples.label.height - layout.padding.chartArea.bottom;
-                layout.yAxis.ticks = axisHelper.getRecommendedNumberOfTicksForYAxis(layout.yAxis.height);
-                layout.yAxis.title = {
+                layout.yAxisRow.height = layout.yAxis.height = layout.multiples.rows.height - layout.multiples.label.height - layout.padding.chartArea.bottom;
+                layout.yAxisRow.ticks = layout.yAxis.ticks = axisHelper.getRecommendedNumberOfTicksForYAxis(layout.yAxisRow.height);
+                layout.yAxisRow.title = {
+                    show: settings.yAxis.showTitle,
                     measureNames: multiples[0].measures.map(function(measure) {
                         return measure.name;
                     }),
@@ -517,14 +519,19 @@ module powerbi.extensibility.visual {
                         fontSize: PixelConverter.toString(settings.yAxis.titleFontSize)
                     }
                 } as SmallMultipleLineChartViewModel.IAxisTitle;
+
+                layout.yAxis.title = {
+                    show: false,
+                    width: 0
+                } as SmallMultipleLineChartViewModel.IAxisTitle;
       
                 /** We format the Y-axis ticks based on the default formatting of the first measure, or the axis properties,
                  *  if they are different.
                  */
-                    layout.yAxis.numberFormat = valueFormatter.create({
+                    layout.yAxisRow.numberFormat = valueFormatter.create({
                         format: multiples[0].measures[0].formatString,
                         value : (settings.yAxis.labelDisplayUnits == 0 
-                            ? layout.yAxis.maxValue.value
+                            ? layout.yAxisRow.maxValue.value
                             : settings.yAxis.labelDisplayUnits
                         ),
                         precision: (settings.yAxis.precision != null
@@ -534,20 +541,20 @@ module powerbi.extensibility.visual {
                     });
     
                 /** Add our formatted min/max values */
-                    layout.yAxis.minValue.textProperties = {
-                        text: layout.yAxis.numberFormat.format(layout.yAxis.minValue.value),
+                    layout.yAxisRow.minValue.textProperties = {
+                        text: layout.yAxisRow.numberFormat.format(layout.yAxisRow.minValue.value),
                         fontFamily: settings.yAxis.fontFamily,
                         fontSize: PixelConverter.toString(settings.yAxis.fontSize)
                     };
-                    layout.yAxis.maxValue.textProperties = {
-                        text: layout.yAxis.numberFormat.format(layout.yAxis.maxValue.value),
+                    layout.yAxisRow.maxValue.textProperties = {
+                        text: layout.yAxisRow.numberFormat.format(layout.yAxisRow.maxValue.value),
                         fontFamily: settings.yAxis.fontFamily,
                         fontSize: PixelConverter.toString(settings.yAxis.fontSize)
                     };
     
                 /** Resolve actual axis text based on the additional Y-axis properties */
-                    layout.yAxis.title.textProperties.text = function() {
-                        let axis = layout.yAxis;
+                    layout.yAxisRow.title.textProperties.text = function() {
+                        let axis = layout.yAxisRow;
     
                         /** If we supplied a title, use that, otherwise format our measure names */
                             let title = (!settings.yAxis.titleText) 
@@ -572,27 +579,27 @@ module powerbi.extensibility.visual {
                     }();
     
                 /** Calculate title width now that we have the text */
-                    layout.yAxis.title.width = (settings.yAxis.showTitle) 
+                    layout.yAxisRow.title.width = (settings.yAxis.showTitle) 
                         ?   layout.padding.chartAxisTitle.left
                             + textMeasurementService.measureSvgTextHeight(
-                                    layout.yAxis.title.textProperties,
-                                    layout.yAxis.title.textProperties.text
+                                    layout.yAxisRow.title.textProperties,
+                                    layout.yAxisRow.title.textProperties.text
                                 )
                             + layout.padding.chartAxisTitle.right 
                         : 0;
 
                 /** And x/y coordinates for title position */
-                    layout.yAxis.title.x = 0 - (layout.multiples.rows.height / 2);
-                    layout.yAxis.title.y = 0 + (layout.yAxis.title.width / 2);
+                    layout.yAxisRow.title.x = 0 - (layout.multiples.rows.height / 2);
+                    layout.yAxisRow.title.y = 0 + (layout.yAxisRow.title.width / 2);
     
                 /** We now have everything we need for our whole Y-axis */
-                    layout.yAxis.width = function(){
+                    layout.yAxisRow.width = function(){
                         if (settings.yAxis.show) {
-                            return layout.yAxis.title.width
+                            return layout.yAxisRow.title.width
                                     + Math.round(
                                             Math.max(
-                                                textMeasurementService.measureSvgTextWidth(layout.yAxis.minValue.textProperties),
-                                                textMeasurementService.measureSvgTextWidth(layout.yAxis.maxValue.textProperties)
+                                                textMeasurementService.measureSvgTextWidth(layout.yAxisRow.minValue.textProperties),
+                                                textMeasurementService.measureSvgTextWidth(layout.yAxisRow.maxValue.textProperties)
                                             )
                                         ) 
                                     + 10;
@@ -600,9 +607,11 @@ module powerbi.extensibility.visual {
                             return 0;
                         }
                     }();
+
+                    layout.yAxis.width = 0;
     
                 /** Now we have our Y-axis width we can calcluate the widths of everything else */
-                    layout.multiples.rows.width = layout.chart.width - layout.yAxis.width;
+                    layout.multiples.rows.width = layout.chart.width - layout.yAxisRow.width;
                     layout.multiples.columns.width = (layout.multiples.rows.width / layout.multiples.columns.count) - layout.multiples.columns.spacing;
                     layout.xAxis.width = layout.multiples.columns.width - layout.padding.chartSeries.right;
     
@@ -646,7 +655,7 @@ module powerbi.extensibility.visual {
 
                 /** And calculate the ranges for our d3 axes */
                     layout.xAxis.range = [layout.padding.chartSeries.left, layout.xAxis.width];
-                    layout.yAxis.range = function() {
+                    layout.yAxisRow.range = layout.yAxis.range = function() {
                         switch (settings.smallMultiple.labelPosition) {
                             case 'top': {
                                 return [
@@ -659,7 +668,7 @@ module powerbi.extensibility.visual {
                             case 'bottom': {
                                 console.log('bottom');
                                 return [
-                                    layout.yAxis.height,
+                                    layout.yAxisRow.height,
                                     layout.padding.chartArea.top
                                 ]
                             }
@@ -671,41 +680,41 @@ module powerbi.extensibility.visual {
                         viewModel.layout.xAxis.minValue.value,
                         viewModel.layout.xAxis.maxValue.value
                     ];
-                    layout.yAxis.domain = function() {
+                    layout.yAxisRow.domain = layout.yAxis.domain = function() {
                         return [
                             settings.yAxis.start
                                 ? settings.yAxis.start
-                                : layout.yAxis.minValue.value,
+                                : layout.yAxisRow.minValue.value,
                             settings.yAxis.end
                                 ? settings.yAxis.end
-                                : layout.yAxis.maxValue.value
+                                : layout.yAxisRow.maxValue.value
                         ]
                     }();
 
                 /** Y-axis generation */
 
                     /** Scale */
-                        layout.yAxis.scale = d3.scale.linear()
-                            .domain(layout.yAxis.domain)
-                            .range(layout.yAxis.range)
-                            .nice(layout.yAxis.ticks);
+                        layout.yAxisRow.scale = layout.yAxis.scale = d3.scale.linear()
+                            .domain(layout.yAxisRow.domain)
+                            .range(layout.yAxisRow.range)
+                            .nice(layout.yAxisRow.ticks);
 
                     /** Major - multiple row */
-                        layout.yAxis.majorAxis = d3.svg.axis()
-                            .scale(layout.yAxis.scale)
+                        layout.yAxisRow.generator = d3.svg.axis()
+                            .scale(layout.yAxisRow.scale)
                             .orient('left')
-                            .ticks(layout.yAxis.ticks)
-                            .tickFormat(d => (layout.yAxis.numberFormat.format(d)))
+                            .ticks(layout.yAxisRow.ticks)
+                            .tickFormat(d => (layout.yAxisRow.numberFormat.format(d)))
                             .tickSize(0, 0);
 
                     /** Minor - individual multiple tick lines */
-                        layout.yAxis.minorAxis = d3.svg.axis()
-                            .scale(layout.yAxis.scale)
+                        layout.yAxis.generator = d3.svg.axis()
+                            .scale(layout.yAxisRow.scale)
                             .orient('left')
-                            .ticks(layout.yAxis.ticks)
+                            .ticks(layout.yAxisRow.ticks)
                             .tickFormat('')
                             .tickSize(-layout.multiples.columns.width, 0);
-                                
+
             return {
                 multiples: multiples,
                 layout: layout

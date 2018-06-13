@@ -102,6 +102,73 @@ module powerbi.extensibility.visual {
             }
         }
 
+        export function renderYAxis(
+            container: d3.Selection<any>,
+            settings: VisualSettings,
+            viewModel: SmallMultipleLineChartViewModel.IViewModel,
+            axisKey: string
+        ): void{
+
+            let axisContainer = container
+                .append('g')
+                    .classed({
+                        yAxisContainer: true
+                    })
+                    .style({
+                        'font-size': viewModel.layout[axisKey].maxValue.textProperties.fontSize,
+                        'font-family': settings.yAxis.fontFamily,
+                        'fill': settings.yAxis.fontColor,
+                        'stroke-width' : 1 /** TODO: Config */
+                    });
+
+            let axisTicks = axisContainer
+                .append('g')
+                    .classed({
+                        'grid': true
+                    })
+                    .call(viewModel.layout[axisKey].d3Axis)
+                    .attr({
+                        transform: function(d) {
+                            return `translate(${viewModel.layout[axisKey].width}, 0)`;
+                        }
+                    });
+
+            /** This prevents fuzzing of the text if we have gridlines */
+                axisTicks.selectAll('text')
+                    .style({
+                        'stroke': 'none'
+                    });
+        
+            /** Apply gridline styling; there's probably a better way to do it, particularly with the stroke line styles ... */
+                axisTicks.selectAll('line')
+                    .attr({
+                        stroke: settings.yAxis.gridlineColor,
+                        'stroke-width': settings.yAxis.gridlines
+                            ? settings.yAxis.gridlineStrokeWidth
+                            : 0
+                    })
+                    .classed(settings.yAxis.gridlineStrokeLineStyle, true);
+
+            /** Add axis title */
+                if (viewModel.layout[axisKey].title && viewModel.layout[axisKey].title.show) {
+                    axisContainer
+                        .append('text')
+                            .attr({
+                                transform: 'rotate(-90)',
+                                y: viewModel.layout[axisKey].title.y,
+                                x: viewModel.layout[axisKey].title.x,
+                                dy: '1em'
+                            })
+                            .style({
+                                'text-anchor': 'middle',
+                                'font-size': viewModel.layout[axisKey].title.textProperties.fontSize,
+                                'font-family': settings.yAxis.titleFontFamily,
+                                'fill': settings.yAxis.titleColor,
+                            })
+                            .text(viewModel.layout[axisKey].title.textProperties.text);
+                }
+            }
+
     }
 
 }

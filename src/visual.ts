@@ -1,7 +1,7 @@
 /*
- *  Power BI Visual CLI
+ *  Power BI Small Multiple Line Chart
  *
- *  Copyright (c) Microsoft Corporation
+ *  Copyright (c) Daniel Marsh-Patrick
  *  All rights reserved.
  *  MIT License
  *
@@ -211,66 +211,14 @@ module powerbi.extensibility.visual {
                                                 transform: viewModel.layout.multiples.translate
                                             });   
 
-                        /** If we've determined that a Y-axis is required, add it in a the start of the row */
+                        /** If we've determined that a Y-axis is required, add it in at the start of the row */
                             if(settings.yAxis.show) {
-                                let axisContainer = multipleRow
-                                    .append('g')
-                                        .classed({
-                                            yAxisContainer: true
-                                        })
-                                        .style({
-                                            'font-size': viewModel.layout.yAxis.maxValue.textProperties.fontSize,
-                                            'font-family': settings.yAxis.fontFamily,
-                                            'fill': settings.yAxis.fontColor,
-                                            'stroke-width' : 1 /** TODO: Config */
-                                        });
-
-                                let axisTicks = axisContainer
-                                    .append('g')
-                                        .classed({
-                                            'grid': true
-                                        })
-                                        .call(viewModel.layout.yAxis.majorAxis)
-                                        .attr({
-                                            transform: function(d) {
-                                                return `translate(${viewModel.layout.yAxis.width}, 0)`;
-                                            }
-                                        });
-
-                                /** This prevents fuzzing of the text if we have gridlines */
-                                    axisTicks.selectAll('text')
-                                        .style({
-                                            'stroke': 'none'
-                                        });
-                                
-                                /** Apply gridline styling; there's probably a better way to do it, particularly with the stroke line styles ... */
-                                    axisTicks.selectAll('line')
-                                        .attr({
-                                            stroke: settings.yAxis.gridlineColor,
-                                            'stroke-width': settings.yAxis.gridlines
-                                                ? settings.yAxis.gridlineStrokeWidth
-                                                : 0
-                                        })
-                                        .classed(settings.yAxis.gridlineStrokeLineStyle, true);
-
-                                /** Add axis title */
-                                    if (settings.yAxis.showTitle) {
-                                        axisContainer
-                                        .append('text')
-                                        .attr({
-                                            transform: 'rotate(-90)',
-                                            y: viewModel.layout.yAxis.title.y,
-                                            x: viewModel.layout.yAxis.title.x,
-                                            dy: '1em'
-                                        })
-                                        .style({
-                                            'text-anchor': 'middle',
-                                            'font-size': viewModel.layout.yAxis.title.textProperties.fontSize,
-                                            'font-family': settings.yAxis.titleFontFamily,
-                                            'fill': settings.yAxis.titleColor,
-                                        })
-                                        .text(viewModel.layout.yAxis.title.textProperties.text);
-                                    }
+                                smallMultipleLineChartUtils.renderYAxis(
+                                    multipleRow,
+                                    settings,
+                                    viewModel,
+                                    'yAxisRow'
+                                );
                             }
 
                         /** Add group elements for each multiple, and translate based on Y-axis configuration */
@@ -284,10 +232,20 @@ module powerbi.extensibility.visual {
                                     .attr({
                                         transform: function(d, i) {
                                             let xOffset = (i * (viewModel.layout.multiples.columns.width + viewModel.layout.multiples.columns.spacing))
-                                                            + viewModel.layout.yAxis.width
+                                                            + viewModel.layout.yAxisRow.width
                                             return `translate(${xOffset}, ${0})`;
                                         }
                                     });
+
+                            /** Separate y-axis tick lines, if required */
+                                if(settings.yAxis.show) {
+                                    smallMultipleLineChartUtils.renderYAxis(
+                                        multiple,
+                                        settings,
+                                        viewModel,
+                                        'yAxis'
+                                    );
+                                }
 
                             /** Multiple background */
                                 multiple
