@@ -6,8 +6,8 @@
     "visualClassName": "SmallMultipleLineChart",
     "version": "1.0.0",
     "description": "",
-    "supportUrl": "",
-    "gitHubUrl": ""
+    "supportUrl": "https://bitbucket.org/dm-p/power-bi-visuals-small-multiple-line-chart/issues?status=new&status=open",
+    "gitHubUrl": "https://bitbucket.org/dm-p/power-bi-visuals-small-multiple-line-chart"
   },
   "apiVersion": "1.11.0",
   "author": {
