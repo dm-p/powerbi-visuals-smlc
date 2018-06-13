@@ -688,7 +688,7 @@ module powerbi.extensibility.visual {
                             .range(layout.yAxis.range)
                             .nice(layout.yAxis.ticks);
 
-                    /** Major */
+                    /** Major - multiple row */
                         layout.yAxis.majorAxis = d3.svg.axis()
                             .scale(layout.yAxis.scale)
                             .orient('left')
@@ -696,8 +696,14 @@ module powerbi.extensibility.visual {
                             .tickFormat(d => (layout.yAxis.numberFormat.format(d)))
                             .tickSize(0, 0);
 
-                    /** Minor */
-    
+                    /** Minor - individual multiple tick lines */
+                        layout.yAxis.minorAxis = d3.svg.axis()
+                            .scale(layout.yAxis.scale)
+                            .orient('left')
+                            .ticks(layout.yAxis.ticks)
+                            .tickFormat('')
+                            .tickSize(-layout.multiples.columns.width, 0);
+                                
             return {
                 multiples: multiples,
                 layout: layout

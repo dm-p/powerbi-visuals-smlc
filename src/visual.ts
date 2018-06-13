@@ -148,9 +148,6 @@ module powerbi.extensibility.visual {
 
             /** Draw our grid by applying our SVG elements based on our configuration */
 
-                /** Y-axis setup */
-
-
                 /** X-axis setup */
 
                     /** Scaling */
