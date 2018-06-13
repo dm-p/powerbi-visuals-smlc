@@ -780,17 +780,27 @@
                 "rows": {
                     "for": {
                         "in": "category"
+                    },
+                    "dataReductionAlgorithm": {
+                        "sample": {
+                            "count": 2000
+                        }
                     }
                 },
                 "columns": {
                     "for": {
                         "in": "smallMultiple"
+                    },
+                    "dataReductionAlgorithm": {
+                        "top": {
+                            "count": 50
+                        }
                     }
                 },
                 "values": {
-                  "for": {
-                      "in": "values"
-                  }
+                    "for": {
+                        "in": "values"
+                    }
                 }
             }
         }
