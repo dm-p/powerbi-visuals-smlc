@@ -397,14 +397,14 @@ module powerbi.extensibility.visual {
 
             /** Set up as much of the remainder of the view model as we can (we'll need to do the rest after working out the legend) */
 
-                /** X-axis min/max (we'r eno displaying this yeat so we'll just add the values rather than font config etc.*/
-                    layout.xAxis.minValue = {
+                /** X-axis min/max (we're not displaying this yeat so we'll just add the values rather than font config etc.*/
+                    layout.xAxis.minValue = layout.xAxisColumn.minValue = {
                         value: xMin,
                         textProperties: {
                             text: xMinFormatted
                         }
                     } as IAxisValue;
-                    layout.xAxis.maxValue = {
+                    layout.xAxis.maxValue = layout.xAxisColumn.maxValue = {
                         value: xMax,
                         textProperties: {
                             text: xMaxFormatted
@@ -657,7 +657,7 @@ module powerbi.extensibility.visual {
                     }();
 
                 /** And calculate the ranges for our d3 axes */
-                    layout.xAxis.range = [layout.padding.chartSeries.left, layout.xAxis.width];
+                    layout.xAxis.range = layout.xAxisColumn.range = [layout.padding.chartSeries.left, layout.xAxis.width];
                     layout.yAxisRow.range = layout.yAxis.range = function() {
                         switch (settings.smallMultiple.labelPosition) {
                             case 'top': {
@@ -679,7 +679,7 @@ module powerbi.extensibility.visual {
                     }();
 
                 /** ...and the domains */
-                    layout.xAxis.domain = [
+                    layout.xAxis.domain = layout.xAxisColumn.domain = [
                         viewModel.layout.xAxis.minValue.value,
                         viewModel.layout.xAxis.maxValue.value
                     ];
@@ -717,6 +717,13 @@ module powerbi.extensibility.visual {
                             .ticks(layout.yAxisRow.ticks)
                             .tickFormat('')
                             .tickSize(-layout.multiples.columns.width, 0);
+
+                /** X-axis generation */
+                    
+                    /** Scale */
+                        layout.xAxis.scale = layout.xAxisColumn.scale = d3.scale.linear()
+                            .domain(layout.xAxis.domain)
+                            .rangeRound(layout.xAxis.range);
 
             return {
                 multiples: multiples,

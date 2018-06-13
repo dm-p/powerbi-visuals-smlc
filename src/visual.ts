@@ -147,21 +147,14 @@ module powerbi.extensibility.visual {
                     }
 
             /** Draw our grid by applying our SVG elements based on our configuration */
-
-                /** X-axis setup */
-
-                    /** Scaling */
-                        let xScale = d3.scale.linear()
-                            .domain(viewModel.layout.xAxis.domain)
-                            .rangeRound(viewModel.layout.xAxis.range);
                     
-                    /** Pass the scale to our utils module for reuse in the chart */
-                        smallMultipleLineChartUtils.xScale = xScale;
+                /** Pass the x-scale to our utils module for reuse in the chart */
+                    smallMultipleLineChartUtils.xScale = viewModel.layout.xAxis.scale;
 
                 /** Line series generation function */
                     let lineGen = d3.svg.line<SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint>()
                         .x(function(d) { 
-                            return xScale(d.name); 
+                            return viewModel.layout.xAxis.scale(d.name); 
                         })
                         .y(function(d) { 
                             return viewModel.layout.yAxis.scale(d.value); 
@@ -372,7 +365,7 @@ module powerbi.extensibility.visual {
                                                 focus.selectAll('circle')
                                                     .attr({
                                                         transform: function(d, j) {
-                                                            return `translate(${xScale(dataPoints[j].name)}, ${viewModel.layout.yAxis.scale(dataPoints[j].value)})`;
+                                                            return `translate(${viewModel.layout.xAxis.scale(dataPoints[j].name)}, ${viewModel.layout.yAxis.scale(dataPoints[j].value)})`;
                                                         }
                                                     });
 
