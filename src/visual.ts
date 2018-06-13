@@ -27,8 +27,6 @@
 module powerbi.extensibility.visual {
     "use strict";
     
-    import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
-    
     /** powerbi.extensibility.utils.chart.legend */
         import createLegend = powerbi.extensibility.utils.chart.legend.createLegend;
         import ILegend = powerbi.extensibility.utils.chart.legend.ILegend;
