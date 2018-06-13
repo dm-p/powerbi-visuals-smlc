@@ -126,7 +126,7 @@ module powerbi.extensibility.visual {
                     .classed({
                         'grid': true
                     })
-                    .call(viewModel.layout[axisKey].d3Axis)
+                    .call(viewModel.layout[axisKey].generator)
                     .attr({
                         transform: function(d) {
                             return `translate(${viewModel.layout[axisKey].width}, 0)`;

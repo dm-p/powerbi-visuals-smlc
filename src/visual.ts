@@ -179,7 +179,7 @@ module powerbi.extensibility.visual {
                             let eligibleMultipleFacets: SmallMultipleLineChartViewModel.ISmallMultipleData[] = viewModel.multiples.map(function(o) {
                                 return o;
                             }).slice(i * viewModel.layout.multiples.columns.count, (i * viewModel.layout.multiples.columns.count) + viewModel.layout.multiples.columns.count);
-                
+
                         /** Container for entire row of multiples */
                             let multipleRow = this.container
                                 .append('svg')
