@@ -102,12 +102,20 @@ module powerbi.extensibility.visual {
             }
         }
 
+        /**
+         * Renders a y-axis inside our chart
+         * 
+         * @param container             -   D3/DOM element selection to bind y-axis to
+         * @param settings              -   Our visual settings
+         * @param viewModel             -   Our view model
+         * @param axisKey               -   The key value of the appropriate IAxis property from IViewModel (would typically be either 'yAxis' or 'yAxisRow' based on current implementation)
+         */
         export function renderYAxis(
             container: d3.Selection<any>,
             settings: VisualSettings,
             viewModel: SmallMultipleLineChartViewModel.IViewModel,
             axisKey: string
-        ): void{
+        ): void {
 
             let axisContainer = container
                 .append('g')
