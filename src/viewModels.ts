@@ -39,6 +39,7 @@ module powerbi.extensibility.visual {
             chart: IChart;
             multiples: IMultiple;
             yAxis: IAxis;
+            yAxisRow: IAxis;
             xAxis: IAxis;
             padding: IPaddingConfiguration
         }
