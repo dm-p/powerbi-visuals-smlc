@@ -32,6 +32,7 @@ module powerbi.extensibility.visual {
          * @property {IAxis} yAxis                                      -   Data specific to the rendering of the Y-axis in our chart
          * @property {IAxis} yAxisRow                                   -   Data specific to the rendering of the Y-axis in each small multiple row
          * @property {IAxis} xAxis                                      -   Data specific to the rendering of the X-axis in our small multiples
+         * @property {IAxis} xAxisColumns                               -   Data specific to the rendering of the X-axis in each small multiple column
          * @property {IPaddingConfiguration} padding                    -   All padding measurements used in calculating other layout data
          */
         export interface ILayout {
@@ -41,6 +42,7 @@ module powerbi.extensibility.visual {
             yAxis: IAxis;
             yAxisRow: IAxis;
             xAxis: IAxis;
+            xAxisColumn: IAxis;
             padding: IPaddingConfiguration
         }
 
@@ -307,7 +309,8 @@ module powerbi.extensibility.visual {
                         multiples: {} as IMultiple,
                         yAxis: {} as IAxis,
                         yAxisRow: {} as IAxis,
-                        xAxis: {} as IAxis
+                        xAxis: {} as IAxis,
+                        xAxisColumn: {} as IAxis
                     }
 
             /** Return this bare-minimum model if the conditions for our data view are not satisfied (basically don't draw the chart) */
