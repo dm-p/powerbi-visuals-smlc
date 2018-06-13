@@ -30,6 +30,7 @@ module powerbi.extensibility.visual {
          * @property {IChart} chart                                     -   Data specific to the chart within the viewport (if different)
          * @property {IMultiple} multiples                              -   Properties needed to render our small multiples
          * @property {IAxis} yAxis                                      -   Data specific to the rendering of the Y-axis in our chart
+         * @property {IAxis} yAxisRow                                   -   Data specific to the rendering of the Y-axis in each small multiple row
          * @property {IAxis} xAxis                                      -   Data specific to the rendering of the X-axis in our small multiples
          * @property {IPaddingConfiguration} padding                    -   All padding measurements used in calculating other layout data
          */
