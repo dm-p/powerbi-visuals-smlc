@@ -301,6 +301,17 @@
                 }
             }
         },
+        "xAxis" : {
+            "displayName": "X-Axis",
+            "properties": {
+                "show": {
+                    "displayName": "Enable/disable X-Axis",
+                    "type": {
+                        "bool": true
+                    }
+                }
+            }
+        },
         "yAxis": {
             "displayName": "Y-Axis",
             "properties": {

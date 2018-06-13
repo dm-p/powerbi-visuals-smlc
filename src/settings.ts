@@ -44,6 +44,7 @@ module powerbi.extensibility.visual {
       public legend: legendSettings = new legendSettings();
       public colorSelector: colorSelectorSettings = new colorSelectorSettings();
       public yAxis: yAxisSettings = new yAxisSettings();
+      public xAxis: axisSettings = new axisSettings();
     }
 
     export class debugSettings {
