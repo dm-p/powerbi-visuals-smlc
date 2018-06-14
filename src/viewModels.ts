@@ -434,7 +434,7 @@ module powerbi.extensibility.visual {
          * @param {VisualSettings} settings                             - Parsed and processed settings from properties pane
          * @param {IViewModel} viewModel                                - Our viewmodel in its current state
          */
-        export function mapLayout(options: VisualUpdateOptions, settings: VisualSettings, viewModel: IViewModel): IViewModel {   
+        export function mapLayout(options: VisualUpdateOptions, settings: VisualSettings, viewModel: IViewModel): IViewModel {
             let viewport = options.viewport,
                 multiples = viewModel.multiples,
                 layout = viewModel.layout;
@@ -466,7 +466,6 @@ module powerbi.extensibility.visual {
                         fontSize: PixelConverter.toString(settings.smallMultiple.fontSize)
                     };
                 layout.multiples = {
-                    availableHeight: layout.chart.height,
                     count: multipleCount,
                     maxPerRow: multipleMaxPerRow,
                     columns: {
@@ -481,15 +480,14 @@ module powerbi.extensibility.visual {
                     },
                     label: {
                         textProperties: multipleTextProperties,
-                        height: (settings.smallMultiple.showMultipleLabel) ? textMeasurementService.measureSvgTextHeight(multipleTextProperties) : 0                    
+                        height: (settings.smallMultiple.showMultipleLabel) 
+                            ? textMeasurementService.measureSvgTextHeight(multipleTextProperties)
+                            : 0
                     },
                     borderStrokeWidth: settings.smallMultiple.border
                         ? settings.smallMultiple.borderStrokeWidth
                         : 0
                 } as IMultiple
-
-            /** Adjust multiple height for spacing between rows */
-                layout.multiples.rows.height = (layout.chart.height / multipleRowCount) - layout.multiples.rows.spacing;
     
             /** Calculate overlay and clip X/Y coordinates */
                 layout.multiples.translate = function() {
@@ -508,25 +506,50 @@ module powerbi.extensibility.visual {
                     return `translate(${x}, ${y})`;
                 }();
 
-            /** We now need to calculate our Y-axis and the space it'll take before we assign anything else */
-                layout.yAxisRow.height = layout.yAxis.height = layout.multiples.rows.height - layout.multiples.label.height - layout.padding.chartArea.bottom;
-                layout.yAxisRow.ticks = layout.yAxis.ticks = axisHelper.getRecommendedNumberOfTicksForYAxis(layout.yAxisRow.height);
-                layout.yAxisRow.title = {
-                    show: settings.yAxis.showTitle,
-                    measureNames: multiples[0].measures.map(function(measure) {
-                        return measure.name;
-                    }),
-                    textProperties: {
-                        text: settings.yAxis.titleText,
-                        fontFamily: settings.yAxis.titleFontFamily,
-                        fontSize: PixelConverter.toString(settings.yAxis.titleFontSize)
-                    }
-                } as SmallMultipleLineChartViewModel.IAxisTitle;
+            /** We now need to calculate our axes and the space they'll take before we assign anything else */
 
-                layout.yAxis.title = {
-                    show: false,
-                    width: 0
-                } as SmallMultipleLineChartViewModel.IAxisTitle;
+                /** X-axis */
+
+                    /** Text properties to allow us to calculate height */
+                        layout.xAxisColumn.minValue.textProperties.fontFamily = layout.xAxisColumn.maxValue.textProperties.fontFamily = settings.xAxis.fontFamily;
+                        layout.xAxisColumn.minValue.textProperties.fontSize = layout.xAxisColumn.maxValue.textProperties.fontSize = PixelConverter.toString(settings.xAxis.fontSize);
+
+                    layout.xAxisColumn.height = settings.xAxis.show
+                        ?   Math.max(
+                                textMeasurementService.measureSvgTextHeight(layout.xAxisColumn.minValue.textProperties),
+                                textMeasurementService.measureSvgTextHeight(layout.xAxisColumn.maxValue.textProperties)
+                            ) 
+                            +   (settings.xAxis.showAxisLine 
+                                    ? 7
+                                    : 4
+                                )
+                        :   0;
+
+                /** Resolve our multiple available height and row height now we know about the X-axis */
+                    layout.multiples.availableHeight = layout.chart.height - layout.xAxisColumn.height;
+
+                /** Adjust multiple height for spacing between rows */
+                    layout.multiples.rows.height = (layout.multiples.availableHeight / multipleRowCount) - layout.multiples.rows.spacing;
+                
+                /** Y-axis */
+                    layout.yAxisRow.height = layout.yAxis.height = layout.multiples.rows.height - layout.multiples.label.height - layout.padding.chartArea.bottom;
+                    layout.yAxisRow.ticks = layout.yAxis.ticks = axisHelper.getRecommendedNumberOfTicksForYAxis(layout.yAxisRow.height);
+                    layout.yAxisRow.title = {
+                        show: settings.yAxis.showTitle,
+                        measureNames: multiples[0].measures.map(function(measure) {
+                            return measure.name;
+                        }),
+                        textProperties: {
+                            text: settings.yAxis.titleText,
+                            fontFamily: settings.yAxis.titleFontFamily,
+                            fontSize: PixelConverter.toString(settings.yAxis.titleFontSize)
+                        }
+                    } as SmallMultipleLineChartViewModel.IAxisTitle;
+
+                    layout.yAxis.title = {
+                        show: false,
+                        width: 0
+                    } as SmallMultipleLineChartViewModel.IAxisTitle;
       
                 /** We format the Y-axis ticks based on the default formatting of the first measure, or the axis properties,
                  *  if they are different.
@@ -544,16 +567,18 @@ module powerbi.extensibility.visual {
                     });
     
                 /** Add our formatted min/max values */
-                    layout.yAxisRow.minValue.textProperties = {
-                        text: layout.yAxisRow.numberFormat.format(layout.yAxisRow.minValue.value),
-                        fontFamily: settings.yAxis.fontFamily,
-                        fontSize: PixelConverter.toString(settings.yAxis.fontSize)
-                    };
-                    layout.yAxisRow.maxValue.textProperties = {
-                        text: layout.yAxisRow.numberFormat.format(layout.yAxisRow.maxValue.value),
-                        fontFamily: settings.yAxis.fontFamily,
-                        fontSize: PixelConverter.toString(settings.yAxis.fontSize)
-                    };
+
+                    /** Y-axis */
+                        layout.yAxisRow.minValue.textProperties = {
+                            text: layout.yAxisRow.numberFormat.format(layout.yAxisRow.minValue.value),
+                            fontFamily: settings.yAxis.fontFamily,
+                            fontSize: PixelConverter.toString(settings.yAxis.fontSize)
+                        };
+                        layout.yAxisRow.maxValue.textProperties = {
+                            text: layout.yAxisRow.numberFormat.format(layout.yAxisRow.maxValue.value),
+                            fontFamily: settings.yAxis.fontFamily,
+                            fontSize: PixelConverter.toString(settings.yAxis.fontSize)
+                        };
     
                 /** Resolve actual axis text based on the additional Y-axis properties */
                     layout.yAxisRow.title.textProperties.text = function() {
