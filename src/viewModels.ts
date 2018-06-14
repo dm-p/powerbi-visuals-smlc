@@ -110,6 +110,7 @@ module powerbi.extensibility.visual {
          * @property {number} ticks                                     -   Number of ticks to use for the axis
          * @property {any} scale                                        -   D3 scale used for the axis
          * @property {d3.svg.Axis} generator                            -   D3 axis generation for axis
+         * @property {IAxisPolyLine} line                               -   Poly line properties for custom axis generation
          */
         export interface IAxis {
             width: number;
@@ -123,6 +124,7 @@ module powerbi.extensibility.visual {
             ticks: number;
             scale: any;
             generator: d3.svg.Axis;
+            line: IAxisPolyLine;
         }
 
         /**
@@ -155,6 +157,17 @@ module powerbi.extensibility.visual {
             x: number;
             y: number;
             show: boolean;
+        }
+
+        /**
+         * Used to specify dimensions of a chart axis line
+         * 
+         * @property {number} top                                       -   Top position of axis line
+         * @property {number} tickMarkLength                            -   Length of tick marks
+         */
+        export interface IAxisPolyLine {
+            top: number;
+            tickMarkLength: number;
         }
 
         /** 
@@ -510,6 +523,12 @@ module powerbi.extensibility.visual {
 
                 /** X-axis */
 
+                    /** Axis line settings */
+                        layout.xAxisColumn.line = {
+                            top: 4,
+                            tickMarkLength: 4
+                        } as IAxisPolyLine
+
                     /** Text properties to allow us to calculate height */
                         layout.xAxisColumn.minValue.textProperties.fontFamily = layout.xAxisColumn.maxValue.textProperties.fontFamily = settings.xAxis.fontFamily;
                         layout.xAxisColumn.minValue.textProperties.fontSize = layout.xAxisColumn.maxValue.textProperties.fontSize = PixelConverter.toString(settings.xAxis.fontSize);
@@ -519,9 +538,10 @@ module powerbi.extensibility.visual {
                                 textMeasurementService.measureSvgTextHeight(layout.xAxisColumn.minValue.textProperties),
                                 textMeasurementService.measureSvgTextHeight(layout.xAxisColumn.maxValue.textProperties)
                             ) 
+                            +   layout.xAxisColumn.line.top
                             +   (settings.xAxis.showAxisLine 
-                                    ? 7
-                                    : 4
+                                    ? layout.xAxisColumn.line.top + layout.xAxisColumn.line.tickMarkLength
+                                    : 0
                                 )
                         :   0;
 
@@ -749,6 +769,12 @@ module powerbi.extensibility.visual {
                         layout.xAxis.scale = layout.xAxisColumn.scale = d3.scale.linear()
                             .domain(layout.xAxis.domain)
                             .rangeRound(layout.xAxis.range);
+
+                    /** Major - multiple column */
+                        layout.xAxisColumn.generator = d3.svg.axis()
+                            .scale(layout.xAxisColumn.scale)
+                            .orient('bottom')
+                            .ticks(1);
 
             return {
                 multiples: multiples,
