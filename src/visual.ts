@@ -481,6 +481,23 @@ module powerbi.extensibility.visual {
                     }
                     break;
                 }
+                case 'xAxis': {
+                    /** Axis line toggle */
+                    if (!this.settings.xAxis.showAxisLine) {
+                        delete instances[0].properties['axisLineColor'];
+                        delete instances[0].properties['axisLineStrokeWidth'];
+                    }
+                    /** Range validation on axis line stroke width */
+                    instances[0].validValues
+                    instances[0].validValues = instances[0].validValues || {};
+                    instances[0].validValues.axisLineStrokeWidth = {
+                        numberRange: {
+                            min: 1,
+                            max: 5
+                        },
+                    };
+                    break;
+                }
                 case 'smallMultiple': {
                     /** Small multiple label toggle */
                     if(!this.settings.smallMultiple.showMultipleLabel) {
