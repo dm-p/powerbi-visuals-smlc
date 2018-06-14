@@ -36,7 +36,7 @@ module powerbi.extensibility.visual {
     let defaultAxisGridlineColor: string = '#EAEAEA';
     let defaultBackgroundColor: string = null;
     let defaultBackgroundColorAlternate: string = '#F3F3F3';
-    let defaultMultipleBorderColor: string = '#999999';
+    let defaultBorderColor: string = '#999999';
 
     export class VisualSettings extends DataViewObjectsParser {
       public debug: debugSettings = new debugSettings();
@@ -44,7 +44,7 @@ module powerbi.extensibility.visual {
       public legend: legendSettings = new legendSettings();
       public colorSelector: colorSelectorSettings = new colorSelectorSettings();
       public yAxis: yAxisSettings = new yAxisSettings();
-      public xAxis: axisSettings = new axisSettings();
+      public xAxis: xAxisSettings = new xAxisSettings();
     }
 
     export class debugSettings {
@@ -102,7 +102,7 @@ module powerbi.extensibility.visual {
       // Border
       public border: boolean = false;
       // Border colour
-      public borderColor: string = defaultMultipleBorderColor;
+      public borderColor: string = defaultBorderColor;
       // Border stroke width
       public borderStrokeWidth: number = 1;
       // Border line style
@@ -144,12 +144,22 @@ module powerbi.extensibility.visual {
       public gridlineStrokeLineStyle: string = 'solid';
     }
 
-    // Independent of the toggle
+    // Independent of the standard axis
     export class yAxisSettings extends axisSettings {
       // Axis range start
       public start: number = null;
       // Axis range end
       public end: number = null;
+    }
+
+    // Independent of the standard axis
+    export class xAxisSettings extends axisSettings {
+      // Axis lines
+      public showAxisLine: boolean = true;
+      // Axis line colour
+      public axisLineColor: string = defaultBorderColor;
+      // Axis line stroke width
+      public axisLineStrokeWidth: number = 1;
     }
 
 }
