@@ -412,6 +412,68 @@ module powerbi.extensibility.visual {
                                 }
                     }
 
+                /** If we need an x-axis for our columns, let's render it */
+                    if (settings.xAxis.show) {
+
+                        /** Containing SVG element */
+                            let xAxisRow = this.container
+                                .append('svg')
+                                    .classed({
+                                        smallMultipleColumnAxisContainer: true
+                                    })
+                                    .attr({
+                                        width: viewModel.layout.chart.width
+                                    });
+
+                        /** Add one axis per column */
+                            for (let x=0; x < viewModel.layout.multiples.columns.count; x++) {
+
+                                /** We're not using a conventional d3 axis for our column axis, so we'll produce our own containing element for the stuff we want to draw */
+                                    let xAxisContainer = xAxisRow
+                                        .append('g')
+                                            .classed({
+                                                smallMultipleColumnAxis: true
+                                            })
+                                            .attr({
+                                                transform: `translate(${(x * (viewModel.layout.multiples.columns.width + viewModel.layout.multiples.columns.spacing)) + viewModel.layout.yAxisRow.width}, ${0})`
+                                            })
+                                            .style({
+                                                'font-size': viewModel.layout.xAxisColumn.maxValue.textProperties.fontSize,
+                                                'font-family': settings.xAxis.fontFamily,
+                                                'fill': settings.xAxis.fontColor
+                                            });
+
+                                /** If we need axis lines, render them */
+                                    if (settings.xAxis.showAxisLine) {
+                                        let top = viewModel.layout.xAxisColumn.line.top,
+                                            bottom = viewModel.layout.xAxisColumn.line.top + viewModel.layout.xAxisColumn.line.tickMarkLength,
+                                            width = viewModel.layout.multiples.columns.width;
+
+                                        xAxisContainer
+                                            .append('polyline')
+                                                .attr({
+                                                    points: `0,${bottom} 0,${top} ${width},${top} ${width},${bottom}`
+                                                })
+                                                .style({
+                                                    stroke: settings.xAxis.axisLineColor,
+                                                    fill: 'none',
+                                                    'stroke-width': settings.xAxis.axisLineStrokeWidth,
+                                                    'stroke-linecap': 'butt',
+                                                    'stroke-linejoin': 'miter'
+                                                });
+                                    }
+
+                                /** Add min/max labels at left/right extremes */
+                                    smallMultipleLineChartUtils.addXAxisLabel(
+                                        xAxisContainer, viewModel, 'xAxisColumn', 'minValue', 'start'
+                                    );
+                                    smallMultipleLineChartUtils.addXAxisLabel(
+                                        xAxisContainer, viewModel, 'xAxisColumn', 'maxValue', 'end'
+                                    );
+                            }
+
+                    }
+
             console.log('We did it!');
         }
 
