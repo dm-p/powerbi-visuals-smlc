@@ -533,17 +533,24 @@ module powerbi.extensibility.visual {
                         layout.xAxisColumn.minValue.textProperties.fontFamily = layout.xAxisColumn.maxValue.textProperties.fontFamily = settings.xAxis.fontFamily;
                         layout.xAxisColumn.minValue.textProperties.fontSize = layout.xAxisColumn.maxValue.textProperties.fontSize = PixelConverter.toString(settings.xAxis.fontSize);
 
-                    layout.xAxisColumn.height = settings.xAxis.show
-                        ?   Math.max(
-                                textMeasurementService.measureSvgTextHeight(layout.xAxisColumn.minValue.textProperties),
-                                textMeasurementService.measureSvgTextHeight(layout.xAxisColumn.maxValue.textProperties)
-                            ) 
-                            +   layout.xAxisColumn.line.top
-                            +   (settings.xAxis.showAxisLine 
-                                    ? layout.xAxisColumn.line.top + layout.xAxisColumn.line.tickMarkLength
-                                    : 0
-                                )
-                        :   0;
+                    /** Calculate height */
+                        layout.xAxisColumn.height = settings.xAxis.show
+                            ?   Math.max(
+                                    textMeasurementService.measureSvgTextHeight(layout.xAxisColumn.minValue.textProperties),
+                                    textMeasurementService.measureSvgTextHeight(layout.xAxisColumn.maxValue.textProperties)
+                                ) 
+                                +   layout.xAxisColumn.line.top
+                                +   (settings.xAxis.showAxisLine 
+                                        ? layout.xAxisColumn.line.top + layout.xAxisColumn.line.tickMarkLength
+                                        : 0
+                                    )
+                            :   0;
+
+                        layout.xAxis.width = layout.xAxisColumn.width = layout.multiples.columns.width;
+                        layout.xAxis.ticks = Math.min(
+                            axisHelper.getRecommendedNumberOfTicksForXAxis(layout.xAxis.width),
+                            layout.xAxis.maxValue.value - layout.xAxis.minValue.value
+                        );
 
                 /** Resolve our multiple available height and row height now we know about the X-axis */
                     layout.multiples.availableHeight = layout.chart.height - layout.xAxisColumn.height;
@@ -770,11 +777,13 @@ module powerbi.extensibility.visual {
                             .domain(layout.xAxis.domain)
                             .rangeRound(layout.xAxis.range);
 
-                    /** Major - multiple column */
-                        layout.xAxisColumn.generator = d3.svg.axis()
+                    /** Minor - individual multiple */
+                        layout.xAxis.generator = d3.svg.axis()
                             .scale(layout.xAxisColumn.scale)
                             .orient('bottom')
-                            .ticks(1);
+                            .ticks(layout.xAxis.ticks)
+                            .tickFormat('')
+                            .tickSize(-layout.yAxis.range[0] + layout.yAxis.range[1], 0);
 
             return {
                 multiples: multiples,

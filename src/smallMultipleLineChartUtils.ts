@@ -161,22 +161,21 @@ module powerbi.extensibility.visual {
          * @param viewModel             -   Our view model
          * @param axisKey               -   The key value of the appropriate IAxis property from IViewModel (would typically be either 'yAxis' or 'yAxisRow' based on current implementation)
          */
-        export function renderYAxis(
+        export function renderAxis(
             container: d3.Selection<any>,
             settings: VisualSettings,
             viewModel: SmallMultipleLineChartViewModel.IViewModel,
-            axisKey: string
+            axisKey: string,
+            settingKey: string
         ): void {
 
             let axisContainer = container
                 .append('g')
-                    .classed({
-                        yAxisContainer: true
-                    })
+                    .classed(`${settingKey}Container`, true)
                     .style({
                         'font-size': viewModel.layout[axisKey].maxValue.textProperties.fontSize,
-                        'font-family': settings.yAxis.fontFamily,
-                        'fill': settings.yAxis.fontColor,
+                        'font-family': settings[settingKey].fontFamily,
+                        'fill': settings[settingKey].fontColor,
                         'stroke-width' : 1 /** TODO: Config */
                     });
 
@@ -187,8 +186,14 @@ module powerbi.extensibility.visual {
                     })
                     .call(viewModel.layout[axisKey].generator)
                     .attr({
-                        transform: function(d) {
-                            return `translate(${viewModel.layout[axisKey].width}, 0)`;
+                        transform: function() {
+                            return `translate(${settingKey == 'yAxis' 
+                                ? viewModel.layout[axisKey].width
+                                : 0
+                            }, ${settingKey == 'yAxis' 
+                            ? 0
+                            : viewModel.layout.yAxis.range[0]
+                        })`;
                         }
                     });
 
@@ -197,16 +202,16 @@ module powerbi.extensibility.visual {
                     .style({
                         'stroke': 'none'
                     });
-        
+
             /** Apply gridline styling; there's probably a better way to do it, particularly with the stroke line styles ... */
                 axisTicks.selectAll('line')
                     .attr({
-                        stroke: settings.yAxis.gridlineColor,
-                        'stroke-width': settings.yAxis.gridlines
-                            ? settings.yAxis.gridlineStrokeWidth
+                        stroke: settings[settingKey].gridlineColor,
+                        'stroke-width': settings[settingKey].gridlines
+                            ? settings[settingKey].gridlineStrokeWidth
                             : 0
                     })
-                    .classed(settings.yAxis.gridlineStrokeLineStyle, true);
+                    .classed(settings[settingKey].gridlineStrokeLineStyle, true);
 
             /** Add axis title */
                 if (viewModel.layout[axisKey].title && viewModel.layout[axisKey].title.show) {
@@ -221,8 +226,8 @@ module powerbi.extensibility.visual {
                             .style({
                                 'text-anchor': 'middle',
                                 'font-size': viewModel.layout[axisKey].title.textProperties.fontSize,
-                                'font-family': settings.yAxis.titleFontFamily,
-                                'fill': settings.yAxis.titleColor,
+                                'font-family': settings[settingKey].titleFontFamily,
+                                'fill': settings[settingKey].titleColor,
                             })
                             .text(viewModel.layout[axisKey].title.textProperties.text);
                 }

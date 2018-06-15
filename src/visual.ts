@@ -25,7 +25,7 @@
  */
 
 module powerbi.extensibility.visual {
-    "use strict";
+    'use strict';
     
     /** powerbi.extensibility.utils.chart.legend */
         import createLegend = powerbi.extensibility.utils.chart.legend.createLegend;
@@ -205,12 +205,13 @@ module powerbi.extensibility.visual {
                                             });   
 
                         /** If we've determined that a Y-axis is required, add it in at the start of the row */
-                            if(settings.yAxis.show) {
-                                smallMultipleLineChartUtils.renderYAxis(
+                            if (settings.yAxis.show) {
+                                smallMultipleLineChartUtils.renderAxis(
                                     multipleRow,
                                     settings,
                                     viewModel,
-                                    'yAxisRow'
+                                    'yAxisRow',
+                                    'yAxis'
                                 );
                             }
 
@@ -231,12 +232,24 @@ module powerbi.extensibility.visual {
                                     });
 
                             /** Separate y-axis tick lines, if required */
-                                if(settings.yAxis.show) {
-                                    smallMultipleLineChartUtils.renderYAxis(
+                                if (settings.yAxis.show) {
+                                    smallMultipleLineChartUtils.renderAxis(
                                         multiple,
                                         settings,
                                         viewModel,
+                                        'yAxis',
                                         'yAxis'
+                                    );
+                                }
+
+                            /** Internal x-axis, if needed */
+                                if (settings.xAxis.show) {
+                                    smallMultipleLineChartUtils.renderAxis(
+                                        multiple,
+                                        settings,
+                                        viewModel,
+                                        'xAxis',
+                                        'xAxis'
                                     );
                                 }
 
@@ -334,7 +347,7 @@ module powerbi.extensibility.visual {
                                 /** Add events to the multiple container */
                                     overlay
                                         /** Upon entry, display the line nodes */
-                                            .on("mouseover", function() { 
+                                            .on('mouseover', function() { 
                                                 let selectedFocus = d3.select(this.parentNode).select('.tooltipFocus'),
                                                     mouse = d3.mouse(element),
                                                     dataPoints = smallMultipleLineChartUtils.getHighlightedDataPoints(this);
@@ -349,7 +362,7 @@ module powerbi.extensibility.visual {
                                                     });
                                             })
                                         /** Upon exit, hide the line nodes */
-                                            .on("mouseout", function() { 
+                                            .on('mouseout', function() { 
                                                 let selectedFocus = d3.select(this.parentNode).select('.tooltipFocus');
                                                 selectedFocus.style('display', 'none');
                                                 smallMultipleLineChartUtils.tooltipService.hide({
@@ -378,7 +391,7 @@ module powerbi.extensibility.visual {
                                             });
 
                             /** Apply our text label */
-                                if(settings.smallMultiple.showMultipleLabel) {
+                                if (settings.smallMultiple.showMultipleLabel) {
                                     multiple
                                         .append('text')
                                             .classed({
@@ -568,7 +581,7 @@ module powerbi.extensibility.visual {
                 }
                 case 'smallMultiple': {
                     /** Small multiple label toggle */
-                    if(!this.settings.smallMultiple.showMultipleLabel) {
+                    if (!this.settings.smallMultiple.showMultipleLabel) {
                         delete instances[0].properties['fontColor'];
                         delete instances[0].properties['fontSize'];
                         delete instances[0].properties['fontFamily'];
@@ -591,16 +604,16 @@ module powerbi.extensibility.visual {
                         }
                     };
                     /** Add padding between rows if we specify multiples per row */
-                    if(!this.settings.smallMultiple.maximumMultiplesPerRow) {
+                    if (!this.settings.smallMultiple.maximumMultiplesPerRow) {
                         delete instances[0].properties['spacingBetweenRows'];
                     }
                     /** Banded multiples toggle */
-                    if(!this.settings.smallMultiple.bandedMultiples) {
+                    if (!this.settings.smallMultiple.bandedMultiples) {
                         delete instances[0].properties['fontColorAlternate'];
                         delete instances[0].properties['backgroundColorAlternate'];
                     }
                     /** Border toggle */
-                    if(!this.settings.smallMultiple.border) {
+                    if (!this.settings.smallMultiple.border) {
                         delete instances[0].properties['borderColor'];
                         delete instances[0].properties['borderStrokeWidth'];
                         delete instances[0].properties['borderStyle'];
@@ -609,7 +622,7 @@ module powerbi.extensibility.visual {
                 }
                 case 'legend': {
                     /** Legend title toggle */
-                    if(!this.settings.legend.showTitle) {
+                    if (!this.settings.legend.showTitle) {
                         delete instances[0].properties['titleText'];
                         delete instances[0].properties['includeRanges'];
                     }
