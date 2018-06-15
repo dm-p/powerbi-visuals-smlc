@@ -535,6 +535,33 @@ module powerbi.extensibility.visual {
                         layout.xAxisColumn.minValue.textProperties.fontFamily = layout.xAxisColumn.maxValue.textProperties.fontFamily = settings.xAxis.fontFamily;
                         layout.xAxisColumn.minValue.textProperties.fontSize = layout.xAxisColumn.maxValue.textProperties.fontSize = PixelConverter.toString(settings.xAxis.fontSize);
 
+                        layout.xAxis.width = layout.xAxisColumn.width = layout.multiples.columns.width;
+                        layout.xAxis.ticks = Math.min(
+                            axisHelper.getRecommendedNumberOfTicksForXAxis(layout.xAxis.width),
+                            layout.xAxis.maxValue.value - layout.xAxis.minValue.value
+                        );
+                        layout.xAxisColumn.title = {
+                            show: settings.xAxis.showTitle,
+                            measureNames: [],
+                            textProperties: {
+                                text: (!settings.xAxis.titleText)
+                                    ? options.dataViews[0].metadata.columns.filter(c => c.roles['category'])[0].displayName
+                                    : settings.xAxis.titleText,
+                                fontFamily: settings.xAxis.titleFontFamily,
+                                fontSize: PixelConverter.toString(settings.xAxis.titleFontSize)
+                            }
+                        } as IAxisTitle;
+
+                    /** Calculate title height now that we have the text */
+                        layout.xAxisColumn.title.height = (settings.xAxis.showTitle) 
+                        ?   layout.padding.chartAxisTitle.bottom
+                            + textMeasurementService.measureSvgTextHeight(
+                                    layout.xAxisColumn.title.textProperties,
+                                    layout.xAxisColumn.title.textProperties.text
+                                )
+                            + layout.padding.chartAxisTitle.top
+                        : 0;
+
                     /** Calculate height */
                         layout.xAxisColumn.height = settings.xAxis.show
                             ?   Math.max(
@@ -546,13 +573,8 @@ module powerbi.extensibility.visual {
                                         ? layout.xAxisColumn.line.top + layout.xAxisColumn.line.tickMarkLength
                                         : 0
                                     )
+                                +   layout.xAxisColumn.title.height
                             :   0;
-
-                        layout.xAxis.width = layout.xAxisColumn.width = layout.multiples.columns.width;
-                        layout.xAxis.ticks = Math.min(
-                            axisHelper.getRecommendedNumberOfTicksForXAxis(layout.xAxis.width),
-                            layout.xAxis.maxValue.value - layout.xAxis.minValue.value
-                        );
 
                 /** Resolve our multiple available height and row height now we know about the X-axis */
                     layout.multiples.availableHeight = layout.chart.height - layout.xAxisColumn.height;
@@ -573,12 +595,12 @@ module powerbi.extensibility.visual {
                             fontFamily: settings.yAxis.titleFontFamily,
                             fontSize: PixelConverter.toString(settings.yAxis.titleFontSize)
                         }
-                    } as SmallMultipleLineChartViewModel.IAxisTitle;
+                    } as IAxisTitle;
 
                     layout.yAxis.title = {
                         show: false,
                         width: 0
-                    } as SmallMultipleLineChartViewModel.IAxisTitle;
+                    } as IAxisTitle;
       
                 /** We format the Y-axis ticks based on the default formatting of the first measure, or the axis properties,
                  *  if they are different.
@@ -670,7 +692,7 @@ module powerbi.extensibility.visual {
                 /** Now we have our Y-axis width we can calcluate the widths of everything else */
                     layout.multiples.rows.width = layout.chart.width - layout.yAxisRow.width;
                     layout.multiples.columns.width = (layout.multiples.rows.width / layout.multiples.columns.count) - layout.multiples.columns.spacing;
-                    layout.xAxis.width = layout.multiples.columns.width - layout.padding.chartSeries.right;
+                    layout.xAxis.width = layout.xAxisColumn.width = layout.multiples.columns.width - layout.padding.chartSeries.right;
     
                 /** Calculate small multiple label positioning */
                     layout.multiples.label.x = function() {
