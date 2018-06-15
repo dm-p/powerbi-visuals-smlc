@@ -139,7 +139,7 @@ module powerbi.extensibility.visual {
                     .append('text')
                         .attr({
                             x: x,
-                            y: viewModel.layout[axisKey].height,
+                            y: viewModel.layout[axisKey].height - viewModel.layout[axisKey].title.height,
                             'text-anchor': textAnchor,
                             'alignment-baseline': 'text-after-edge'
                         })
