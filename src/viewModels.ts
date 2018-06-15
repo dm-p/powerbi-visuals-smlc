@@ -315,9 +315,9 @@ module powerbi.extensibility.visual {
                                 left: 4
                             },
                             chartAxisTitle: {
-                                top: 0,
+                                top: 5,
                                 right: 5,
-                                bottom: 0,
+                                bottom: 5,
                                 left: 5
                             }
                         },
