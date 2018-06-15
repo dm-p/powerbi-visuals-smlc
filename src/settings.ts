@@ -160,8 +160,12 @@ module powerbi.extensibility.visual {
       public axisLineColor: string = defaultBorderColor;
       // Axis line stroke width
       public axisLineStrokeWidth: number = 1;
+      // Overload show for this instance to false
+      public show: boolean = false;
       // Overload gridlines for this instance to false
       public gridlines: boolean = false;
+      // Overload title for this instance to false
+      public showTitle: boolean = false;
     }
 
 }
