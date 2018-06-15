@@ -145,6 +145,7 @@ module powerbi.extensibility.visual {
          * @property {string[]} measureNames                            -   Array of all distinct measure names contained in the multiples
          * @property {TextProperties} textProperties                    -   Properties for title, including formatted value for supplied font configuration
          * @property {number} width                                     -   Calculated width of title, based on text properties (for Y-axis this is actually the height due to 90 degree rotation)
+         * @property {number} height                                    -   Calculated height of title, based on text properties
          * @property {number} x                                         -   Calculated x-position of title
          * @property {number} y                                         -   Calculated y-position of title
          * @property {boolean} show                                     -   Whether to actually display title or not
@@ -154,6 +155,7 @@ module powerbi.extensibility.visual {
             measureNames: string[];
             textProperties: TextProperties;
             width: number;
+            height: number;
             x: number;
             y: number;
             show: boolean;
