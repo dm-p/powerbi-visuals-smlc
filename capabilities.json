@@ -453,6 +453,47 @@
                             }
                         ]
                     }
+                },
+                "gridlines": {
+                    "displayName": "Gridlines",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "gridlineColor": {
+                    "displayName": "Gridline color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "gridlineStrokeWidth": {
+                    "displayName": "Gridline stroke width",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "gridlineStrokeLineStyle": {
+                    "displayName": "Gridline style",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Dashed",
+                                "value": "dashed"
+                            },
+                            {
+                                "displayName": "Solid",
+                                "value": "solid"
+                            },
+                            {
+                                "displayName": "Dotted",
+                                "value": "dotted"
+                            }
+                        ]
+                    }
                 }
             }
         },

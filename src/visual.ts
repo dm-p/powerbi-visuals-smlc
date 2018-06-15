@@ -544,6 +544,12 @@ module powerbi.extensibility.visual {
                     break;
                 }
                 case 'xAxis': {
+                    /** Gridline toggle */
+                    if (!this.settings.xAxis.gridlines) {
+                        delete instances[0].properties['gridlineColor'];
+                        delete instances[0].properties['gridlineStrokeWidth'];
+                        delete instances[0].properties['gridlineStrokeLineStyle'];
+                    }                    
                     /** Axis line toggle */
                     if (!this.settings.xAxis.showAxisLine) {
                         delete instances[0].properties['axisLineColor'];
