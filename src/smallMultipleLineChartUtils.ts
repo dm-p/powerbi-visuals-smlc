@@ -229,7 +229,14 @@ module powerbi.extensibility.visual {
                                 'font-family': settings[settingKey].titleFontFamily,
                                 'fill': settings[settingKey].titleColor,
                             })
-                            .text(viewModel.layout[axisKey].title.textProperties.text);
+                            .text(viewModel.layout[axisKey].title.textProperties.text)
+                            .each(function() {
+                                wrapText(
+                                    d3.select(this),
+                                    viewModel.layout[axisKey].title.textProperties,
+                                    viewModel.layout.multiples.rows.height
+                                );
+                            });
                 }
             }
 
