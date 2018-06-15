@@ -562,7 +562,15 @@ module powerbi.extensibility.visual {
                         delete instances[0].properties['gridlineColor'];
                         delete instances[0].properties['gridlineStrokeWidth'];
                         delete instances[0].properties['gridlineStrokeLineStyle'];
-                    }                    
+                    }
+                    /** Title toggle */
+                    if (!this.settings.xAxis.showTitle) {
+                        delete instances[0].properties['titleStyle'];
+                        delete instances[0].properties['titleColor'];
+                        delete instances[0].properties['titleText'];
+                        delete instances[0].properties['titleFontSize'];
+                        delete instances[0].properties['titleFontFamily'];
+                    }
                     /** Axis line toggle */
                     if (!this.settings.xAxis.showAxisLine) {
                         delete instances[0].properties['axisLineColor'];
