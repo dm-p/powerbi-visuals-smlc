@@ -485,6 +485,31 @@ module powerbi.extensibility.visual {
                                     );
                             }
 
+                            /** Add title, if requested */
+                                if (settings.xAxis.showTitle) {
+                                    xAxisRow
+                                        .append('text')
+                                            .attr({
+                                                x: viewModel.layout.multiples.rows.width / 2,
+                                                y: viewModel.layout.xAxisColumn.height,
+                                                'text-anchor': 'middle',
+                                                'alignment-baseline': 'text-after-edge'
+                                            })
+                                            .style({
+                                                'font-size': viewModel.layout.xAxisColumn.title.textProperties.fontSize,
+                                                'font-family': settings.xAxis.titleFontFamily,
+                                                'fill': settings.xAxis.titleColor
+                                            })
+                                            .text(viewModel.layout.xAxisColumn.title.textProperties.text)
+                                            .each(function() {
+                                                smallMultipleLineChartUtils.wrapText(
+                                                    d3.select(this),
+                                                    viewModel.layout.xAxisColumn.title.textProperties,
+                                                    viewModel.layout.multiples.rows.width
+                                                );
+                                            });                                        
+                                }
+
                     }
 
             console.log('We did it!');
