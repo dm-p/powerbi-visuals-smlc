@@ -125,11 +125,7 @@ module powerbi.extensibility.visual {
 
                 /** Resolve our number of columns, based on configuration and calculate how much space we have available for each small multiple */
 
-                    /** TODO: at this point, we should determine if we need to overflow, based on minimum height, which we will need to also work out
-                     * in accordance with height reserved for the multiple text
-                     */
-
-                    /** Debugging stuff for grid dimensions */
+                /** Debugging stuff for grid dimensions */
                     if (settings.debug.show) {
                         console.log(`Grid:\n`,
                             `Viewport Width: ${options.viewport.width}\n`,
