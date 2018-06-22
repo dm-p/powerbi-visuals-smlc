@@ -303,7 +303,7 @@ module powerbi.extensibility.visual {
          * Map the data views into the view model and set up the other layout bare minimums. 
          * We will need to do the remainder of the layout after calculating the legend, but we can get some things done here.
          * 
-         * @param {VisualupdateOptions} options                         - options from visual instantiation
+         * @param {VisualUpdateOptions} options                         - options from visual instantiation
          * @param {IVisualHost} host                                    - host from visual instantiation
          * @param {VisualSettings} settings                             - parsed and processed settings from properties pane
          */
