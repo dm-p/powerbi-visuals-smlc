@@ -586,7 +586,6 @@ module powerbi.extensibility.visual {
                     }
                     /** Title toggle */
                     if (!this.settings.xAxis.showTitle) {
-                        delete instances[0].properties['titleStyle'];
                         delete instances[0].properties['titleColor'];
                         delete instances[0].properties['titleText'];
                         delete instances[0].properties['titleFontSize'];

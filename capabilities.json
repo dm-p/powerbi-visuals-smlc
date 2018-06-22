@@ -316,23 +316,7 @@
                         "bool": true
                     }
                 },
-                "titleStyle": {
-                    "displayName": "Title style",
                     "type": {
-                        "enumeration": [
-                            {
-                                "displayName": "Show title only",
-                                "value": "title"
-                            },
-                            {
-                                "displayName": "Show unit only",
-                                "value": "unit"
-                            },
-                            {
-                                "displayName": "Show both",
-                                "value": "both"
-                            }
-                        ]
                     }
                 },
                 "titleColor": {
