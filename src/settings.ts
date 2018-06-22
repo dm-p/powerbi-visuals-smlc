@@ -112,6 +112,8 @@ module powerbi.extensibility.visual {
     export class axisSettings {
       // Show whole axis
       public show: boolean = true;
+      // Labels
+      public showLabels: boolean = true;
       // Font color
       public fontColor: string = defaultFontColor;
       // Text Size

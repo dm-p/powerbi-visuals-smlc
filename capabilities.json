@@ -310,13 +310,16 @@
                         "bool": true
                     }                    
                 },
-                "showTitle": {
-                    "displayName": "Show title",
+                "showLabels": {
+                    "displayName": "Show labels",
                     "type": {
                         "bool": true
                     }
                 },
+                "showTitle": {
+                    "displayName": "Show title",
                     "type": {
+                        "bool": true
                     }
                 },
                 "titleColor": {
@@ -644,6 +647,12 @@
                         "bool": true
                     }
                 },
+                "showLabels": {
+                    "displayName": "Show labels",
+                    "type": {
+                        "bool": true
+                    }
+                },                
                 "showTitle": {
                     "displayName": "Show title",
                     "type": {
@@ -1067,7 +1076,8 @@
                     "displayNameKey": "Visual_Text",
                     "type": {
                         "text": true
-                    }
+                    },
+                    "placeHolderText": "Category"
                 },
                 "includeRanges": {
                     "displayName": "Include range as suffix",

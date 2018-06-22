@@ -557,6 +557,14 @@ module powerbi.extensibility.visual {
 
             switch (objectName) {
                 case 'yAxis': {
+                    /** Label toggle */
+                    if (!this.settings.yAxis.showLabels) {
+                        delete instances[0].properties['fontColor'];
+                        delete instances[0].properties['fontSize'];
+                        delete instances[0].properties['fontFamily'];
+                        delete instances[0].properties['labelDisplayUnits'];
+                        delete instances[0].properties['precision'];
+                    }                    
                     /** Gridline toggle */
                     if (!this.settings.yAxis.gridlines) {
                         delete instances[0].properties['gridlineColor'];
@@ -578,6 +586,12 @@ module powerbi.extensibility.visual {
                     break;
                 }
                 case 'xAxis': {
+                    /** Label toggle */
+                    if (!this.settings.xAxis.showLabels) {
+                        delete instances[0].properties['fontColor'];
+                        delete instances[0].properties['fontSize'];
+                        delete instances[0].properties['fontFamily'];
+                    }
                     /** Gridline toggle */
                     if (!this.settings.xAxis.gridlines) {
                         delete instances[0].properties['gridlineColor'];
