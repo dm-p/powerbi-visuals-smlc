@@ -13,6 +13,28 @@ module powerbi.extensibility.visual {
     export namespace SmallMultipleLineChartViewModel {
 
         /**
+         * Dimensions of chart viewport
+         * 
+         * @property {number} width                                     -   Width of viewport, in percent
+         * @property {number} height                                    -   Height of viewport, in percent
+         */
+        export interface IViewport {
+            width: number;
+            height: number;
+        }
+
+        /**
+         * Dimensions of chart within viewport. This is currently the same as the viewport but we will likely need it to be different if we have to scroll etc.
+         * 
+         * @property {number} width                                     -   Width of chart area, in percent
+         * @property {number} height                                    -   Height of chart area, in percent
+         */
+        export interface IChart {
+            width: number;
+            height: number;
+        }
+
+        /**
          * Master view model for the small multiple line chart
          * 
          * @property {ILayout} layout                                   -   Computed chart layout properties
@@ -72,28 +94,6 @@ module powerbi.extensibility.visual {
             right: number;
             bottom: number;
             left: number;
-        }
-
-        /**
-         * Dimensions of chart viewport
-         * 
-         * @property {number} width                                     -   Width of viewport, in pixels
-         * @property {number} height                                    -   Height of viewport, in pixels
-         */
-        export interface IViewport {
-            width: number;
-            height: number;
-        }
-
-        /**
-         * Dimensions of chart within viewport. This is currently the same as the viewport but we will likely need it to be different if we have to scroll etc.
-         * 
-         * @property {number} width                                     -   Width of chart area, in pixels
-         * @property {number} height                                    -   Height of chart area, in pixels
-         */
-        export interface IChart {
-            width: number;
-            height: number;
         }
 
         /**
