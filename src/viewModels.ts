@@ -104,7 +104,7 @@ module powerbi.extensibility.visual {
          * @property {IAxisValue} minValue                              -   Axis minimum value and associated value properties
          * @property {IAxisValue} maxValue                              -   Axis maximum value and associated value properties
          * @property {IValueFormatter} numberFormat                     -   Number format of axis values, based on visual properties
-         * @property {IAxisTitle} title                                 -   All properties for axis, based on visual properties
+         * @property {IAxisMasterTitle} masterTitle                     -   All properties for axis, based on visual properties
          * @property {number[]} range                                   -   2-value array of min/max axis values, used for setting d3 axis range
          * @property {number[]} domain                                  -   2-value array of min/max axis values, used for setting d3 axis domain
          * @property {number} ticks                                     -   Number of ticks to use for the axis
@@ -118,13 +118,27 @@ module powerbi.extensibility.visual {
             minValue: IAxisValue;
             maxValue: IAxisValue;
             numberFormat: IValueFormatter;
-            title: IAxisTitle;
+            masterTitle: IAxisMasterTitle;
             range: number[];
             domain: number[];
             ticks: number;
             scale: any;
+            labelWidth: number;
+            labelHeight: number;
+            line: IAxisPolyLine;            
+            inner: IAxisConfiguration;
+            outer: IAxisConfiguration;
+        }
+
+        export interface IAxisMasterTitle extends IAxisTitle {}
+
+        /**
+         * Used to hold any axis-specific configuration that doesn't sensibly fit inside the main axis but might be used for inidividual "sub-axes"
+         * 
+         * @property {d3.svg.Axis} generator                            -   D3 axis generation for axis
+         */
+        export interface IAxisConfiguration {
             generator: d3.svg.Axis;
-            line: IAxisPolyLine;
         }
 
         /**
