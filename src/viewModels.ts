@@ -52,9 +52,7 @@ module powerbi.extensibility.visual {
          * @property {IChart} chart                                     -   Data specific to the chart within the viewport (if different)
          * @property {IMultiple} multiples                              -   Properties needed to render our small multiples
          * @property {IAxis} yAxis                                      -   Data specific to the rendering of the Y-axis in our chart
-         * @property {IAxis} yAxisRow                                   -   Data specific to the rendering of the Y-axis in each small multiple row
          * @property {IAxis} xAxis                                      -   Data specific to the rendering of the X-axis in our small multiples
-         * @property {IAxis} xAxisColumns                               -   Data specific to the rendering of the X-axis in each small multiple column
          * @property {IPaddingConfiguration} padding                    -   All padding measurements used in calculating other layout data
          */
         export interface ILayout {
@@ -62,9 +60,7 @@ module powerbi.extensibility.visual {
             chart: IChart;
             multiples: IMultiple;
             yAxis: IAxis;
-            yAxisRow: IAxis;
             xAxis: IAxis;
-            xAxisColumn: IAxis;
             padding: IPaddingConfiguration
         }
 
@@ -109,8 +105,9 @@ module powerbi.extensibility.visual {
          * @property {number[]} domain                                  -   2-value array of min/max axis values, used for setting d3 axis domain
          * @property {number} ticks                                     -   Number of ticks to use for the axis
          * @property {any} scale                                        -   D3 scale used for the axis
-         * @property {d3.svg.Axis} generator                            -   D3 axis generation for axis
          * @property {IAxisPolyLine} line                               -   Poly line properties for custom axis generation
+         * @property {IAxisConfiguration} inner                         -   Inner (multiple-level) axis-specific configuration
+         * @property {IAxisConfiguration} outer                         -   Outer (row or column-level) axis-specific configuration
          */
         export interface IAxis {
             width: number;
