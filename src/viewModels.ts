@@ -370,7 +370,8 @@ module powerbi.extensibility.visual {
                     xMax: number,
                     xMaxFormatted: string,
                     xMin: number,
-                    xMinFormatted: string;
+                    xMinFormatted: string,
+                    measureNames = [];
 
                 /** Populate the small multiple data from our data columns */
                     multiplesData = columns.root.children.map(function(multiple, multipleIndex){
@@ -385,6 +386,10 @@ module powerbi.extensibility.visual {
                                         };
                                     /** Get measure metadata from datview, so we can do formatting etc. later on */
                                         let measureMetadata = valueSources[measureIndex];
+                                    /** Add our measure name to our list for the view model layout */
+                                        if (measureNames.indexOf(measure.displayName) == -1) {
+                                            measureNames.push(measure.displayName)
+                                        }
                                     return {                        
                                         name: measure.displayName,
                                         formatString: measure.format,
