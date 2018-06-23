@@ -83,6 +83,8 @@ module powerbi.extensibility.visual {
                 this.legendData = {
                     title: (settings.legend.showTitle 
                                 ? settings.legend.titleText 
+                                    ?   settings.legend.titleText
+                                    :   options.dataViews[0].metadata.columns.filter(c => c.roles['category'])[0].displayName
                                     + (settings.legend.includeRanges 
                                         ? ` (${viewModel.layout.xAxis.minValue.textProperties.text} - ${viewModel.layout.xAxis.maxValue.textProperties.text})`
                                         : '' 
