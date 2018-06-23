@@ -350,10 +350,16 @@ module powerbi.extensibility.visual {
                             }
                         },
                         multiples: {} as IMultiple,
-                        yAxis: {} as IAxis,
-                        yAxisRow: {} as IAxis,
-                        xAxis: {} as IAxis,
-                        xAxisColumn: {} as IAxis
+                        yAxis: {
+                            masterTitle: {} as IAxisMasterTitle
+                        } as IAxis,
+                        xAxis: {
+                            masterTitle: {} as IAxisMasterTitle,
+                            line: {
+                                top: 4,
+                                tickMarkLength: 4
+                            } as IAxisPolyLine
+                        } as IAxis,
                     }
 
             /** Return this bare-minimum model if the conditions for our data view are not satisfied (basically don't draw the chart) */
@@ -411,7 +417,7 @@ module powerbi.extensibility.visual {
                                         selectionId: host.createSelectionIdBuilder()
                                             .withMeasure(measureMetadata.queryName)
                                             .createSelectionId(),
-                                        categoryData: rows.root.children.map(function(category, categoryIndex) {
+                                        categoryData: rows.root.children.map(function(category) {
                                             let targetKey = multipleIndex * valueSources.length + measureIndex
                                             let categoryValue = <number>category.value;
                                             let value = <number>category.values[targetKey].value;
@@ -445,27 +451,148 @@ module powerbi.extensibility.visual {
 
             /** Set up as much of the remainder of the view model as we can (we'll need to do the rest after working out the legend) */
 
-                /** X-axis min/max (we're not displaying this yeat so we'll just add the values rather than font config etc.*/
-                    layout.xAxis.minValue = layout.xAxisColumn.minValue = {
+                /** Multiples */
+                    let multipleCount = multiplesData.length,
+                        multipleMaxPerRow = settings.smallMultiple.maximumMultiplesPerRow,
+                        multipleColumnsPerRow = (!multipleMaxPerRow ||  multipleMaxPerRow > multipleCount) ? multipleCount : multipleMaxPerRow,
+                        multipleRowCount = Math.ceil(multipleCount / multipleColumnsPerRow),
+                        multipleTextProperties = {
+                            text: multiplesData[0].name,
+                            fontFamily: settings.smallMultiple.fontFamily,
+                            fontSize: PixelConverter.toString(settings.smallMultiple.fontSize)
+                        };
+
+                    layout.multiples = {
+                        count: multipleCount,
+                        maxPerRow: multipleMaxPerRow,
+                        columns: {
+                            count: multipleColumnsPerRow,
+                            spacing: settings.smallMultiple.spacingBetweenColumns
+                        },
+                        rows: {
+                            count: multipleRowCount,
+                            spacing: multipleRowCount > 1 && settings.smallMultiple.spacingBetweenRows
+                                ? settings.smallMultiple.spacingBetweenRows
+                                : 0
+                        },
+                        container: {} as IMultipleContainer,
+                        label: {
+                            textProperties: multipleTextProperties,
+                            height: (settings.smallMultiple.showMultipleLabel) 
+                                ? textMeasurementService.measureSvgTextHeight(multipleTextProperties)
+                                : 0
+                        },
+                        borderStrokeWidth: settings.smallMultiple.border
+                            ? settings.smallMultiple.borderStrokeWidth
+                            : 0
+                    } as IMultiple
+
+                /** X-axis */
+                    layout.xAxis.domain = [
+                        xMin,
+                        xMax
+                    ];
+                    layout.xAxis.minValue = {
                         value: xMin,
                         textProperties: {
-                            text: xMinFormatted
+                            text: xMinFormatted,
+                            fontFamily: settings.xAxis.fontFamily,
+                            fontSize: PixelConverter.toString(settings.xAxis.fontSize)
                         }
                     } as IAxisValue;
-                    layout.xAxis.maxValue = layout.xAxisColumn.maxValue = {
+                    layout.xAxis.maxValue = {
                         value: xMax,
                         textProperties: {
-                            text: xMaxFormatted
+                            text: xMaxFormatted,
+                            fontFamily: settings.xAxis.fontFamily,
+                            fontSize: PixelConverter.toString(settings.xAxis.fontSize)
                         }
                     } as IAxisValue;
+                    layout.xAxis.masterTitle = {
+                        show: settings.xAxis.showTitle,
+                        measureNames: [],
+                        textProperties: {
+                            text: (!settings.xAxis.titleText)
+                                ? categoryMetadata.displayName
+                                : settings.xAxis.titleText,
+                            fontFamily: settings.xAxis.titleFontFamily,
+                            fontSize: PixelConverter.toString(settings.xAxis.titleFontSize)
+                        }
+                    } as IAxisMasterTitle
 
-                /** Y-axis min/max */
-                    layout.yAxisRow.minValue = layout.yAxis.minValue = {
-                        value: yMin
+                /** Y-axis */
+
+                    /** We format the Y-axis ticks based on the default formatting of the first measure, or the axis properties,
+                     *  if they are different.
+                     */
+                        layout.yAxis.numberFormat = valueFormatter.create({
+                            format: multiplesData[0].measures[0].formatString,
+                            value : (settings.yAxis.labelDisplayUnits == 0 
+                                ? yMax
+                                : settings.yAxis.labelDisplayUnits
+                            ),
+                            precision: (settings.yAxis.precision != null
+                                ? settings.yAxis.precision
+                                : null
+                            )
+                        });
+
+                    layout.yAxis.domain = function() {
+                        return [
+                            settings.yAxis.start || settings.yAxis.start == 0
+                                ? settings.yAxis.start
+                                : yMin,
+                            settings.yAxis.end || settings.yAxis.end == 0
+                                ? settings.yAxis.end
+                                : yMax
+                        ]
+                    }();
+                    layout.yAxis.minValue = {
+                        value: yMin,
+                        textProperties: {
+                            text: layout.yAxis.numberFormat.format(yMin),
+                            fontFamily: settings.yAxis.fontFamily,
+                            fontSize: PixelConverter.toString(settings.yAxis.fontSize)
+                        }
                     } as IAxisValue;
-                    layout.yAxisRow.maxValue = layout.yAxis.maxValue = {
-                        value: yMax
+                    layout.yAxis.maxValue = {
+                        value: yMax,
+                        textProperties: {
+                            text: layout.yAxis.numberFormat.format(yMax),
+                            fontFamily: settings.yAxis.fontFamily,
+                            fontSize: PixelConverter.toString(settings.yAxis.fontSize)
+                        }
                     } as IAxisValue;
+                    layout.yAxis.masterTitle = {
+                        show: settings.yAxis.showTitle,
+                        measureNames: measureNames,
+                        textProperties: {
+                            text: function() {            
+                                /** If we supplied a title, use that, otherwise format our measure names */
+                                    let title = (!settings.yAxis.titleText) 
+                                        ? measureNames.join(', ').replace(/, ([^,]*)$/, ' and $1')
+                                        : settings.yAxis.titleText;
+            
+                                /** Return the correct title based on our supplied settings */
+                                    if (settings.yAxis.labelDisplayUnits == 1) {
+                                        return title;
+                                    }
+                                    switch (settings.yAxis.titleStyle) {
+                                        case 'title': {
+                                            return title;
+                                        }
+                                        case 'unit': {
+                                            return layout.yAxis.numberFormat.displayUnit.title;
+                                        }
+                                        case 'both': {
+                                            return `${title} (${layout.yAxis.numberFormat.displayUnit.title})`;
+                                        }
+                                    }
+                            }(),
+                            fontFamily: settings.yAxis.titleFontFamily,
+                            fontSize: PixelConverter.toString(settings.yAxis.titleFontSize)
+                        } as TextProperties
+                    } as IAxisMasterTitle;
 
             return {
                 multiples: multiplesData,
@@ -483,63 +610,19 @@ module powerbi.extensibility.visual {
          * @param {IViewModel} viewModel                                - Our viewmodel in its current state
          */
         export function mapLayout(options: VisualUpdateOptions, settings: VisualSettings, viewModel: IViewModel): IViewModel {
-            let viewport = options.viewport,
-                multiples = viewModel.multiples,
+            let multiples = viewModel.multiples,
                 layout = viewModel.layout;
-    
-            /** It's been observed that if we use 100% of the height with overflow set on the viewport (which we might need to use
-             *  when applying the minimum dimensions on a multiple later on), that we will always get a scrollbar, so this is used
-             *  to scale the chart height to a value that has bene observed to work for default multiple dimensions.
-            */
-                const heightScale: number = 0.99; 
-    
+
             /** Now we have revised viewport size after creating legend, we can calculate the remainder */
-                layout.viewport = {
-                    width: options.viewport.width,
-                    height: options.viewport.height
-                };
-                layout.chart = {
-                    width: options.viewport.width,
-                    height: options.viewport.height * heightScale
-                };
-    
-            /** Core multiples configuration */
-                let multipleCount = multiples.length,
-                    multipleMaxPerRow = settings.smallMultiple.maximumMultiplesPerRow,
-                    multipleColumnsPerRow = (!multipleMaxPerRow ||  multipleMaxPerRow > multipleCount) ? multipleCount : multipleMaxPerRow,
-                    multipleRowCount = Math.ceil(multipleCount / multipleColumnsPerRow),
-                    multipleTextProperties = {
-                        text: multiples[0].name,
-                        fontFamily: settings.smallMultiple.fontFamily,
-                        fontSize: PixelConverter.toString(settings.smallMultiple.fontSize)
-                    };
-                layout.multiples = {
-                    count: multipleCount,
-                    maxPerRow: multipleMaxPerRow,
-                    columns: {
-                        count: multipleColumnsPerRow,
-                        spacing: settings.smallMultiple.spacingBetweenColumns
-                    },
-                    rows: {
-                        count: multipleRowCount,
-                        spacing: multipleRowCount > 1 && settings.smallMultiple.spacingBetweenRows
-                            ? settings.smallMultiple.spacingBetweenRows
-                            : 0
-                    },
-                    label: {
-                        textProperties: multipleTextProperties,
-                        height: (settings.smallMultiple.showMultipleLabel) 
-                            ? textMeasurementService.measureSvgTextHeight(multipleTextProperties)
-                            : 0
-                    },
-                    borderStrokeWidth: settings.smallMultiple.border
-                        ? settings.smallMultiple.borderStrokeWidth
-                        : 0
-                } as IMultiple
+                layout.viewport.width = options.viewport.width;
+                layout.viewport.height = options.viewport.height;
+                
+                layout.chart.width = options.viewport.width;
+                layout.chart.height = options.viewport.height;
     
             /** Calculate overlay and clip X/Y coordinates */
                 layout.multiples.translate = function() {
-                    let x = layout.padding.chartSeries.left,
+                    let x = 0,//layout.padding.chartSeries.left,
                         y: number;
                     switch(settings.smallMultiple.labelPosition) {
                         case 'top': {
@@ -556,176 +639,89 @@ module powerbi.extensibility.visual {
 
             /** We now need to calculate our axes and the space they'll take before we assign anything else */
 
-                /** X-axis */
+                /** Theoretical Height of X-Axis */
 
-                    /** Axis line settings */
-                        layout.xAxisColumn.line = {
-                            top: 4,
-                            tickMarkLength: 4
-                        } as IAxisPolyLine
+                    /** Master title height */
+                        layout.xAxis.masterTitle.height = (settings.xAxis.showTitle) 
+                            ?   layout.padding.chartAxisTitle.bottom
+                                + textMeasurementService.measureSvgTextHeight(
+                                        layout.xAxis.masterTitle.textProperties,
+                                        layout.xAxis.masterTitle.textProperties.text
+                                    )
+                                + layout.padding.chartAxisTitle.top
+                            : 0;
+
+                    /** Label height */
+                        layout.xAxis.labelHeight = settings.xAxis.show && settings.xAxis.showLabels
+                            ?   Math.max(
+                                    textMeasurementService.measureSvgTextHeight(layout.xAxis.minValue.textProperties),
+                                    textMeasurementService.measureSvgTextHeight(layout.xAxis.maxValue.textProperties)
+                                )
+                            :   0;
+
+                    /** Calculate total height, including labels TODO: Split out into components for rendering; will proably need extra interface */
+                        layout.xAxis.height = settings.xAxis.show
+                            ?   layout.xAxis.labelHeight
+                                +   layout.xAxis.line.top
+                                +   (settings.xAxis.showAxisLine 
+                                        ? layout.xAxis.line.top + layout.xAxis.line.tickMarkLength
+                                        : 0
+                                    )
+                                +   layout.xAxis.masterTitle.height
+                            :   0;
+
+                /** Resolve our multiple available height and row height now we know about the X-axis */
+                    layout.multiples.availableHeight = layout.chart.height - layout.xAxis.height;
+
+                /** Adjust multiple height for spacing between rows */
+                    layout.multiples.rows.height =  (layout.multiples.availableHeight / layout.multiples.rows.count) - layout.multiples.rows.spacing;
+                
+                /** Theoretical width and height of Y-Axis */
+                    layout.yAxis.masterTitle.height = layout.multiples.availableHeight;
+                    layout.yAxis.height = layout.multiples.rows.height - layout.multiples.label.height - layout.padding.chartArea.bottom;
+                    layout.yAxis.ticks = axisHelper.getRecommendedNumberOfTicksForYAxis(layout.yAxis.height);
+
+                    /** Calculate title width now that we have the text */
+                        layout.yAxis.masterTitle.width = (settings.yAxis.show && settings.yAxis.showTitle) 
+                            ?   layout.padding.chartAxisTitle.left
+                                    + textMeasurementService.measureSvgTextHeight(
+                                            layout.yAxis.masterTitle.textProperties,
+                                            layout.yAxis.masterTitle.textProperties.text
+                                        )
+                                    + layout.padding.chartAxisTitle.right
+                            :   0;
+
+                    /** Width of labels */
+                        layout.yAxis.labelWidth = settings.yAxis.show && settings.yAxis.showLabels
+                            ?   Math.round(
+                                    Math.max(
+                                        textMeasurementService.measureSvgTextWidth(layout.yAxis.minValue.textProperties),
+                                        textMeasurementService.measureSvgTextWidth(layout.yAxis.maxValue.textProperties)
+                                    )
+                                )
+                                + 10
+                            :   0;
+
+                    /** And x/y coordinates for title position */
+                        layout.yAxis.masterTitle.x = -layout.yAxis.masterTitle.height / 2;
+                        layout.yAxis.masterTitle.y = layout.padding.chartAxisTitle.left;
+
+                    /** We now have everything we need for our whole Y-axis */
+                        layout.yAxis.width = layout.yAxis.labelWidth + layout.yAxis.masterTitle.width;
+
+                /** Now we have our Y-axis width we can calcluate the widths of everything else */
+                    layout.multiples.rows.width = layout.chart.width - layout.yAxis.masterTitle.width;
+                    layout.multiples.columns.width = ((layout.multiples.rows.width - layout.yAxis.labelWidth) / layout.multiples.columns.count) - layout.multiples.columns.spacing;
+
+                    layout.multiples.container.width = layout.multiples.columns.width;
+                    layout.multiples.container.height = layout.multiples.rows.height;
 
                     /** Text properties to allow us to calculate height */
-                        layout.xAxisColumn.minValue.textProperties.fontFamily = layout.xAxisColumn.maxValue.textProperties.fontFamily = settings.xAxis.fontFamily;
-                        layout.xAxisColumn.minValue.textProperties.fontSize = layout.xAxisColumn.maxValue.textProperties.fontSize = PixelConverter.toString(settings.xAxis.fontSize);
-
-                        layout.xAxis.width = layout.xAxisColumn.width = layout.multiples.columns.width;
+                        layout.xAxis.width = layout.multiples.columns.width - layout.padding.chartSeries.right;
                         layout.xAxis.ticks = Math.min(
                             axisHelper.getRecommendedNumberOfTicksForXAxis(layout.xAxis.width),
                             layout.xAxis.maxValue.value - layout.xAxis.minValue.value
                         );
-                        layout.xAxisColumn.title = {
-                            show: settings.xAxis.showTitle,
-                            measureNames: [],
-                            textProperties: {
-                                text: (!settings.xAxis.titleText)
-                                    ? options.dataViews[0].metadata.columns.filter(c => c.roles['category'])[0].displayName
-                                    : settings.xAxis.titleText,
-                                fontFamily: settings.xAxis.titleFontFamily,
-                                fontSize: PixelConverter.toString(settings.xAxis.titleFontSize)
-                            }
-                        } as IAxisTitle;
-
-                    /** Calculate title height now that we have the text */
-                        layout.xAxisColumn.title.height = (settings.xAxis.showTitle) 
-                        ?   layout.padding.chartAxisTitle.bottom
-                            + textMeasurementService.measureSvgTextHeight(
-                                    layout.xAxisColumn.title.textProperties,
-                                    layout.xAxisColumn.title.textProperties.text
-                                )
-                            + layout.padding.chartAxisTitle.top
-                        : 0;
-
-                    /** Calculate height */
-                        layout.xAxisColumn.height = settings.xAxis.show
-                            ?   Math.max(
-                                    textMeasurementService.measureSvgTextHeight(layout.xAxisColumn.minValue.textProperties),
-                                    textMeasurementService.measureSvgTextHeight(layout.xAxisColumn.maxValue.textProperties)
-                                ) 
-                                +   layout.xAxisColumn.line.top
-                                +   (settings.xAxis.showAxisLine 
-                                        ? layout.xAxisColumn.line.top + layout.xAxisColumn.line.tickMarkLength
-                                        : 0
-                                    )
-                                +   layout.xAxisColumn.title.height
-                            :   0;
-
-                /** Resolve our multiple available height and row height now we know about the X-axis */
-                    layout.multiples.availableHeight = layout.chart.height - layout.xAxisColumn.height;
-
-                /** Adjust multiple height for spacing between rows */
-                    layout.multiples.rows.height = (layout.multiples.availableHeight / multipleRowCount) - layout.multiples.rows.spacing;
-                
-                /** Y-axis */
-                    layout.yAxisRow.height = layout.yAxis.height = layout.multiples.rows.height - layout.multiples.label.height - layout.padding.chartArea.bottom;
-                    layout.yAxisRow.ticks = layout.yAxis.ticks = axisHelper.getRecommendedNumberOfTicksForYAxis(layout.yAxisRow.height);
-                    layout.yAxisRow.title = {
-                        show: settings.yAxis.showTitle,
-                        measureNames: multiples[0].measures.map(function(measure) {
-                            return measure.name;
-                        }),
-                        textProperties: {
-                            text: settings.yAxis.titleText,
-                            fontFamily: settings.yAxis.titleFontFamily,
-                            fontSize: PixelConverter.toString(settings.yAxis.titleFontSize)
-                        }
-                    } as IAxisTitle;
-
-                    layout.yAxis.title = {
-                        show: false,
-                        width: 0
-                    } as IAxisTitle;
-      
-                /** We format the Y-axis ticks based on the default formatting of the first measure, or the axis properties,
-                 *  if they are different.
-                 */
-                    layout.yAxisRow.numberFormat = valueFormatter.create({
-                        format: multiples[0].measures[0].formatString,
-                        value : (settings.yAxis.labelDisplayUnits == 0 
-                            ? layout.yAxisRow.maxValue.value
-                            : settings.yAxis.labelDisplayUnits
-                        ),
-                        precision: (settings.yAxis.precision != null
-                            ? settings.yAxis.precision
-                            : null
-                        )
-                    });
-    
-                /** Add our formatted min/max values */
-
-                    /** Y-axis */
-                        layout.yAxisRow.minValue.textProperties = {
-                            text: layout.yAxisRow.numberFormat.format(layout.yAxisRow.minValue.value),
-                            fontFamily: settings.yAxis.fontFamily,
-                            fontSize: PixelConverter.toString(settings.yAxis.fontSize)
-                        };
-                        layout.yAxisRow.maxValue.textProperties = {
-                            text: layout.yAxisRow.numberFormat.format(layout.yAxisRow.maxValue.value),
-                            fontFamily: settings.yAxis.fontFamily,
-                            fontSize: PixelConverter.toString(settings.yAxis.fontSize)
-                        };
-    
-                /** Resolve actual axis text based on the additional Y-axis properties */
-                    layout.yAxisRow.title.textProperties.text = function() {
-                        let axis = layout.yAxisRow;
-    
-                        /** If we supplied a title, use that, otherwise format our measure names */
-                            let title = (!settings.yAxis.titleText) 
-                                ? axis.title.measureNames.join(', ').replace(/, ([^,]*)$/, ' and $1')
-                                : settings.yAxis.titleText;
-    
-                        /** Return the correct title based on our supplied settings */
-                            if (settings.yAxis.labelDisplayUnits == 1) {
-                                return title;
-                            }
-                            switch (settings.yAxis.titleStyle) {
-                                case 'title': {
-                                    return title;
-                                }
-                                case 'unit': {
-                                    return axis.numberFormat.displayUnit.title;
-                                }
-                                case 'both': {
-                                    return `${title} (${axis.numberFormat.displayUnit.title})`;
-                                }
-                            }
-                    }();
-    
-                /** Calculate title width now that we have the text */
-                    layout.yAxisRow.title.width = (settings.yAxis.showTitle) 
-                        ?   layout.padding.chartAxisTitle.left
-                            + textMeasurementService.measureSvgTextHeight(
-                                    layout.yAxisRow.title.textProperties,
-                                    layout.yAxisRow.title.textProperties.text
-                                )
-                            + layout.padding.chartAxisTitle.right 
-                        : 0;
-
-                /** And x/y coordinates for title position */
-                    layout.yAxisRow.title.x = 0 - (layout.multiples.rows.height / 2);
-                    layout.yAxisRow.title.y = 0 + (layout.yAxisRow.title.width / 2);
-    
-                /** We now have everything we need for our whole Y-axis */
-                    layout.yAxisRow.width = function(){
-                        if (settings.yAxis.show) {
-                            return layout.yAxisRow.title.width
-                                    + Math.round(
-                                            Math.max(
-                                                textMeasurementService.measureSvgTextWidth(layout.yAxisRow.minValue.textProperties),
-                                                textMeasurementService.measureSvgTextWidth(layout.yAxisRow.maxValue.textProperties)
-                                            )
-                                        ) 
-                                    + 10;
-                        } else {
-                            return 0;
-                        }
-                    }();
-
-                    layout.yAxis.width = 0;
-    
-                /** Now we have our Y-axis width we can calcluate the widths of everything else */
-                    layout.multiples.rows.width = layout.chart.width - layout.yAxisRow.width;
-                    layout.multiples.columns.width = (layout.multiples.rows.width / layout.multiples.columns.count) - layout.multiples.columns.spacing;
-                    layout.xAxis.width = layout.xAxisColumn.width = layout.multiples.columns.width - layout.padding.chartSeries.right;
     
                 /** Calculate small multiple label positioning */
                     layout.multiples.label.x = function() {
@@ -734,10 +730,10 @@ module powerbi.extensibility.visual {
                                 return 0;
                             }
                             case 'center': {
-                                return layout.multiples.columns.width / 2;
+                                return layout.multiples.container.width / 2;
                             }
                             case 'right': {
-                                return layout.multiples.columns.width;
+                                return layout.multiples.container.width;
                             }
                         }
                     }();
@@ -747,7 +743,7 @@ module powerbi.extensibility.visual {
                                 return 0 + layout.multiples.label.height;
                             }
                             case  'bottom': {
-                                return layout.multiples.rows.height;
+                                return layout.multiples.container.height;
                             }
                         }                                        
                     }();
@@ -766,8 +762,8 @@ module powerbi.extensibility.visual {
                     }();
 
                 /** And calculate the ranges for our d3 axes */
-                    layout.xAxis.range = layout.xAxisColumn.range = [layout.padding.chartSeries.left, layout.xAxis.width];
-                    layout.yAxisRow.range = layout.yAxis.range = function() {
+                    layout.xAxis.range = [layout.padding.chartSeries.left, layout.xAxis.width];
+                    layout.yAxis.range = function() {
                         switch (settings.smallMultiple.labelPosition) {
                             case 'top': {
                                 return [
@@ -780,67 +776,60 @@ module powerbi.extensibility.visual {
                             case 'bottom': {
                                 console.log('bottom');
                                 return [
-                                    layout.yAxisRow.height,
+                                    layout.yAxis.height,
                                     layout.padding.chartArea.top
                                 ]
                             }
                         }
                     }();
 
-                /** ...and the domains */
-                    layout.xAxis.domain = layout.xAxisColumn.domain = [
-                        viewModel.layout.xAxis.minValue.value,
-                        viewModel.layout.xAxis.maxValue.value
-                    ];
-                    layout.yAxisRow.domain = layout.yAxis.domain = function() {
-                        return [
-                            settings.yAxis.start
-                                ? settings.yAxis.start
-                                : layout.yAxisRow.minValue.value,
-                            settings.yAxis.end
-                                ? settings.yAxis.end
-                                : layout.yAxisRow.maxValue.value
-                        ]
-                    }();
-
                 /** Y-axis generation */
 
                     /** Scale */
-                        layout.yAxisRow.scale = layout.yAxis.scale = d3.scale.linear()
-                            .domain(layout.yAxisRow.domain)
-                            .range(layout.yAxisRow.range)
-                            .nice(layout.yAxisRow.ticks);
+                        layout.yAxis.scale = layout.yAxis.scale = d3.scale.linear()
+                            .domain(layout.yAxis.domain)
+                            .range(layout.yAxis.range)
+                            .nice(layout.yAxis.ticks);
 
-                    /** Major - multiple row */
-                        layout.yAxisRow.generator = d3.svg.axis()
-                            .scale(layout.yAxisRow.scale)
-                            .orient('left')
-                            .ticks(layout.yAxisRow.ticks)
-                            .tickFormat(d => (layout.yAxisRow.numberFormat.format(d)))
-                            .tickSize(0, 0);
+                    /** Outer - tick labels at start of multiple row */
+                        layout.yAxis.outer = {
+                            generator: d3.svg.axis()
+                                .scale(layout.yAxis.scale)
+                                .orient('left')
+                                .ticks(layout.yAxis.ticks)
+                                .tickFormat( d => settings.yAxis.showLabels 
+                                    ?   layout.yAxis.numberFormat.format(d)
+                                    :   ''
+                                )
+                                .tickSize(0, 0)
+                        }
 
-                    /** Minor - individual multiple tick lines */
-                        layout.yAxis.generator = d3.svg.axis()
-                            .scale(layout.yAxisRow.scale)
-                            .orient('left')
-                            .ticks(layout.yAxisRow.ticks)
-                            .tickFormat('')
-                            .tickSize(-layout.multiples.columns.width, 0);
+                    /** Inner - individual multiples */
+                        layout.yAxis.inner = {
+                            generator: d3.svg.axis()
+                                .scale(layout.yAxis.scale)
+                                .orient('left')
+                                .ticks(layout.yAxis.ticks)
+                                .tickFormat('')
+                                .tickSize(-layout.multiples.columns.width, 0)
+                        }
 
                 /** X-axis generation */
                     
                     /** Scale */
-                        layout.xAxis.scale = layout.xAxisColumn.scale = d3.scale.linear()
+                        layout.xAxis.scale = layout.xAxis.scale = d3.scale.linear()
                             .domain(layout.xAxis.domain)
                             .rangeRound(layout.xAxis.range);
 
                     /** Minor - individual multiple */
-                        layout.xAxis.generator = d3.svg.axis()
-                            .scale(layout.xAxisColumn.scale)
-                            .orient('bottom')
-                            .ticks(layout.xAxis.ticks)
-                            .tickFormat('')
-                            .tickSize(-layout.yAxis.range[0] + layout.yAxis.range[1], 0);
+                        layout.xAxis.inner = {
+                            generator: d3.svg.axis()
+                                .scale(layout.xAxis.scale)
+                                .orient('bottom')
+                                .ticks(layout.xAxis.ticks)
+                                .tickFormat('')
+                                .tickSize(-layout.yAxis.range[0] + layout.yAxis.range[1], 0)
+                        }
 
             return {
                 multiples: multiples,
