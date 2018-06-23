@@ -170,7 +170,7 @@ module powerbi.extensibility.visual {
                 .append('g')
                     .classed(`${settingKey}Container`, true)
                     .style({
-                        'font-size': viewModel.layout[axisKey].maxValue.textProperties.fontSize,
+                        'font-size': viewModel.layout[settingKey].maxValue.textProperties.fontSize,
                         'font-family': settings[settingKey].fontFamily,
                         'fill': settings[settingKey].fontColor,
                         'stroke-width' : 1 /** TODO: Config */
@@ -181,11 +181,11 @@ module powerbi.extensibility.visual {
                     .classed({
                         'grid': true
                     })
-                    .call(viewModel.layout[axisKey].generator)
+                    .call(viewModel.layout[settingKey][axisKey].generator)
                     .attr({
                         transform: function() {
-                            return `translate(${settingKey == 'yAxis' 
-                                ? viewModel.layout[axisKey].width
+                            return `translate(${settingKey == 'yAxis' && axisKey == 'outer'
+                                ? viewModel.layout[settingKey].width
                                 : 0
                             }, ${settingKey == 'yAxis' 
                             ? 0
@@ -210,8 +210,8 @@ module powerbi.extensibility.visual {
                     })
                     .classed(settings[settingKey].gridlineStrokeLineStyle, true);
 
-            /** Add axis title */
-                if (viewModel.layout[axisKey].title && viewModel.layout[axisKey].title.show) {
+            /** Forthcoming - used to be the axis title; will form the basis for the second category in 1.1.0 */
+                /*if (viewModel.layout[axisKey].title && viewModel.layout[axisKey].title.show) {
                     axisContainer
                         .append('text')
                             .attr({
@@ -234,7 +234,7 @@ module powerbi.extensibility.visual {
                                     viewModel.layout.multiples.rows.height
                                 );
                             });
-                }
+                }*/
             }
 
     }
