@@ -107,7 +107,7 @@ module powerbi.extensibility.visual {
 
             /** Complete mapping our view model layout */
                 viewModel = mapLayout(options, this.settings, viewModel);
-            
+
             /** For debugging purposes - remove later on */
                 if (settings.debug.show) {
                     console.clear();
@@ -121,11 +121,9 @@ module powerbi.extensibility.visual {
 
                 /** Size our initial container to match the viewport */
                     this.container.attr({
-                        width: viewModel.layout.chart.width,
-                        height: viewModel.layout.chart.height,
+                        width: `${viewModel.layout.chart.width}%`,
+                        height: `${viewModel.layout.chart.height}%`,
                     });
-
-                /** Resolve our number of columns, based on configuration and calculate how much space we have available for each small multiple */
 
                 /** Debugging stuff for grid dimensions */
                     if (settings.debug.show) {
@@ -144,8 +142,55 @@ module powerbi.extensibility.visual {
                         );
                     }
 
-            /** Draw our grid by applying our SVG elements based on our configuration */
-                    
+            /** Draw our grid based on our configuration */
+
+                /** Add our container (table) */
+                    let chartGrid = this.container
+                        .append('svg')
+                            .classed('smallMultipleLineChartGrid', true)
+                            .attr({
+                                width: `${viewModel.layout.chart.width}`,
+                                height: `${viewModel.layout.chart.height}`
+                            });
+
+                /** If a y-axis title is required, add a column to support it */
+                    if (    settings.yAxis.showTitle 
+                        &&  viewModel.layout.yAxis.masterTitle 
+                        &&  viewModel.layout.yAxis.masterTitle.show
+                    ) {
+                        chartGrid
+                            .append('svg')
+                                .classed('smallMultipleLineChartMasterYAxis', true)
+                                .attr({
+                                    width: viewModel.layout.yAxis.masterTitle.width,
+                                    height: viewModel.layout.yAxis.masterTitle.height,
+                                    /** Coordinates should be at the origin for now but this may change later on */
+                                    x: 0,
+                                    y: 0
+                                })
+                            .append('text')
+                                .attr({
+                                    transform: 'rotate(-90)',
+                                    y: viewModel.layout.yAxis.masterTitle.y,
+                                    x: viewModel.layout.yAxis.masterTitle.x,
+                                    dy: '1em'
+                                })
+                                .style({
+                                    'text-anchor': 'middle',
+                                    'font-size': viewModel.layout.yAxis.masterTitle.textProperties.fontSize,
+                                    'font-family': settings.yAxis.titleFontFamily,
+                                    'fill': settings.yAxis.titleColor,
+                                })
+                                .text(viewModel.layout.yAxis.masterTitle.textProperties.text)
+                                .each(function() {
+                                    smallMultipleLineChartUtils.wrapText(
+                                        d3.select(this),
+                                        viewModel.layout.yAxis.masterTitle.textProperties,
+                                        viewModel.layout.yAxis.masterTitle.height
+                                    );
+                                });
+                    }                            
+                            
                 /** Pass the x-scale to our utils module for reuse in the chart */
                     smallMultipleLineChartUtils.xScale = viewModel.layout.xAxis.scale;
 
@@ -162,7 +207,31 @@ module powerbi.extensibility.visual {
                     smallMultipleLineChartUtils.tooltipService = this.host.tooltipService;
 
                 /** Create as many rows as we need for our multiples based on the configuration of how manay we want per row */
-                    for(let i = 0, len = viewModel.layout.multiples.rows.count; i < len; i++) {
+                    for (let i = 0, len = viewModel.layout.multiples.rows.count; i < len; i++) {
+
+                        /** Container for entire row of multiples */
+                        let multipleRow = chartGrid
+                            .append('svg')
+                                .classed({
+                                    smallMultipleRowContainer: true
+                                })                            
+                                .attr({
+                                    height: viewModel.layout.multiples.rows.height,
+                                    width: viewModel.layout.chart.width,
+                                    x: 0,
+                                    y: 0 + ((viewModel.layout.multiples.rows.height + viewModel.layout.multiples.rows.spacing)* i)
+                                });
+
+                        /** If we've determined that a Y-axis is required, add it in at the start of the row */
+                            if (settings.yAxis.show) {
+                                smallMultipleLineChartUtils.renderAxis(
+                                    multipleRow,
+                                    settings,
+                                    viewModel,
+                                    'outer',
+                                    'yAxis'
+                                );
+                            }
 
                         /** We can filter the source data when drawing but this creates empty elements; this step creates a subset of our
                          *  data for the row in question
@@ -171,47 +240,23 @@ module powerbi.extensibility.visual {
                                 return o;
                             }).slice(i * viewModel.layout.multiples.columns.count, (i * viewModel.layout.multiples.columns.count) + viewModel.layout.multiples.columns.count);
 
-                        /** Container for entire row of multiples */
-                            let multipleRow = this.container
-                                .append('svg')
-                                    .classed({
-                                        smallMultipleRowContainer: true
-                                    })
-                                    .attr({
-                                        height: viewModel.layout.multiples.rows.height,
-                                        width: viewModel.layout.chart.width
-                                    })
-                                    .style({
-                                        'padding-bottom': viewModel.layout.multiples.rows.spacing
-                                    });
-
                         /** Definition for clip container */
+                            multipleRow.selectAll('defs').remove();
                             d3.select('.smallMultipleRowContainer')
                                 .append('defs')
-                                    .append('clipPath')
-                                        .attr({
-                                            id: 'multiple-clip'
-                                        })
-                                        .classed({
-                                            'multipleClip': true
-                                        })
-                                        .append('rect')
-                                            .attr({
-                                                width: viewModel.layout.multiples.columns.width,
-                                                height: viewModel.layout.yAxis.height,
-                                                transform: viewModel.layout.multiples.translate
-                                            });   
-
-                        /** If we've determined that a Y-axis is required, add it in at the start of the row */
-                            if (settings.yAxis.show) {
-                                smallMultipleLineChartUtils.renderAxis(
-                                    multipleRow,
-                                    settings,
-                                    viewModel,
-                                    'yAxisRow',
-                                    'yAxis'
-                                );
-                            }
+                                .append('clipPath')
+                                    .attr({
+                                        id: 'multiple-clip'
+                                    })
+                                    .classed({
+                                        'multipleClip': true
+                                    })
+                                .append('rect')
+                                    .attr({
+                                        width: viewModel.layout.multiples.columns.width,
+                                        height: viewModel.layout.yAxis.height,
+                                        transform: viewModel.layout.multiples.translate
+                                    });
 
                         /** Add group elements for each multiple, and translate based on Y-axis configuration */
                             let multiple = multipleRow.selectAll('.lineChartSmallMultiple')
@@ -224,7 +269,7 @@ module powerbi.extensibility.visual {
                                     .attr({
                                         transform: function(d, i) {
                                             let xOffset = (i * (viewModel.layout.multiples.columns.width + viewModel.layout.multiples.columns.spacing))
-                                                            + viewModel.layout.yAxisRow.width
+                                                            + viewModel.layout.yAxis.width;
                                             return `translate(${xOffset}, ${0})`;
                                         }
                                     });
@@ -235,7 +280,7 @@ module powerbi.extensibility.visual {
                                         multiple,
                                         settings,
                                         viewModel,
-                                        'yAxis',
+                                        'inner',
                                         'yAxis'
                                     );
                                 }
@@ -246,21 +291,24 @@ module powerbi.extensibility.visual {
                                         multiple,
                                         settings,
                                         viewModel,
-                                        'xAxis',
+                                        'inner',
                                         'xAxis'
                                     );
                                 }
 
                             /** Multiple background */
                                 multiple
+                                    .append('g')
                                     .append('rect')
                                         .classed({
                                             multipleBackground: true,
                                         })
                                         .classed(settings.smallMultiple.borderStyle, true)
                                         .attr({
-                                            height: viewModel.layout.multiples.rows.height,
-                                            width: viewModel.layout.multiples.columns.width,
+                                            height: viewModel.layout.multiples.container.height,
+                                            width: viewModel.layout.multiples.container.width,
+                                            x: 0,
+                                            y: 0,
                                             fill: function(d, i) {
                                                 return i % 2 && settings.smallMultiple.bandedMultiples 
                                                     ? settings.smallMultiple.backgroundColorAlternate 
@@ -329,7 +377,8 @@ module powerbi.extensibility.visual {
                                                         return lineGen(d.measures[measureIndex].categoryData);
                                                     },
                                                     transform: 'translate(0, 0)',
-                                                    stroke: measure.color
+                                                    stroke: measure.color,
+                                                    'stroke-linecap': 'round'
                                                 });
 
                                         focus
@@ -417,7 +466,7 @@ module powerbi.extensibility.visual {
                                                 smallMultipleLineChartUtils.wrapText(
                                                     d3.select(this),
                                                     viewModel.layout.multiples.label.textProperties,
-                                                    viewModel.layout.xAxis.width
+                                                    viewModel.layout.multiples.container.width
                                                 );
                                             });
                                 }
@@ -426,41 +475,67 @@ module powerbi.extensibility.visual {
                 /** If we need an x-axis for our columns, let's render it */
                     if (settings.xAxis.show) {
 
-                        /** Containing SVG element */
-                            let xAxisRow = this.container
-                                .append('svg')
-                                    .classed({
-                                        smallMultipleColumnAxisContainer: true
-                                    })
-                                    .attr({
-                                        width: viewModel.layout.chart.width
-                                    });
+                        let xAxisContainer = chartGrid
+                            .append('svg')
+                                .attr({
+                                    height: viewModel.layout.xAxis.height,
+                                    width: viewModel.layout.chart.width, // TODO: Fix to width of row
+                                    x: viewModel.layout.multiples.rows.x,
+                                    y: viewModel.layout.chart.height - viewModel.layout.xAxis.height
+                                })
+
+                        /** Add title, if requested */
+                            if (settings.xAxis.showTitle) {
+                                xAxisContainer
+                                    .append('g')
+                                    .append('text')
+                                        .attr({
+                                            x: viewModel.layout.multiples.rows.width / 2,
+                                            y: viewModel.layout.xAxis.height,
+                                            'text-anchor': 'middle',
+                                            'alignment-baseline': 'text-after-edge'
+                                        })
+                                        .style({
+                                            'font-size': viewModel.layout.xAxis.masterTitle.textProperties.fontSize,
+                                            'font-family': settings.xAxis.titleFontFamily,
+                                            'fill': settings.xAxis.titleColor
+                                        })
+                                        .text(viewModel.layout.xAxis.masterTitle.textProperties.text)
+                                        .each(function() {
+                                            smallMultipleLineChartUtils.wrapText(
+                                                d3.select(this),
+                                                viewModel.layout.xAxis.masterTitle.textProperties,
+                                                viewModel.layout.multiples.rows.width
+                                            );
+                                        });                                        
+                            }
 
                         /** Add one axis per column */
-                            for (let x=0; x < viewModel.layout.multiples.columns.count; x++) {
+                            for (let x = 0; x < viewModel.layout.multiples.columns.count; x++) {
 
                                 /** We're not using a conventional d3 axis for our column axis, so we'll produce our own containing element for the stuff we want to draw */
-                                    let xAxisContainer = xAxisRow
+                                    let xAxisColumn = xAxisContainer
                                         .append('g')
                                             .classed({
                                                 smallMultipleColumnAxis: true
                                             })
                                             .attr({
-                                                transform: `translate(${(x * (viewModel.layout.multiples.columns.width + viewModel.layout.multiples.columns.spacing)) + viewModel.layout.yAxisRow.width}, ${0})`
+                                                transform: `translate(${(x * (viewModel.layout.multiples.columns.width + viewModel.layout.multiples.columns.spacing)) 
+                                                    + viewModel.layout.yAxis.width}, ${0})`
                                             })
                                             .style({
-                                                'font-size': viewModel.layout.xAxisColumn.maxValue.textProperties.fontSize,
+                                                'font-size': viewModel.layout.xAxis.maxValue.textProperties.fontSize,
                                                 'font-family': settings.xAxis.fontFamily,
                                                 'fill': settings.xAxis.fontColor
                                             });
 
                                 /** If we need axis lines, render them */
                                     if (settings.xAxis.showAxisLine) {
-                                        let top = viewModel.layout.xAxisColumn.line.top,
-                                            bottom = viewModel.layout.xAxisColumn.line.top + viewModel.layout.xAxisColumn.line.tickMarkLength,
+                                        let top = viewModel.layout.xAxis.line.top,
+                                            bottom = viewModel.layout.xAxis.line.top + viewModel.layout.xAxis.line.tickMarkLength,
                                             width = viewModel.layout.multiples.columns.width;
 
-                                        xAxisContainer
+                                        xAxisColumn
                                             .append('polyline')
                                                 .attr({
                                                     points: `0,${bottom} 0,${top} ${width},${top} ${width},${bottom}`
@@ -474,39 +549,16 @@ module powerbi.extensibility.visual {
                                                 });
                                     }
 
-                                /** Add min/max labels at left/right extremes */
-                                    smallMultipleLineChartUtils.addXAxisLabel(
-                                        xAxisContainer, viewModel, 'xAxisColumn', 'minValue', 'start'
-                                    );
-                                    smallMultipleLineChartUtils.addXAxisLabel(
-                                        xAxisContainer, viewModel, 'xAxisColumn', 'maxValue', 'end'
-                                    );
+                                /** Add min/max labels at left/right extremes, if we need them */
+                                    if (settings.xAxis.showLabels) {
+                                        smallMultipleLineChartUtils.addXAxisLabel(
+                                            xAxisColumn, viewModel, 'minValue', 'start'
+                                        );
+                                        smallMultipleLineChartUtils.addXAxisLabel(
+                                            xAxisColumn, viewModel, 'maxValue', 'end'
+                                        );
+                                    }
                             }
-
-                            /** Add title, if requested */
-                                if (settings.xAxis.showTitle) {
-                                    xAxisRow
-                                        .append('text')
-                                            .attr({
-                                                x: viewModel.layout.multiples.rows.width / 2,
-                                                y: viewModel.layout.xAxisColumn.height,
-                                                'text-anchor': 'middle',
-                                                'alignment-baseline': 'text-after-edge'
-                                            })
-                                            .style({
-                                                'font-size': viewModel.layout.xAxisColumn.title.textProperties.fontSize,
-                                                'font-family': settings.xAxis.titleFontFamily,
-                                                'fill': settings.xAxis.titleColor
-                                            })
-                                            .text(viewModel.layout.xAxisColumn.title.textProperties.text)
-                                            .each(function() {
-                                                smallMultipleLineChartUtils.wrapText(
-                                                    d3.select(this),
-                                                    viewModel.layout.xAxisColumn.title.textProperties,
-                                                    viewModel.layout.multiples.rows.width
-                                                );
-                                            });                                        
-                                }
 
                     }
 
