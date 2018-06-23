@@ -61,7 +61,7 @@ module powerbi.extensibility.visual {
       // Show title
       public showTitle: boolean = true;
       // Title text
-      public titleText: string = 'Legend';
+      public titleText: string = null;
       // Include x-ranges
       public includeRanges: boolean = true;
       // Font color
