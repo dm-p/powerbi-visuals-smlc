@@ -252,11 +252,11 @@ module powerbi.extensibility.visual {
         /**
          * Everything needed to render a small multiple label and calculate any dependencies on it
          * 
-         * @property {number} height                                    - Height that multiple takes up, based on its text properties
-         * @property {TextProperties} textProperties                    - Text properties, including multiple text and font configuration
-         * @property {number} x                                         - Calculated x-position of label
-         * @property {number} y                                         - Calculated y-position of label
-         * @property {string} textAnchor                                - Derived text-anchor based on visual properties
+         * @property {number} height                                    -   Height that multiple takes up, based on its text properties
+         * @property {TextProperties} textProperties                    -   Text properties, including multiple text and font configuration
+         * @property {number} x                                         -   Calculated x-position of label
+         * @property {number} y                                         -   Calculated y-position of label
+         * @property {string} textAnchor                                -   Derived text-anchor based on visual properties
          */
         export interface IMultipleLabel {
             height: number;
@@ -270,8 +270,8 @@ module powerbi.extensibility.visual {
          * Interface for a line chart small multiple (containing many data points)
          * 
          * @interface
-         * @property {string} name                                      - The name of the small multiple facet
-         * @property {ISmallMultipleMeasure[]} measures                 - Set of LineChartSeriesSmallMultipleMeasure values to plot within the small multiple
+         * @property {string} name                                      -   The name of the small multiple facet
+         * @property {ISmallMultipleMeasure[]} measures                 -   Set of LineChartSeriesSmallMultipleMeasure values to plot within the small multiple
          */
         export interface ISmallMultipleData {
             name: string,
@@ -282,11 +282,11 @@ module powerbi.extensibility.visual {
          * Interface for a measure within a multiple series (containing many data points)
          * 
          * @interface
-         * @property {string} name                                      - Name of measure
-         * @property {string} queryName                                 - The query name used to find the measure metadata in the data view
-         * @property {string} formatString                              - The format string used to format the measure for display
-         * @property {ISmallMultipleCategoryDataPoint[]} categoryData   - All category/value data for this measure
-         * @property {string} color                                     - Colour assigned to the measure
+         * @property {string} name                                      -   Name of measure
+         * @property {string} queryName                                 -   The query name used to find the measure metadata in the data view
+         * @property {string} formatString                              -   The format string used to format the measure for display
+         * @property {ISmallMultipleCategoryDataPoint[]} categoryData   -   All category/value data for this measure
+         * @property {string} color                                     -   Colour assigned to the measure
          */
         export interface ISmallMultipleMeasure {
             name: string;
@@ -301,9 +301,9 @@ module powerbi.extensibility.visual {
          * Interface for a category/data point within a measure
          * 
          * @interface
-         * @property {string} name                                      - Name of category
-         * @property {number} value                                     - Data value for point
-         * @property {VisualTooltipDataItem[]} tooltips                 - All VisualToolTipDataItem entries to add to any tooltips that need to be displayed for this data point
+         * @property {string} name                                      -   Name of category
+         * @property {number} value                                     -   Data value for point
+         * @property {VisualTooltipDataItem[]} tooltips                 -   All VisualToolTipDataItem entries to add to any tooltips that need to be displayed for this data point
          */
         export interface ISmallMultipleCategoryDataPoint {
             name: any;
@@ -315,9 +315,9 @@ module powerbi.extensibility.visual {
          * Map the data views into the view model and set up the other layout bare minimums. 
          * We will need to do the remainder of the layout after calculating the legend, but we can get some things done here.
          * 
-         * @param {VisualUpdateOptions} options                         - options from visual instantiation
-         * @param {IVisualHost} host                                    - host from visual instantiation
-         * @param {VisualSettings} settings                             - parsed and processed settings from properties pane
+         * @param {VisualUpdateOptions} options                         -   options from visual instantiation
+         * @param {IVisualHost} host                                    -   host from visual instantiation
+         * @param {VisualSettings} settings                             -   parsed and processed settings from properties pane
          */
         export function visualTransform(options: VisualUpdateOptions, host: IVisualHost, settings: VisualSettings): IViewModel {
             let dataViews = options.dataViews;
