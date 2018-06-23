@@ -108,15 +108,12 @@ module powerbi.extensibility.visual {
          * 
          * @param container             -   D3/DOM element selection to bind y-axis to
          * @param viewModel             -   Our view model
-         * @param axisKey               -   The key value of the appropriate IAxis property from IViewModel (would typically be either 'xAxis' 
-         *                                      or 'xAxisColumn' based on current implementation)
          * @param valueKey              -   The key value of the appropriate IAxisValue to use when adding to the axis
          * @param textAnchor            -   SVG text-anchor attribute value to use (we currently only support 'start' and 'end')
          */
         export function addXAxisLabel(
             container: d3.Selection<any>,
             viewModel: SmallMultipleLineChartViewModel.IViewModel,
-            axisKey: string,
             valueKey: string,
             textAnchor: string
         ): void {
@@ -139,15 +136,15 @@ module powerbi.extensibility.visual {
                     .append('text')
                         .attr({
                             x: x,
-                            y: viewModel.layout[axisKey].height - viewModel.layout[axisKey].title.height,
+                            y: viewModel.layout.xAxis.height - viewModel.layout.xAxis.masterTitle.height,
                             'text-anchor': textAnchor,
                             'alignment-baseline': 'text-after-edge'
                         })
-                        .text(viewModel.layout[axisKey][valueKey].textProperties.text)
+                        .text(viewModel.layout.xAxis[valueKey].textProperties.text)
                         .each(function() {
                             wrapText(
                                 d3.select(this),
-                                viewModel.layout[axisKey][valueKey].textProperties,
+                                viewModel.layout.xAxis[valueKey].textProperties,
                                 viewModel.layout.multiples.columns.width * 0.45
                             );
                         });
