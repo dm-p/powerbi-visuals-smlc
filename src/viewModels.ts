@@ -211,24 +211,26 @@ module powerbi.extensibility.visual {
         /** 
          * Everything needed to render a row of small multiples and calculate any dependencies on it
          * 
-         * @property {number} count                                     - The number of multiple rows in our chart
-         * @property {number} height                                    - The calculated height of the multiple row, with respect to the available height for all multiples and the number of rows
-         * @property {number} width                                     - The calculated width of the multiple row, with respect to the Y-axis width (if applicable)
-         * @property {number} spacing                                   - Spacing between rows (in px)
+         * @property {number} count                                     -   The number of multiple rows in our chart
+         * @property {number} height                                    -   The calculated height of the multiple row, with respect to the available height for all multiples and the number of rows
+         * @property {number} width                                     -   The calculated width of the multiple row, with respect to the Y-axis width (if applicable)
+         * @property {number} spacing                                   -   Spacing between rows (in px)
+         * @property {number} x                                         -   Calculated x-coordinate for placement of row container when rendering
          */
         export interface IMultipleRow {
             count: number;
             height: number;
             width: number;
             spacing: number;
+            x: number;
         }
 
         /**
          * Everything needed to render a small multiple column within a small multiple row and calculate any dependencies on it
          * 
-         * @property {number} count                                     - Number of columns to render inside a small multiple row
-         * @property {number} width                                     - The calcluated width of the multiple column, with respect to its parent row
-         * @property {number} spacing                                   - Spacing between columns (in px)
+         * @property {number} count                                     -   Number of columns to render inside a small multiple row
+         * @property {number} width                                     -   The calcluated width of the multiple column, with respect to its parent row
+         * @property {number} spacing                                   -   Spacing between columns (in px)
          */
         export interface IMultipleColumn {
             count: number;
