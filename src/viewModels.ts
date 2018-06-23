@@ -186,14 +186,15 @@ module powerbi.extensibility.visual {
         /** 
          * Everything needed to render our small multiples within our chart
          * 
-         * @property {number} availableHeight                           - The height available for all multiples relative to our viewport and chart configuration
-         * @property {number} count                                     - The total number of small multiples to render in our chart
-         * @property {number} maxPerRow                                 - The maximum number of multiples to render in each row
-         * @property {IMultipleRow} rows                                - Configuration for each row of multiples rendered inside the chart
-         * @property {IMultipleColumn} columns                          - Configuration for each column of multiples rendered inside each row
-         * @property {IMultipleLabel} label                             - Configuration for display of label in each small multiple
-         * @property {string} translate                                 - X/Y coordinates to translate clipping areas and overlays to match dimensions based on configuration
-         * @property {number} borderStrokeWidth                         - Resolved stroke width of border, based on properties
+         * @property {number} availableHeight                           -   The height available for all multiples relative to our viewport and chart configuration
+         * @property {number} count                                     -   The total number of small multiples to render in our chart
+         * @property {number} maxPerRow                                 -   The maximum number of multiples to render in each row
+         * @property {IMultipleRow} rows                                -   Configuration for each row of multiples rendered inside the chart
+         * @property {IMultipleColumn} columns                          -   Configuration for each column of multiples rendered inside each row
+         * @property {IMultipleLabel} label                             -   Configuration for display of label in each small multiple
+         * @property {string} translate                                 -   X/Y coordinates to translate clipping areas and overlays to match dimensions based on configuration
+         * @property {number} borderStrokeWidth                         -   Resolved stroke width of border, based on properties
+         * @property {IMultipleContainer} container                     -   Configuration for the multiple container
          */
         export interface IMultiple {
             availableHeight: number;
@@ -204,6 +205,7 @@ module powerbi.extensibility.visual {
             label: IMultipleLabel;
             translate: string;
             borderStrokeWidth: number;
+            container: IMultipleContainer;
         }
 
         /** 
@@ -232,6 +234,17 @@ module powerbi.extensibility.visual {
             count: number;
             width: number;
             spacing: number;
+        }
+
+        /**
+         * Configuration to manage placement of the multiple container
+         * 
+         * @property {number} width                                     -   Width of the container, in pixels
+         * @property {number} height                                    -   Height of the container, in pixels
+         */
+        export interface IMultipleContainer {
+            width: number;
+            height: number;
         }
 
         /**
