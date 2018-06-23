@@ -105,6 +105,8 @@ module powerbi.extensibility.visual {
          * @property {number[]} domain                                  -   2-value array of min/max axis values, used for setting d3 axis domain
          * @property {number} ticks                                     -   Number of ticks to use for the axis
          * @property {any} scale                                        -   D3 scale used for the axis
+         * @property {number} labelWidth                                -   Calculated width of labels, in pixels
+         * @property {number} labelHeight                               -   Calculated height of labels, in pixels
          * @property {IAxisPolyLine} line                               -   Poly line properties for custom axis generation
          * @property {IAxisConfiguration} inner                         -   Inner (multiple-level) axis-specific configuration
          * @property {IAxisConfiguration} outer                         -   Outer (row or column-level) axis-specific configuration
