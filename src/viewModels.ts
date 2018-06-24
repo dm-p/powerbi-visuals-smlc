@@ -245,10 +245,15 @@ module powerbi.extensibility.visual {
          * 
          * @property {number} width                                     -   Width of the container, in pixels
          * @property {number} height                                    -   Height of the container, in pixels
+         * @property {number} x                                         -   Calculated x-position of clip container
+         * @property {number} y                                         -   Calculated y-position of clip container
+         * 
          */
         export interface IMultipleClipContainer {
             width: number;
             height: number;
+            x: number;
+            y: number;
         }
 
         /**
