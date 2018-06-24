@@ -196,7 +196,7 @@ module powerbi.extensibility.visual {
          * @property {IMultipleLabel} label                             -   Configuration for display of label in each small multiple
          * @property {string} translate                                 -   X/Y coordinates to translate clipping areas and overlays to match dimensions based on configuration
          * @property {number} borderStrokeWidth                         -   Resolved stroke width of border, based on properties
-         * @property {IMultipleContainer} container                     -   Configuration for the multiple container
+         * @property {IMultipleContainer} clipContainer                 -   Configuration for the multiple container inner
          */
         export interface IMultiple {
             availableHeight: number;
@@ -207,7 +207,7 @@ module powerbi.extensibility.visual {
             label: IMultipleLabel;
             translate: string;
             borderStrokeWidth: number;
-            container: IMultipleContainer;
+            clipContainer: IMultipleClipContainer;
         }
 
         /** 
@@ -241,12 +241,12 @@ module powerbi.extensibility.visual {
         }
 
         /**
-         * Configuration to manage placement of the multiple container
+         * Configuration to manage placement of the clipping container within the small multiple (for plot lines)
          * 
          * @property {number} width                                     -   Width of the container, in pixels
          * @property {number} height                                    -   Height of the container, in pixels
          */
-        export interface IMultipleContainer {
+        export interface IMultipleClipContainer {
             width: number;
             height: number;
         }
@@ -475,7 +475,7 @@ module powerbi.extensibility.visual {
                                 ? settings.smallMultiple.spacingBetweenRows
                                 : 0
                         },
-                        container: {} as IMultipleContainer,
+                        clipContainer: {} as IMultipleClipContainer,
                         label: {
                             textProperties: multipleTextProperties,
                             height: (settings.smallMultiple.showMultipleLabel) 
