@@ -627,7 +627,7 @@ module powerbi.extensibility.visual {
     
             /** Calculate overlay and clip X/Y coordinates */
                 layout.multiples.translate = function() {
-                    let x = 0,//layout.padding.chartSeries.left,
+                    let x = 0,
                         y: number;
                     switch(settings.smallMultiple.labelPosition) {
                         case 'top': {
@@ -680,7 +680,23 @@ module powerbi.extensibility.visual {
 
                 /** Adjust multiple height for spacing between rows */
                     layout.multiples.rows.height =  (layout.multiples.availableHeight / layout.multiples.rows.count) - layout.multiples.rows.spacing;
-                
+
+                /** Height and x/y of clip container */
+                    layout.multiples.clipContainer.height = layout.multiples.rows.height
+                                                            - layout.multiples.label.height
+                                                            - layout.padding.chartArea.top;
+                    layout.multiples.clipContainer.x = 0;
+                    layout.multiples.clipContainer.y = function() {
+                        switch(settings.smallMultiple.labelPosition) {
+                            case 'top': {
+                                return layout.multiples.label.height;
+                            }
+                            case 'bottom': {
+                                return 0;
+                            }
+                        }
+                    }();
+
                 /** Theoretical width and height of Y-Axis */
                     layout.yAxis.masterTitle.height = layout.multiples.availableHeight;
                     layout.yAxis.height = layout.multiples.rows.height - layout.multiples.label.height - layout.padding.chartArea.bottom;
@@ -718,8 +734,9 @@ module powerbi.extensibility.visual {
                     layout.multiples.rows.width = layout.chart.width - layout.yAxis.masterTitle.width;
                     layout.multiples.columns.width = ((layout.multiples.rows.width - layout.yAxis.labelWidth) / layout.multiples.columns.count) - layout.multiples.columns.spacing;
 
-                    layout.multiples.container.width = layout.multiples.columns.width;
-                    layout.multiples.container.height = layout.multiples.rows.height;
+                    layout.multiples.clipContainer.width = layout.multiples.columns.width
+                                                            - layout.padding.chartArea.left
+                                                            - layout.padding.chartArea.right;
 
                     /** Text properties to allow us to calculate height */
                         layout.xAxis.width = layout.multiples.columns.width - layout.padding.chartSeries.right;
@@ -735,10 +752,10 @@ module powerbi.extensibility.visual {
                                 return 0;
                             }
                             case 'center': {
-                                return layout.multiples.container.width / 2;
+                                return layout.multiples.columns.width / 2;
                             }
                             case 'right': {
-                                return layout.multiples.container.width;
+                                return layout.multiples.columns.width;
                             }
                         }
                     }();
@@ -748,7 +765,7 @@ module powerbi.extensibility.visual {
                                 return 0 + layout.multiples.label.height;
                             }
                             case  'bottom': {
-                                return layout.multiples.container.height;
+                                return layout.multiples.rows.height;
                             }
                         }                                        
                     }();

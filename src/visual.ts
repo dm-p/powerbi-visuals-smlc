@@ -255,7 +255,7 @@ module powerbi.extensibility.visual {
                                     .attr({
                                         width: viewModel.layout.multiples.columns.width,
                                         height: viewModel.layout.yAxis.height,
-                                        transform: viewModel.layout.multiples.translate
+                                        transform: `translate(${viewModel.layout.multiples.clipContainer.x}, ${viewModel.layout.multiples.clipContainer.y}`
                                     });
 
                         /** Add group elements for each multiple, and translate based on Y-axis configuration */
@@ -305,8 +305,8 @@ module powerbi.extensibility.visual {
                                         })
                                         .classed(settings.smallMultiple.borderStyle, true)
                                         .attr({
-                                            height: viewModel.layout.multiples.container.height,
-                                            width: viewModel.layout.multiples.container.width,
+                                            height: viewModel.layout.multiples.rows.height,
+                                            width: viewModel.layout.multiples.columns.width,
                                             x: 0,
                                             y: 0,
                                             fill: function(d, i) {
@@ -466,7 +466,7 @@ module powerbi.extensibility.visual {
                                                 smallMultipleLineChartUtils.wrapText(
                                                     d3.select(this),
                                                     viewModel.layout.multiples.label.textProperties,
-                                                    viewModel.layout.multiples.container.width
+                                                    viewModel.layout.multiples.columns.width
                                                 );
                                             });
                                 }
