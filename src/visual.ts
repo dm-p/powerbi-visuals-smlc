@@ -253,9 +253,9 @@ module powerbi.extensibility.visual {
                                     })
                                 .append('rect')
                                     .attr({
-                                        width: viewModel.layout.multiples.columns.width,
-                                        height: viewModel.layout.yAxis.height,
-                                        transform: `translate(${viewModel.layout.multiples.clipContainer.x}, ${viewModel.layout.multiples.clipContainer.y}`
+                                        width: viewModel.layout.multiples.clipContainer.width,
+                                        height: viewModel.layout.multiples.clipContainer.height,
+                                        transform: viewModel.layout.multiples.translate
                                     });
 
                         /** Add group elements for each multiple, and translate based on Y-axis configuration */
@@ -273,28 +273,6 @@ module powerbi.extensibility.visual {
                                             return `translate(${xOffset}, ${0})`;
                                         }
                                     });
-
-                            /** Separate y-axis tick lines, if required */
-                                if (settings.yAxis.show) {
-                                    smallMultipleLineChartUtils.renderAxis(
-                                        multiple,
-                                        settings,
-                                        viewModel,
-                                        'inner',
-                                        'yAxis'
-                                    );
-                                }
-
-                            /** Internal x-axis, if needed */
-                                if (settings.xAxis.show) {
-                                    smallMultipleLineChartUtils.renderAxis(
-                                        multiple,
-                                        settings,
-                                        viewModel,
-                                        'inner',
-                                        'xAxis'
-                                    );
-                                }
 
                             /** Multiple background */
                                 multiple
@@ -329,7 +307,31 @@ module powerbi.extensibility.visual {
                                         .classed({
                                             multipleCanvas: true
                                         })
-                                        .attr('clip-path', 'url(#multiple-clip)');                              
+                                        .attr({
+                                            'clip-path': 'url(#multiple-clip)'
+                                        });
+
+                            /** Separate y-axis tick lines, if required */
+                                if (settings.yAxis.show) {
+                                    smallMultipleLineChartUtils.renderAxis(
+                                        canvas,
+                                        settings,
+                                        viewModel,
+                                        'inner',
+                                        'yAxis'
+                                    );
+                                }
+
+                            /** Internal x-axis, if needed */
+                                if (settings.xAxis.show) {
+                                    smallMultipleLineChartUtils.renderAxis(
+                                        canvas,
+                                        settings,
+                                        viewModel,
+                                        'inner',
+                                        'xAxis'
+                                    );
+                                }
 
                             /** Add container to multiple, specifically to manage interaction */
                                 let overlay = canvas
@@ -338,8 +340,8 @@ module powerbi.extensibility.visual {
                                             overlay: true
                                         })
                                         .attr({
-                                            width: viewModel.layout.xAxis.width,
-                                            height: viewModel.layout.yAxis.height,
+                                            width: viewModel.layout.multiples.clipContainer.width,
+                                            height: viewModel.layout.multiples.clipContainer.height,
                                             transform: viewModel.layout.multiples.translate
                                         });
 

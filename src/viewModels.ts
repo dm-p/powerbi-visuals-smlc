@@ -769,21 +769,25 @@ module powerbi.extensibility.visual {
                     }();
 
                 /** And calculate the ranges for our d3 axes */
-                    layout.xAxis.range = [layout.padding.chartSeries.left, layout.xAxis.width];
+                    layout.xAxis.range = [layout.padding.chartSeries.left, layout.multiples.clipContainer.width - layout.padding.chartSeries.right];
                     layout.yAxis.range = function() {
                         switch (settings.smallMultiple.labelPosition) {
                             case 'top': {
                                 return [
-                                    layout.multiples.rows.height
-                                        - layout.padding.chartArea.bottom,
-                                    layout.padding.chartArea.top
+                                    layout.yAxis.height
                                         + layout.multiples.label.height
+                                        + layout.padding.chartSeries.top,
+                                    layout.multiples.label.height
+                                        + layout.padding.chartArea.top
+                                
                                 ]
                             }
                             case 'bottom': {
                                 console.log('bottom');
                                 return [
-                                    layout.yAxis.height,
+                                    layout.yAxis.height
+                                        - layout.multiples.label.height
+                                        - layout.padding.chartSeries.bottom,
                                     layout.padding.chartArea.top
                                 ]
                             }
