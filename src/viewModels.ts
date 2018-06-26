@@ -681,25 +681,13 @@ module powerbi.extensibility.visual {
                 /** Adjust multiple height for spacing between rows */
                     layout.multiples.rows.height =  (layout.multiples.availableHeight / layout.multiples.rows.count) - layout.multiples.rows.spacing;
 
-                /** Height and x/y of clip container */
-                    layout.multiples.clipContainer.height = layout.multiples.rows.height
-                                                            - layout.multiples.label.height
-                                                            - layout.padding.chartArea.top;
-                    layout.multiples.clipContainer.x = 0;
-                    layout.multiples.clipContainer.y = function() {
-                        switch(settings.smallMultiple.labelPosition) {
-                            case 'top': {
-                                return layout.multiples.label.height;
-                            }
-                            case 'bottom': {
-                                return 0;
-                            }
-                        }
-                    }();
+                /** Clip container height */
+                    layout.multiples.clipContainer.height = layout.multiples.rows.height 
+                        - layout.multiples.label.height;
 
                 /** Theoretical width and height of Y-Axis */
                     layout.yAxis.masterTitle.height = layout.multiples.availableHeight;
-                    layout.yAxis.height = layout.multiples.rows.height - layout.multiples.label.height - layout.padding.chartArea.bottom;
+                    layout.yAxis.height = layout.multiples.clipContainer.height - layout.padding.chartSeries.bottom - layout.padding.chartSeries.top;
                     layout.yAxis.ticks = axisHelper.getRecommendedNumberOfTicksForYAxis(layout.yAxis.height);
 
                     /** Calculate title width now that we have the text */
