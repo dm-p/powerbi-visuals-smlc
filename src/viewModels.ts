@@ -721,13 +721,10 @@ module powerbi.extensibility.visual {
                 /** Now we have our Y-axis width we can calcluate the widths of everything else */
                     layout.multiples.rows.width = layout.chart.width - layout.yAxis.masterTitle.width;
                     layout.multiples.columns.width = ((layout.multiples.rows.width - layout.yAxis.labelWidth) / layout.multiples.columns.count) - layout.multiples.columns.spacing;
-
-                    layout.multiples.clipContainer.width = layout.multiples.columns.width
-                                                            - layout.padding.chartArea.left
-                                                            - layout.padding.chartArea.right;
+                    layout.multiples.clipContainer.width = layout.multiples.columns.width;
 
                     /** Text properties to allow us to calculate height */
-                        layout.xAxis.width = layout.multiples.columns.width - layout.padding.chartSeries.right;
+                        layout.xAxis.width = layout.multiples.clipContainer.width - layout.padding.chartSeries.right - layout.padding.chartSeries.left;
                         layout.xAxis.ticks = Math.min(
                             axisHelper.getRecommendedNumberOfTicksForXAxis(layout.xAxis.width),
                             layout.xAxis.maxValue.value - layout.xAxis.minValue.value
