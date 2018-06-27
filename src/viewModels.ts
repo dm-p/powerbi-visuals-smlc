@@ -783,7 +783,6 @@ module powerbi.extensibility.visual {
                                 ]
                             }
                             case 'bottom': {
-                                console.log('bottom');
                                 return [
                                     layout.yAxis.height
                                         - layout.multiples.label.height

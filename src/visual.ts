@@ -108,39 +108,8 @@ module powerbi.extensibility.visual {
             /** Complete mapping our view model layout */
                 viewModel = mapLayout(options, this.settings, viewModel);
 
-            /** For debugging purposes - remove later on */
-                if (settings.debug.show) {
-                    console.clear();
-                    console.log('Visual update', options, '\nView model', viewModel, '\nSettings', settings);
-                }
-
             /** Clear down our existing plot data as we need to re-draw the whole thing */
                 this.container.selectAll('*').remove();
-                
-            /** Calculate all necessary dimensions for components */
-
-                /** Size our initial container to match the viewport */
-                    this.container.attr({
-                        width: `${viewModel.layout.chart.width}%`,
-                        height: `${viewModel.layout.chart.height}%`,
-                    });
-
-                /** Debugging stuff for grid dimensions */
-                    if (settings.debug.show) {
-                        console.log(`Grid:\n`,
-                            `Viewport Width: ${options.viewport.width}\n`,
-                            `Viewport Height: ${options.viewport.height}\n`,
-                            `Y-Axis Label Width: ${viewModel.layout.yAxis.width}\n`,
-                            `Width Available for Multiples: ${viewModel.layout.multiples.rows.width}\n`,
-                            `Height Available for Multiples: ${viewModel.layout.multiples.availableHeight}\n`,
-                            `Multiple Count: ${viewModel.layout.multiples.count}\n`,
-                            `Multiple Columns Per Row: ${viewModel.layout.multiples.columns.count}\n`,
-                            `Multiple Columns Individual Width: ${viewModel.layout.multiples.columns.width}\n`,
-                            `Required Multiple Rows: ${viewModel.layout.multiples.rows.count}\n`,
-                            `Multiple Rows Individual Height: ${viewModel.layout.multiples.rows.height}\n`,
-                            `Multiple Label Height: ${viewModel.layout.multiples.label.height}\n`,
-                        );
-                    }
 
             /** Draw our grid based on our configuration */
 
@@ -563,8 +532,6 @@ module powerbi.extensibility.visual {
                             }
 
                     }
-
-            console.log('We did it!');
         }
 
         /** Renders the legend, based on the properties supplied in the update method */

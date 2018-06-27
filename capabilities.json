@@ -17,17 +17,6 @@
         }
     ],
     "objects": {
-        "debug" :{
-            "displayName": "Debug",
-            "properties": {
-                "show": {
-                    "displayName": "Enable/disable debugging",
-                    "type": {
-                        "bool": true
-                    }
-                }
-            }
-        },
         "smallMultiple" :{
             "displayName" : "Small Multiples",
             "properties" : {
