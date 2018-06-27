@@ -701,6 +701,13 @@ module powerbi.extensibility.visual {
                             max: 20
                         }
                     };
+                    /** Range validation on border stroke width */
+                    instances[0].validValues.borderStrokeWidth = {
+                        numberRange: {
+                            min: 1,
+                            max: 5
+                        }
+                    };                    
                     /** Add padding between rows if we specify multiples per row */
                     if (!this.settings.smallMultiple.maximumMultiplesPerRow) {
                         delete instances[0].properties['spacingBetweenRows'];
