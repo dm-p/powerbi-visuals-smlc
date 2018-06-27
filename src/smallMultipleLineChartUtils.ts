@@ -209,34 +209,6 @@ module powerbi.extensibility.visual {
                             : 0
                     })
                     .classed(settings[settingKey].gridlineStrokeLineStyle, true);
-
-            /** Forthcoming - used to be the axis title; will form the basis for the second category in 1.1.0 */
-                /*if (viewModel.layout[axisKey].title && viewModel.layout[axisKey].title.show) {
-                    axisContainer
-                        .append('text')
-                            .attr({
-                                transform: 'rotate(-90)',
-                                y: viewModel.layout[axisKey].title.y,
-                                x: viewModel.layout[axisKey].title.x,
-                                dy: '1em'
-                            })
-                            .style({
-                                'text-anchor': 'middle',
-                                'font-size': viewModel.layout[axisKey].title.textProperties.fontSize,
-                                'font-family': settings[settingKey].titleFontFamily,
-                                'fill': settings[settingKey].titleColor,
-                            })
-                            .text(viewModel.layout[axisKey].title.textProperties.text)
-                            .each(function() {
-                                wrapText(
-                                    d3.select(this),
-                                    viewModel.layout[axisKey].title.textProperties,
-                                    viewModel.layout.multiples.rows.height
-                                );
-                            });
-                }*/
             }
-
     }
-
 }
