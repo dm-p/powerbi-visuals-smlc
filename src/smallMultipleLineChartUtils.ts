@@ -55,7 +55,7 @@ module powerbi.extensibility.visual {
          * @returns {LineChartSeriesSmallMultipleCategoryDataPoint[]}   - Array of data points across measures for category
          */
         export function getHighlightedDataPoints(overlay: any): SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint[] {
-            let focus = d3.select(overlay.parentNode).select('.tooltipFocus'),
+            let focus = d3.select(overlay.parentNode).select('.smallMultipleLineChartMultipleTooltipFocus'),
                 xData = xScale.invert(d3.mouse(overlay)[0]),
                 bisectValue = d3.bisector(function(d: SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint) { 
                     return d.name; 

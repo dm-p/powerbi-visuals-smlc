@@ -69,7 +69,6 @@ module powerbi.extensibility.visual {
                     false,
                     LegendPosition.Top
                 );
-
         }
 
         public update(options: VisualUpdateOptions) {            
@@ -110,6 +109,12 @@ module powerbi.extensibility.visual {
 
             /** Clear down our existing plot data as we need to re-draw the whole thing */
                 this.container.selectAll('*').remove();
+
+            /** Size our initial container to match the viewport */
+                this.container.attr({
+                    width: `${viewModel.layout.chart.width}%`,
+                    height: `${viewModel.layout.chart.height}%`,
+                });
 
             /** Draw our grid based on our configuration */
 
@@ -181,9 +186,7 @@ module powerbi.extensibility.visual {
                         /** Container for entire row of multiples */
                         let multipleRow = chartGrid
                             .append('svg')
-                                .classed({
-                                    smallMultipleRowContainer: true
-                                })                            
+                                .classed('smallMultipleLineChartRowContainer', true)                            
                                 .attr({
                                     height: viewModel.layout.multiples.rows.height,
                                     width: viewModel.layout.chart.width,
@@ -211,15 +214,13 @@ module powerbi.extensibility.visual {
 
                         /** Definition for clip container */
                             multipleRow.selectAll('defs').remove();
-                            d3.select('.smallMultipleRowContainer')
+                            d3.select('.smallMultipleLineChartRowContainer')
                                 .append('defs')
                                 .append('clipPath')
                                     .attr({
                                         id: 'multiple-clip'
                                     })
-                                    .classed({
-                                        'multipleClip': true
-                                    })
+                                    .classed('smallMultipleLineChartMultipleClipContainer', true)
                                 .append('rect')
                                     .attr({
                                         width: viewModel.layout.multiples.clipContainer.width,
@@ -232,9 +233,7 @@ module powerbi.extensibility.visual {
                                 .data(eligibleMultipleFacets)
                                 .enter()
                                 .append('g')
-                                    .classed({
-                                        lineChartSmallMultiple: true                                        
-                                    })
+                                    .classed('smallMultipleLineChartMultiple', true)
                                     .attr({
                                         transform: function(d, i) {
                                             let xOffset = (i * (viewModel.layout.multiples.columns.width + viewModel.layout.multiples.columns.spacing))
@@ -246,10 +245,8 @@ module powerbi.extensibility.visual {
                             /** Multiple background */
                                 multiple
                                     .append('g')
+                                        .classed('smallMultipleLineChartMultipleBackground', true)
                                     .append('rect')
-                                        .classed({
-                                            multipleBackground: true,
-                                        })
                                         .classed(settings.smallMultiple.borderStyle, true)
                                         .attr({
                                             height: viewModel.layout.multiples.rows.height,
@@ -273,9 +270,7 @@ module powerbi.extensibility.visual {
                             /** Canvas for lines and points this will overlay the clip-path */
                                 let canvas = multiple
                                     .append('g')
-                                        .classed({
-                                            multipleCanvas: true
-                                        })
+                                        .classed('smallMultipleLineChartMultipleCanvas', true)
                                         .attr({
                                             'clip-path': 'url(#multiple-clip)'
                                         });
@@ -305,9 +300,7 @@ module powerbi.extensibility.visual {
                             /** Add container to multiple, specifically to manage interaction */
                                 let overlay = canvas
                                     .append('rect')
-                                        .classed({
-                                            overlay: true
-                                        })
+                                        .classed('smallMultipleLineChartMultipleOverlay', true)
                                         .attr({
                                             width: viewModel.layout.multiples.clipContainer.width,
                                             height: viewModel.layout.multiples.clipContainer.height,
@@ -319,9 +312,7 @@ module powerbi.extensibility.visual {
                                 /** Container for line plot(s) */
                                     let paths = canvas
                                         .append('g')
-                                            .classed({
-                                                pathContainer: true
-                                            })
+                                            .classed('smallMultipleLineChartMultiplePathContainer', true)
                                             .attr({
                                                 id: 'multiple-clip'
                                             });
@@ -329,9 +320,7 @@ module powerbi.extensibility.visual {
                                 /** Container for tooltip nodes */
                                     let focus = canvas
                                         .append('g')
-                                            .classed( {
-                                                tooltipFocus: true
-                                            })
+                                            .classed('smallMultipleLineChartMultipleTooltipFocus', true)
                                             .style({
                                                 display: 'none' 
                                             });                                    
@@ -340,9 +329,7 @@ module powerbi.extensibility.visual {
                                     this.measureMetadata.map(function(measure, measureIndex) {
                                         paths
                                             .append('path')
-                                                .classed({
-                                                    lineSeries: true /** TODO: May need to change this when multiple measures are introduced */
-                                                })
+                                                .classed('smallMultipleLineChartMultipleLineSeries', true)
                                                 .attr({
                                                     d: function(d) {
                                                         return lineGen(d.measures[measureIndex].categoryData);
@@ -366,7 +353,7 @@ module powerbi.extensibility.visual {
                                     overlay
                                         /** Upon entry, display the line nodes */
                                             .on('mouseover', function() { 
-                                                let selectedFocus = d3.select(this.parentNode).select('.tooltipFocus'),
+                                                let selectedFocus = d3.select(this.parentNode).select('.smallMultipleLineChartMultipleTooltipFocus'),
                                                     mouse = d3.mouse(element),
                                                     dataPoints = smallMultipleLineChartUtils.getHighlightedDataPoints(this);
 
@@ -381,7 +368,7 @@ module powerbi.extensibility.visual {
                                             })
                                         /** Upon exit, hide the line nodes */
                                             .on('mouseout', function() { 
-                                                let selectedFocus = d3.select(this.parentNode).select('.tooltipFocus');
+                                                let selectedFocus = d3.select(this.parentNode).select('.smallMultipleLineChartMultipleTooltipFocus');
                                                 selectedFocus.style('display', 'none');
                                                 smallMultipleLineChartUtils.tooltipService.hide({
                                                     immediately: true,
@@ -412,9 +399,7 @@ module powerbi.extensibility.visual {
                                 if (settings.smallMultiple.showMultipleLabel) {
                                     multiple
                                         .append('text')
-                                            .classed({
-                                                smallMultipleLabel: true
-                                            })
+                                            .classed('smallMultipleLineChartMultipleLabel', true)
                                             .attr({
                                                 x: viewModel.layout.multiples.label.x,
                                                 y: viewModel.layout.multiples.label.y,
@@ -448,9 +433,10 @@ module powerbi.extensibility.visual {
 
                         let xAxisContainer = chartGrid
                             .append('svg')
+                                .classed('smallMultipleLineChartMasterXAxis', true)
                                 .attr({
                                     height: viewModel.layout.xAxis.height,
-                                    width: viewModel.layout.chart.width, // TODO: Fix to width of row
+                                    width: viewModel.layout.chart.width,
                                     x: viewModel.layout.multiples.rows.x,
                                     y: viewModel.layout.chart.height - viewModel.layout.xAxis.height
                                 })
@@ -459,6 +445,7 @@ module powerbi.extensibility.visual {
                             if (settings.xAxis.showTitle) {
                                 xAxisContainer
                                     .append('g')
+                                        .classed('smallMultipleLineChartMasterXAxisTitle', true)
                                     .append('text')
                                         .attr({
                                             x: viewModel.layout.multiples.rows.width / 2,
@@ -487,9 +474,7 @@ module powerbi.extensibility.visual {
                                 /** We're not using a conventional d3 axis for our column axis, so we'll produce our own containing element for the stuff we want to draw */
                                     let xAxisColumn = xAxisContainer
                                         .append('g')
-                                            .classed({
-                                                smallMultipleColumnAxis: true
-                                            })
+                                            .classed('smallMultipleLineChartXAxis', true)
                                             .attr({
                                                 transform: `translate(${(x * (viewModel.layout.multiples.columns.width + viewModel.layout.multiples.columns.spacing)) 
                                                     + viewModel.layout.yAxis.width}, ${0})`
