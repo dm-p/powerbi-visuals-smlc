@@ -6,7 +6,7 @@
             "kind": "Grouping"
         },
         {
-            "displayName": "Category Data",
+            "displayName": "Axis",
             "name": "category",
             "kind": "Grouping"
         },
