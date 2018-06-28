@@ -156,7 +156,7 @@ module powerbi.extensibility.visual {
          * @param container             -   D3/DOM element selection to bind y-axis to
          * @param settings              -   Our visual settings
          * @param viewModel             -   Our view model
-         * @param axisKey               -   The key value of the appropriate IAxis property from IViewModel (would typically be either 'yAxis' or 'yAxisRow' based on current implementation)
+         * @param axisKey               -   The key value of the appropriate IAxisConfiguration property from IViewModel
          */
         export function renderAxis(
             container: d3.Selection<any>,
@@ -184,13 +184,20 @@ module powerbi.extensibility.visual {
                     .call(viewModel.layout[settingKey][axisKey].generator)
                     .attr({
                         transform: function() {
-                            return `translate(${settingKey == 'yAxis' && axisKey == 'outer'
-                                ? viewModel.layout[settingKey].width
-                                : 0
-                            }, ${settingKey == 'yAxis' 
-                            ? 0
-                            : viewModel.layout.yAxis.range[0]
-                        })`;
+                            switch (settingKey) {
+                               case ('yAxis'): {
+                                    return(`translate(${axisKey == "outer"
+                                        ?   viewModel.layout.yAxis.width
+                                        :   /** Adjust width for multiple border to prevent overlap of tick lines */
+                                            settings.smallMultiple.border && axisKey == "inner"
+                                            ?   settings.smallMultiple.borderStrokeWidth / 2
+                                            :   0 
+                                    })`)
+                               }
+                               case ('xAxis'): {
+                                   return(`translate(0, ${viewModel.layout.yAxis.range[0]})`)
+                               }
+                            }
                         }
                     });
 

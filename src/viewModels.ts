@@ -821,7 +821,12 @@ module powerbi.extensibility.visual {
                                 .orient('left')
                                 .ticks(layout.yAxis.ticks)
                                 .tickFormat('')
-                                .tickSize(-layout.multiples.columns.width, 0)
+                                .tickSize(-layout.multiples.columns.width
+                                            /** Adjust width for multiple border to prevent overlap of tick lines */
+                                            + ( settings.smallMultiple.border
+                                                    ? settings.smallMultiple.borderStrokeWidth
+                                                    : 0
+                                              ), 0)
                         }
 
                 /** X-axis generation */

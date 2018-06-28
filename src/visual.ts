@@ -242,7 +242,7 @@ module powerbi.extensibility.visual {
                                         }
                                     });
 
-                            /** Multiple background */
+                            /** Multiple background and border */
                                 multiple
                                     .append('g')
                                         .classed('smallMultipleLineChartMultipleBackground', true)
