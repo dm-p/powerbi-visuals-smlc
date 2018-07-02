@@ -206,8 +206,8 @@
                         "integer": true
                     }
                 },
-                "bandedMultiples": {
-                    "displayName": "Banded multiples",
+                "zebraStripe": {
+                    "displayName": "Zebra stripe",
                     "type": {
                         "bool": true
                     }

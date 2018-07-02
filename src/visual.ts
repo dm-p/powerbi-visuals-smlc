@@ -254,7 +254,7 @@ module powerbi.extensibility.visual {
                                             x: 0,
                                             y: 0,
                                             fill: function(d, i) {
-                                                return i % 2 && settings.smallMultiple.bandedMultiples 
+                                                return i % 2 && settings.smallMultiple.zebraStripe 
                                                     ? settings.smallMultiple.backgroundColorAlternate 
                                                     : !settings.smallMultiple.backgroundColor 
                                                         ? 'transparent' 
@@ -410,7 +410,7 @@ module powerbi.extensibility.visual {
                                                 'font-size': viewModel.layout.multiples.label.textProperties.fontSize,
                                                 'font-family': settings.smallMultiple.fontFamily,
                                                 fill: function(d, i) {
-                                                    return i % 2 && settings.smallMultiple.bandedMultiples 
+                                                    return i % 2 && settings.smallMultiple.zebraStripe 
                                                         ? settings.smallMultiple.fontColorAlternate 
                                                         : settings.smallMultiple.fontColor;
                                                 }
@@ -659,13 +659,21 @@ module powerbi.extensibility.visual {
                             min: 1,
                             max: 5
                         }
-                    };                    
-                    /** Add padding between rows if we specify multiples per row */
+                    };
+                    /** Add padding between rows and range validation if we specify multiples per row */
                     if (!this.settings.smallMultiple.maximumMultiplesPerRow) {
                         delete instances[0].properties['spacingBetweenRows'];
-                    }
+                    } 
+                    // if (this.settings.smallMultiple.maximumMultiplesPerRow) {
+                        instances[0].validValues.maximumMultiplesPerRow = {
+                            numberRange: {
+                                min: 1,
+                                max: 50
+                            }
+                        };
+                    // } 
                     /** Banded multiples toggle */
-                    if (!this.settings.smallMultiple.bandedMultiples) {
+                    if (!this.settings.smallMultiple.zebraStripe) {
                         delete instances[0].properties['fontColorAlternate'];
                         delete instances[0].properties['backgroundColorAlternate'];
                     }

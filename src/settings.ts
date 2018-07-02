@@ -93,8 +93,8 @@ module powerbi.extensibility.visual {
       public backgroundColor: string = defaultBackgroundColor;
       // Background transparency
       public backgroundTransparency: number = 50;
-      // Banded multiples switch
-      public bandedMultiples: boolean = false;
+      // Zebra stripe multiples switch
+      public zebraStripe: boolean = false;
       // Alternate background color
       public backgroundColorAlternate: string = defaultBackgroundColorAlternate;
       // Alternate font color
