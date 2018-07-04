@@ -59,7 +59,7 @@ module powerbi.extensibility.visual {
                 xData = xScale.invert(d3.mouse(overlay)[0]),
                 bisectValue = d3.bisector(function(d: SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint) { 
                     return d.name; 
-                }).left,                   
+                }).left,
                 dataPoints: SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint[] = [];
             
             focus.selectAll('circle')
