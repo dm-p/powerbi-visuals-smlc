@@ -56,8 +56,9 @@ module powerbi.extensibility.visual {
          */
         export function getHighlightedDataPoints(overlay: any): SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint[] {
             let focus = d3.select(overlay.parentNode).select('.smallMultipleLineChartMultipleTooltipFocus'),
-                xData = xScale.invert(d3.mouse(overlay)[0]),
-                bisectValue = d3.bisector(function(d: SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint) { 
+                xData = xScale.invert(d3.mouse(overlay)[0]);
+            
+            let bisectValue = d3.bisector(function(d: SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint) {
                     return d.name; 
                 }).left,
                 dataPoints: SmallMultipleLineChartViewModel.ISmallMultipleCategoryDataPoint[] = [];
@@ -67,7 +68,7 @@ module powerbi.extensibility.visual {
                     let data = d.measures[j].categoryData,
                         idx = bisectValue(data, xData, 1),
                         d0 = data[idx - 1],
-                        d1 = data[idx],
+                        d1 = data[idx] ? data[idx] : d0,
                         e = xData - d0.name > d1.name - xData ? d1 : d0;
                     dataPoints.push(e);
                 });

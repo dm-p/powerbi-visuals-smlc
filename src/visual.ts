@@ -302,8 +302,8 @@ module powerbi.extensibility.visual {
                                     .append('rect')
                                         .classed('smallMultipleLineChartMultipleOverlay', true)
                                         .attr({
-                                            width: viewModel.layout.xAxis.width,
-                                            height: viewModel.layout.yAxis.height,
+                                            width: viewModel.layout.multiples.clipContainer.width,
+                                            height: viewModel.layout.multiples.clipContainer.height,
                                             transform: viewModel.layout.multiples.translate
                                         });
 
