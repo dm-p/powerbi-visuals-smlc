@@ -15,7 +15,7 @@
     "email": "d.s.marsh@gmail.com"
   },
   "assets": {
-    "icon": "assets/icon.png"
+    "icon": "assets/desktop_icon.png"
   },
   "externalJS": [
     "node_modules/globalize/lib/globalize.js",
