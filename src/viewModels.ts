@@ -719,7 +719,7 @@ module powerbi.extensibility.visual {
                         layout.yAxis.width = layout.yAxis.labelWidth + layout.yAxis.masterTitle.width;
 
                 /** Now we have our Y-axis width we can calcluate the widths of everything else */
-                    layout.multiples.rows.width = layout.chart.width - layout.yAxis.masterTitle.width;
+                    layout.multiples.rows.width = layout.chart.width - layout.yAxis.masterTitle.width - 1;
                     layout.multiples.columns.width = ((layout.multiples.rows.width - layout.yAxis.labelWidth) / layout.multiples.columns.count) - layout.multiples.columns.spacing;
                     layout.multiples.clipContainer.width = layout.multiples.columns.width;
 
