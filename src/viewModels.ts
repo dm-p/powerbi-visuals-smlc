@@ -679,7 +679,7 @@ module powerbi.extensibility.visual {
                     layout.multiples.availableHeight = layout.chart.height - layout.xAxis.height;
 
                 /** Adjust multiple height for spacing between rows */
-                    layout.multiples.rows.height =  (layout.multiples.availableHeight / layout.multiples.rows.count) - layout.multiples.rows.spacing;
+                    layout.multiples.rows.height =  (layout.multiples.availableHeight / layout.multiples.rows.count) - layout.multiples.rows.spacing - 2;
 
                 /** Clip container height */
                     layout.multiples.clipContainer.height = layout.multiples.rows.height 
