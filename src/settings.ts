@@ -35,7 +35,7 @@ module powerbi.extensibility.visual {
     let defaultAxisFontColor: string = '#777777';
     let defaultAxisGridlineColor: string = '#EAEAEA';
     let defaultBackgroundColor: string = null;
-    let defaultBackgroundColorAlternate: string = '#F3F3F3';
+    let defaultBackgroundColorAlternate: string = '#B3B3B3';
     let defaultBorderColor: string = '#999999';
 
     export class VisualSettings extends DataViewObjectsParser {
