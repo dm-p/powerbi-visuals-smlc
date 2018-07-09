@@ -1116,7 +1116,7 @@
                     },
                     "dataReductionAlgorithm": {
                         "sample": {
-                            "count": 2000
+                            "count": 200
                         }
                     }
                 },
