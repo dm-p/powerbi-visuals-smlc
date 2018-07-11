@@ -157,23 +157,24 @@ module powerbi.extensibility.visual {
          * @param container             -   D3/DOM element selection to bind y-axis to
          * @param settings              -   Our visual settings
          * @param viewModel             -   Our view model
-         * @param axisKey               -   The key value of the appropriate IAxisConfiguration property from IViewModel
+         * @param axisType              -   The key value of the appropriate IAxisConfiguration property from IAxis to reference
+         * @param axisSettingKey        -   The key value of the appropriate setting to look for axis properties
          */
         export function renderAxis(
             container: d3.Selection<any>,
             settings: VisualSettings,
             viewModel: SmallMultipleLineChartViewModel.IViewModel,
-            axisKey: string,
-            settingKey: string
+            axisType: string,
+            axisSettingKey: string
         ): void {
 
             let axisContainer = container
                 .append('g')
-                    .classed(`${settingKey}Container`, true)
+                    .classed(`${axisSettingKey}Container`, true)
                     .style({
-                        'font-size': viewModel.layout[settingKey].maxValue.textProperties.fontSize,
-                        'font-family': settings[settingKey].fontFamily,
-                        'fill': settings[settingKey].fontColor,
+                        'font-size': viewModel.layout[axisSettingKey].maxValue.textProperties.fontSize,
+                        'font-family': settings[axisSettingKey].fontFamily,
+                        'fill': settings[axisSettingKey].fontColor,
                         'stroke-width' : 1 /** TODO: Config */
                     });
 
@@ -182,15 +183,15 @@ module powerbi.extensibility.visual {
                     .classed({
                         'grid': true
                     })
-                    .call(viewModel.layout[settingKey][axisKey].generator)
+                    .call(viewModel.layout[axisSettingKey][axisType].generator)
                     .attr({
                         transform: function() {
-                            switch (settingKey) {
+                            switch (axisSettingKey) {
                                case ('yAxis'): {
-                                    return(`translate(${axisKey == "outer"
+                                    return(`translate(${axisType == "outer"
                                         ?   viewModel.layout.yAxis.width
                                         :   /** Adjust width for multiple border to prevent overlap of tick lines */
-                                            settings.smallMultiple.border && axisKey == "inner"
+                                            settings.smallMultiple.border && axisType == "inner"
                                             ?   settings.smallMultiple.borderStrokeWidth / 2
                                             :   0 
                                     })`)
@@ -211,12 +212,12 @@ module powerbi.extensibility.visual {
             /** Apply gridline styling; there's probably a better way to do it, particularly with the stroke line styles ... */
                 axisTicks.selectAll('line')
                     .attr({
-                        stroke: settings[settingKey].gridlineColor,
-                        'stroke-width': settings[settingKey].gridlines
-                            ? settings[settingKey].gridlineStrokeWidth
+                        stroke: settings[axisSettingKey].gridlineColor,
+                        'stroke-width': settings[axisSettingKey].gridlines
+                            ? settings[axisSettingKey].gridlineStrokeWidth
                             : 0
                     })
-                    .classed(settings[settingKey].gridlineStrokeLineStyle, true);
+                    .classed(settings[axisSettingKey].gridlineStrokeLineStyle, true);
             }
     }
 }
