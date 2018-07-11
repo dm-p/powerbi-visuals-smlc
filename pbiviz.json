@@ -1,0 +1,36 @@
+{
+  "visual": {
+    "name": "smallMultipleLineChart",
+    "displayName": "Small Multiple Line Chart",
+    "guid": "smallMultipleLineChart6FA6C19AAE3840AFB9CD11A23CA7D7C7",
+    "visualClassName": "SmallMultipleLineChart",
+    "version": "1.0.0",
+    "description": "A small multiple is a series of charts using the same scale and axes, allowing them to be easily compared. This visual allows you to take a measure you might normally plot in a line chart, and duplicate this for the values of another category.",
+    "supportUrl": "https://bitbucket.org/dm-p/power-bi-visuals-small-multiple-line-chart/issues?status=new&status=open",
+    "gitHubUrl": "https://bitbucket.org/dm-p/power-bi-visuals-small-multiple-line-chart"
+  },
+  "apiVersion": "1.11.0",
+  "author": {
+    "name": "Daniel Marsh-Patrick",
+    "email": "d.s.marsh@gmail.com"
+  },
+  "assets": {
+    "icon": "assets/desktop_icon.png"
+  },
+  "externalJS": [
+    "node_modules/globalize/lib/globalize.js",
+    "node_modules/globalize/lib/cultures/globalize.culture.en-US.js",
+    "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-typeutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-svgutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-formattingutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-chartutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-tooltiputils/lib/index.js",
+    "node_modules/d3/d3.min.js"
+  ],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": "dependencies.json",
+  "stringResources": []
+}

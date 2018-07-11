@@ -1,0 +1,57 @@
+@import (less) "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.css";
+@import (less) "node_modules/powerbi-visuals-utils-chartutils/lib/index.css";
+@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
+
+.smallMultipleLineChart {
+    position: absolute;
+}
+
+.grid .tick {
+    stroke-opacity: 1;
+}
+
+.grid path {
+    stroke-width: 0;
+}
+
+.grid .tick line.dashed {
+    stroke-dasharray: 5, 5;
+}
+
+.smallMultipleLineChartMultipleBackground .dashed {
+    stroke-dasharray: 5, 5;
+}
+
+.grid .tick line.dotted {
+    stroke-dasharray: 1, 5;
+}
+
+.smallMultipleLineChartMultipleBackground .dotted {
+    stroke-dasharray: 1, 5;
+}
+
+.smallMultipleLineChartMultipleLineSeries {
+    fill: none;
+    stroke-width: 2px; /* This will be done via shape config later on */
+}
+
+.smallMultipleLineChartMultipleClipContainer {
+    fill: none;
+}
+
+.smallMultipleLineChartMultipleOverlay {
+    fill: none;
+    pointer-events: all;
+}
+
+.legendText {
+    text-overflow: ellipsis;
+    white-space: pre;
+    font-family: "Segoe UI", wf_segoe-ui_normal, helvetica, arial, sans-serif;
+}
+
+.legendTitle {
+    text-overflow: ellipsis;
+    white-space: pre;
+    font-family: "Segoe UI Semibold", wf_segoe-ui_semibold, helvetica, arial, sans-serif !important;
+}
