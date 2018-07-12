@@ -49,6 +49,7 @@ module powerbi.extensibility.visual {
         private viewport: IViewport;
         private legend: ILegend;
         private legendData: LegendData;
+        private errorState: boolean;
 
         constructor(options: VisualConstructorOptions) {
             options.element.style.overflow = 'auto';
@@ -73,10 +74,34 @@ module powerbi.extensibility.visual {
 
         public update(options: VisualUpdateOptions) {            
             let settings = this.settings = SmallMultipleLineChart.parseSettings(options && options.dataViews && options.dataViews[0]),
-                element = this.element,
-                viewModel = visualTransform(options, this.host, settings)
-            this.measureMetadata = viewModel.multiples[0].measures;
-            this.viewport = options.viewport;
+                element = this.element;
+            this.errorState = false;
+
+            /** Clear down our existing plot data as we need to re-draw the whole thing */
+                this.container.selectAll('*').remove();
+
+            /** Manage issues with field conditions not being met (min/max conditions do not work well together in Desktop currently) */
+                if (!options.dataViews
+                    || !options.dataViews[0]
+                    || !options.dataViews[0].metadata
+                    || !options.dataViews[0].metadata.columns.filter(c => c.roles['category'])[0]
+                    || !options.dataViews[0].metadata.columns.filter(c => c.roles['smallMultiple'])[0]
+                    || !options.dataViews[0].metadata.columns.filter(c => c.roles['values'])[0]
+                ) {
+                    this.errorState = true;
+                    this.renderLegend();
+                    this.container
+                        .append('div')
+                            .classed('smallMultipleLineChartError', true)
+                            .html('Please ensure that you have added data to the <strong>Small Multiple</strong>,\
+                             <strong>Axis</strong> and <strong>Values</strong> fields, in order to display your chart.');
+                    return;
+                }
+
+            /** We should have the bare minimum to start mapping our data and plotting our chart */
+                let viewModel = visualTransform(options, this.host, settings)
+                this.measureMetadata = viewModel.multiples[0].measures;
+                this.viewport = options.viewport;
 
             /** Construct legend from measures. We need our legend before we can size the rest of the chart, so we'll do this first. */
                 this.legendData = {
@@ -106,9 +131,6 @@ module powerbi.extensibility.visual {
 
             /** Complete mapping our view model layout */
                 viewModel = mapLayout(options, this.settings, viewModel);
-
-            /** Clear down our existing plot data as we need to re-draw the whole thing */
-                this.container.selectAll('*').remove();
 
             /** Size our initial container to match the viewport */
                 this.container.attr({
@@ -525,7 +547,7 @@ module powerbi.extensibility.visual {
                 return;
             }
 
-            const position: LegendPosition = this.settings.legend.show
+            const position: LegendPosition = this.settings.legend.show && !this.errorState
                 ? LegendPosition[this.settings.legend.position]
                 : LegendPosition.None;
 
