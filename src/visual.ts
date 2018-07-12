@@ -49,6 +49,7 @@ module powerbi.extensibility.visual {
         private viewport: IViewport;
         private legend: ILegend;
         private legendData: LegendData;
+        private errorState: boolean;
 
         constructor(options: VisualConstructorOptions) {
             options.element.style.overflow = 'auto';
@@ -77,6 +78,7 @@ module powerbi.extensibility.visual {
                 viewModel = visualTransform(options, this.host, settings)
             this.measureMetadata = viewModel.multiples[0].measures;
             this.viewport = options.viewport;
+            this.errorState = false;
 
             /** Construct legend from measures. We need our legend before we can size the rest of the chart, so we'll do this first. */
                 this.legendData = {
