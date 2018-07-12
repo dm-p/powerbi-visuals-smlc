@@ -527,7 +527,7 @@ module powerbi.extensibility.visual {
                 return;
             }
 
-            const position: LegendPosition = this.settings.legend.show
+            const position: LegendPosition = this.settings.legend.show && !this.errorState
                 ? LegendPosition[this.settings.legend.position]
                 : LegendPosition.None;
 
