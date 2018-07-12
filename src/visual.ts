@@ -74,11 +74,14 @@ module powerbi.extensibility.visual {
 
         public update(options: VisualUpdateOptions) {            
             let settings = this.settings = SmallMultipleLineChart.parseSettings(options && options.dataViews && options.dataViews[0]),
-                element = this.element,
-                viewModel = visualTransform(options, this.host, settings)
-            this.measureMetadata = viewModel.multiples[0].measures;
-            this.viewport = options.viewport;
+                element = this.element;
             this.errorState = false;
+
+
+            /** We should have the bare minimum to start mapping our data and plotting our chart */
+                let viewModel = visualTransform(options, this.host, settings)
+                this.measureMetadata = viewModel.multiples[0].measures;
+                this.viewport = options.viewport;
 
             /** Construct legend from measures. We need our legend before we can size the rest of the chart, so we'll do this first. */
                 this.legendData = {
@@ -108,9 +111,6 @@ module powerbi.extensibility.visual {
 
             /** Complete mapping our view model layout */
                 viewModel = mapLayout(options, this.settings, viewModel);
-
-            /** Clear down our existing plot data as we need to re-draw the whole thing */
-                this.container.selectAll('*').remove();
 
             /** Size our initial container to match the viewport */
                 this.container.attr({
