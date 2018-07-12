@@ -77,6 +77,26 @@ module powerbi.extensibility.visual {
                 element = this.element;
             this.errorState = false;
 
+            /** Clear down our existing plot data as we need to re-draw the whole thing */
+                this.container.selectAll('*').remove();
+
+            /** Manage issues with field conditions not being met (min/max conditions do not work well together in Desktop currently) */
+                if (!options.dataViews
+                    || !options.dataViews[0]
+                    || !options.dataViews[0].metadata
+                    || !options.dataViews[0].metadata.columns.filter(c => c.roles['category'])[0]
+                    || !options.dataViews[0].metadata.columns.filter(c => c.roles['smallMultiple'])[0]
+                    || !options.dataViews[0].metadata.columns.filter(c => c.roles['values'])[0]
+                ) {
+                    this.errorState = true;
+                    this.renderLegend();
+                    this.container
+                        .append('div')
+                            .classed('smallMultipleLineChartError', true)
+                            .html('Please ensure that you have added data to the <strong>Small Multiple</strong>,\
+                             <strong>Axis</strong> and <strong>Values</strong> fields, in order to display your chart.');
+                    return;
+                }
 
             /** We should have the bare minimum to start mapping our data and plotting our chart */
                 let viewModel = visualTransform(options, this.host, settings)
