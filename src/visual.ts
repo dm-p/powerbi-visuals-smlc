@@ -197,6 +197,10 @@ module powerbi.extensibility.visual {
                         })
                         .y(function(d) { 
                             return viewModel.layout.yAxis.scale(d.value); 
+                        })
+                        /** #45: Function to only return non-null values from the data set so that `null` doesn't get plotted as `0` */
+                        .defined(function(d) {
+                            return d.value !== null;
                         });
 
                 /** Assign tooltip service wrapper to utility module */
@@ -354,7 +358,9 @@ module powerbi.extensibility.visual {
                                                 .classed('smallMultipleLineChartMultipleLineSeries', true)
                                                 .attr({
                                                     d: function(d) {
-                                                        return lineGen(d.measures[measureIndex].categoryData);
+                                                        /** #45: Ensure null values are ignored and a continuous line runs from defined points */
+                                                        var filteredData = d.measures[measureIndex].categoryData.filter(lineGen.defined())
+                                                        return lineGen(filteredData);
                                                     },
                                                     transform: 'translate(0, 0)',
                                                     stroke: measure.color,

@@ -65,7 +65,9 @@ module powerbi.extensibility.visual {
             
             focus.selectAll('circle')
                 .each(function(d, j) {
-                    let data = d.measures[j].categoryData,
+                    let data = d.measures[j].categoryData
+                            /** #45: Remove `null` values so that we can skip to the next valid data point, like the core line visual */
+                            .filter(t => t.value !== null),
                         idx = bisectValue(data, xData, 1),
                         d0 = data[idx - 1],
                         d1 = data[idx] ? data[idx] : d0,
