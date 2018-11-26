@@ -57,19 +57,19 @@ module powerbi.extensibility.visual {
             this.host = options.host;
             this.element = options.element;
             
-            /** Visual container */
-                this.container = d3.select(options.element)
-                    .append('div')
-                        .classed('smallMultipleLineChart', true);
-
             /** Legend container */
                 this.legend = createLegend(
                     options.element,
                     false,
                     null,
-                    false,
+                    true,
                     LegendPosition.Top
                 );
+
+            /** Visual container */
+                this.container = d3.select(options.element)
+                    .append('div')
+                        .classed('smallMultipleLineChart', true);
         }
 
         public update(options: VisualUpdateOptions) {            
@@ -134,8 +134,8 @@ module powerbi.extensibility.visual {
 
             /** Size our initial container to match the viewport */
                 this.container.attr({
-                    width: `${viewModel.layout.chart.width}%`,
-                    height: `${viewModel.layout.chart.height}%`,
+                    width: `${viewModel.layout.chart.width}`,
+                    height: `${viewModel.layout.chart.height}`,
                 });
 
             /** Draw our grid based on our configuration */
