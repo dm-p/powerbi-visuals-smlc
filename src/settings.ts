@@ -45,6 +45,7 @@ module powerbi.extensibility.visual {
       public colorSelector: colorSelectorSettings = new colorSelectorSettings();
       public yAxis: yAxisSettings = new yAxisSettings();
       public xAxis: xAxisSettings = new xAxisSettings();
+      public about: aboutSettings = new aboutSettings();
     }
 
     export class debugSettings {
@@ -168,6 +169,12 @@ module powerbi.extensibility.visual {
       public gridlines: boolean = false;
       // Overload title for this instance to false
       public showTitle: boolean = false;
+    }
+
+    // Used to hold about info
+    export class aboutSettings {
+        public visualName: string = 'Small Multiple Line Chart';
+        public version: string = '1.0.1.0';
     }
 
 }

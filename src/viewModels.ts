@@ -436,16 +436,19 @@ module powerbi.extensibility.visual {
                                             return {
                                                 name: categoryValue,
                                                 value: value,
-                                                tooltips: [
-                                                    {
-                                                        header: `${multiple.value} - ${valueFormatter.format(category.value, categoryMetadata.format)}`,
-                                                        displayName: measureMetadata.displayName,
-                                                        value: `${valueFormatter.format(value, measureMetadata.format)}`,
-                                                        color: smallMultipleLineChartUtils
-                                                                .getValue<Fill>(valueSources[measureIndex].objects, 'colorSelector', 'fill', defaultColor)
-                                                                .solid.color
-                                                    }
-                                                ]
+                                                tooltips: value 
+                                                    /** #45: If the value is `null`, we don't want any tooltip data, as we should skip to the next valid value in the dataset */
+                                                    ?   [
+                                                            {
+                                                                header: `${multiple.value} - ${valueFormatter.format(category.value, categoryMetadata.format)}`,
+                                                                displayName: measureMetadata.displayName,
+                                                                value: `${valueFormatter.format(value, measureMetadata.format)}`,
+                                                                color: smallMultipleLineChartUtils
+                                                                        .getValue<Fill>(valueSources[measureIndex].objects, 'colorSelector', 'fill', defaultColor)
+                                                                        .solid.color
+                                                            }
+                                                        ]
+                                                    :   null
                                             }   
                                         }),
                                         color: smallMultipleLineChartUtils.getValue<Fill>(valueSources[measureIndex].objects, 'colorSelector', 'fill', defaultColor).solid.color

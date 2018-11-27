@@ -1095,6 +1095,23 @@
                     }
                 }
             }
+        },
+        "about": {
+            "displayName": "About",
+            "properties": {
+                "visualName": {
+                    "displayName": "Visual Name",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "version": {
+                    "displayName": "Version",
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
         }
     },
     "dataViewMappings": [
