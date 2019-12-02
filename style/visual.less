@@ -1,76 +1,67 @@
 @import (less) "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.css";
 @import (less) "node_modules/powerbi-visuals-utils-chartutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
+@import (less) "node_modules/overlayscrollbars/css/OverLayScrollbars.min.css";
 
-.smallMultipleLineChart {
+* {
+    box-sizing: border-box;
+}
+
+.small-multiple-line-chart {
+    shape-rendering: geometricPrecision;
+}
+
+.small-multiple-line-chart {
     position: absolute;
 }
 
-.smallMultipleLineChartGrid {
-    position: absolute;
-}
-
-svg:not(:root) {
-    overflow: hidden;
-}
-
-.smallMultipleLineChartError {
-    width: 100vw;
-    height: 100vh;
-    text-align: center;
-    font-family: "Segoe UI", wf_segoe-ui_semibold, helvetica, arial, sans-serif;
-    background-color: #f4f4f4;
-    display: table-cell;
-    line-height: normal;
-    vertical-align: middle;
-}
-
-.grid .tick {
-    stroke-opacity: 1;
-}
-
-.grid path {
-    stroke-width: 0;
-}
-
-.grid .tick line.dashed {
+.small-multiple-axis .tick line.dashed {
     stroke-dasharray: 5, 5;
 }
 
-.smallMultipleLineChartMultipleBackground .dashed {
-    stroke-dasharray: 5, 5;
-}
-
-.grid .tick line.dotted {
+.small-multiple-axis .tick line.dotted {
     stroke-dasharray: 1, 5;
 }
 
-.smallMultipleLineChartMultipleBackground .dotted {
-    stroke-dasharray: 1, 5;
-}
-
-.smallMultipleLineChartMultipleLineSeries {
-    fill: none;
-    stroke-width: 2px; /* This will be done via shape config later on */
-}
-
-.smallMultipleLineChartMultipleClipContainer {
-    fill: none;
-}
-
-.smallMultipleLineChartMultipleOverlay {
-    fill: none;
+.tooltip-overlay {
+    fill: transparent;
     pointer-events: all;
 }
 
-.legendText {
-    text-overflow: ellipsis;
-    white-space: pre;
-    font-family: "Segoe UI", wf_segoe-ui_normal, helvetica, arial, sans-serif;
+.hover-line {
+    stroke: rgb(96, 94, 92);
 }
 
-.legendTitle {
-    text-overflow: ellipsis;
-    white-space: pre;
-    font-family: "Segoe UI Semibold", wf_segoe-ui_semibold, helvetica, arial, sans-serif !important;
+.small-multiple-border {
+    fill: none;
+}
+
+.small-multiple-measure.dashed {
+    stroke-dasharray: 5, 5;
+}
+
+.small-multiple-measure.dotted {
+    stroke-dasharray: 1, 5;
+}
+
+.small-multiple-measure.dotdash {
+    stroke-dasharray: 5, 5, 1, 5;
+}
+
+
+.visual-container {
+    display: grid;
+    grid-template-areas: "y-title visual-canvas" ". x-title";
+  }
+  
+.x-title {
+    grid-area: x-title;
+}
+
+.y-title {
+    grid-area: y-title;
+}
+
+.visual-canvas {
+    grid-area: visual-canvas;
+    overflow: auto;
 }
