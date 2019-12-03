@@ -755,7 +755,7 @@
                             .classed(m.lineStyle, true)
                             .attr('d', (d) => lineGen(d.measures[inverse].values.filter(lineGen.defined())))
                             .attr('transform', 'translate(0, 0)')
-                            .style('stroke', m.colour)
+                            .style('stroke', m.stroke)
                             .style('stroke-linecap', 'round')
                             .style('fill', 'none')
                             .style('stroke-width', m.strokeWidth);
@@ -765,7 +765,7 @@
                             .append('circle')
                                 .classed('circle-item', true)
                                 .attr('r', 3)
-                                .attr('fill', (d) => m.colour);
+                                .attr('fill', (d) => m.stroke);
                 });
         }
 

@@ -231,19 +231,19 @@
                         /** Persist out measure metadata and config */
                             this.viewModel.measureMetadata.push({
                                 metadata: m,
-                                colour: DataViewHelper.getMetadataObjectValue<Fill>(m, 'colorSelector', 'fill', defaultColour).solid.color,
+                                stroke: DataViewHelper.getMetadataObjectValue<Fill>(m, 'lines', 'stroke', defaultColour).solid.color,
                                 selectionId: this.host.createSelectionIdBuilder()
                                     .withMeasure(m.queryName)
                                     .createSelectionId(),
-                                strokeWidth: this.settings.lines.byMeasure
-                                    ?   DataViewHelper.getMetadataObjectValue<number>(m, 'lines', 'strokeWidth', VisualConstants.defaults.lines.strokeWidth)
-                                    :   this.settings.lines.strokeWidth,
-                                lineShape: this.settings.lines.byMeasure
-                                    ?   DataViewHelper.getMetadataObjectValue<string>(m, 'lines', 'lineShape', VisualConstants.defaults.lines.lineShape)
-                                    :   this.settings.lines.lineShape,
-                                lineStyle: this.settings.lines.byMeasure
-                                    ?   DataViewHelper.getMetadataObjectValue<string>(m, 'lines', 'lineStyle', VisualConstants.defaults.lines.lineStyle)
-                                    :   this.settings.lines.lineStyle
+                                strokeWidth: /*this.settings.lines.byMeasure
+                                    ?   */DataViewHelper.getMetadataObjectValue<number>(m, 'lines', 'strokeWidth', VisualConstants.defaults.lines.strokeWidth)/*
+                                    :   this.settings.lines.strokeWidth*/,
+                                lineShape: /*this.settings.lines.byMeasure
+                                    ?   */DataViewHelper.getMetadataObjectValue<string>(m, 'lines', 'lineShape', VisualConstants.defaults.lines.lineShape)/*
+                                    :   this.settings.lines.lineShape*/,
+                                lineStyle: /*this.settings.lines.byMeasure
+                                    ?   */DataViewHelper.getMetadataObjectValue<string>(m, 'lines', 'lineStyle', VisualConstants.defaults.lines.lineStyle)/*
+                                    :   this.settings.lines.lineStyle*/
                             });
 
                     });
@@ -314,7 +314,7 @@
                                                             header: `${name} - ${valueFormatter.format(category, this.categoryColumn.format)}`,
                                                             displayName: m.metadata.displayName,
                                                             value: valueFormatter.format(value, m.metadata.format),
-                                                            color: m.colour
+                                                            color: m.stroke
                                                         }
                                                     :   null
                                             });
@@ -400,7 +400,7 @@
                     dataPoints: this.viewModel.measureMetadata.map(function(m, i) {
                         return {
                             label: m.metadata.displayName,
-                            color: m.colour,
+                            color: m.stroke,
                             markerShape: MarkerShape.longDash,
                             selected: false,
                             identity: m.selectionId

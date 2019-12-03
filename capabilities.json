@@ -1,6 +1,14 @@
 {
     "dataRoles": [
         {
+            "displayNameKey": "Roles_SmallMultiple",
+            "descriptionKey": "Roles_SmallMultiple_Description",
+            "displayName": "Small Multiple",
+            "description": "Small Multiple description.",
+            "name": "smallMultiple",
+            "kind": "Grouping"
+        },
+        {
             "displayNameKey": "Roles_Axis",
             "descriptionKey": "Roles_Axis_Description",
             "displayName": "Axis",
@@ -18,14 +26,6 @@
             "requiredTypes": [
                 { "numeric": true}
             ]
-        },
-        {
-            "displayNameKey": "Roles_SmallMultiple",
-            "descriptionKey": "Roles_SmallMultiple_Description",
-            "displayName": "Small Multiple",
-            "description": "Small Multiple description.",
-            "name": "smallMultiple",
-            "kind": "Grouping"
         }
     ],
     "objects": {
@@ -414,8 +414,8 @@
         "colorSelector": {
             "displayNameKey": "Objects_ColorSelector",
             "descriptionKey": "Objects_ColorSelector_Description",
-            "displayName": "Data Colors",
-            "description": "Data Colors Description",
+            "displayName": "[DEPRECATED] Data Colors",
+            "description": "[DEPRECATED] Data Colors Description",
             "properties": {
                 "fill": {
                     "displayName": "Color",
@@ -435,16 +435,20 @@
             "displayName": "Lines",
             "description": "Lines description.",
             "properties": {
+                "stroke": {
+                    "displayNameKey": "Objects_Lines_Stroke",
+                    "descriptionKey": "Objects_Lines_Stroke_Description",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
                 "strokeWidth": {
                     "displayNameKey": "Objects_Lines_StrokeWidth",
                     "descriptionKey": "Objects_Lines_StrokeWidth_Description",
-                    "displayName": "Stroke Width",
-                    "description": "Stroke Width Description",
-                    "type": {
-                        "integer": true
-                    }
-                },
-                "measureName": {
                     "type": {
                         "integer": true
                     }
@@ -452,8 +456,6 @@
                 "lineShape": {
                     "displayNameKey": "Objects_Lines_LineShape",
                     "descriptionKey": "Objects_Lines_LineShape_Description",
-                    "displayName": "Line Shape",
-                    "description": "Line Shape description",
                     "type": {
                         "enumeration": [
                             {
@@ -482,8 +484,6 @@
                 "lineStyle": {
                     "displayNameKey": "Objects_Lines_LineStyle",
                     "descriptionKey": "Objects_Lines_LineStyle_Description",
-                    "displayName": "Line Style",
-                    "description": "Line Style description",
                     "type": {
                         "enumeration": [
                             {
@@ -512,8 +512,6 @@
                 "byMeasure": {
                     "displayNameKey": "Objects_Lines_ByMeasure",
                     "descriptionKey": "Objects_Lines_ByMeasure_Description",
-                    "displayName": "By Measure",
-                    "description": "By Measure description.",
                     "type": {
                         "bool": true
                     }

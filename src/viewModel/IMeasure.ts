@@ -8,7 +8,7 @@
  */
     export default interface IMeasure {
         metadata: DataViewMetadataColumn;
-        colour: string;
+        stroke: string;
         selectionId: ISelectionId;
         strokeWidth: number;
         lineShape: string;

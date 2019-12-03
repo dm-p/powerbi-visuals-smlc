@@ -29,6 +29,7 @@ Bugs fixed:
 * If Small Multiple field contains (blank), then visual will now render ;)
 
 Need:
+* Migrate line colours for v1
 * Nice axes with linear values seems to casue spacig issues; we can allow categorical as a selection and that'll pporbably help
 * Landing page / clear if fields removed
 * Full-collapse (height or width too small)

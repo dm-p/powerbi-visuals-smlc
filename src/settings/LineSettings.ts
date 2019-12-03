@@ -7,7 +7,7 @@
 */
     export default class LineSettings {
         /** Specify measure-specific configuration */
-            public byMeasure: boolean = defaults.lines.byMeasure;
+            public stroke: string = null;
         /** Thickness of measure lines */
             public strokeWidth: number = defaults.lines.strokeWidth;
         /** Curve type to use when drawing */

@@ -165,9 +165,15 @@
          * objects and properties you want to expose to the users in the property pane.
          *
          */
-            public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] {
-                let instances: VisualObjectInstance[] = (VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options) as VisualObjectInstanceEnumerationObject).instances;
+            public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): powerbi.VisualObjectInstanceEnumeration {
+                let instances: VisualObjectInstance[] = (
+                    VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options) as VisualObjectInstanceEnumerationObject).instances;
                 let objectName = options.objectName;
+                
+                const enumerationObject: powerbi.VisualObjectInstanceEnumerationObject = {
+                    containers: [],
+                    instances: [],
+                };
 
                 switch (objectName) {
 
@@ -284,7 +290,7 @@
                                     properties: {
                                         fill: {
                                             solid: {
-                                                color: measure.colour
+                                                color: measure.stroke
                                             }
                                         }
                                     },
@@ -299,66 +305,36 @@
 
                     case 'lines': {
 
-                        /** Range validation */
-                            instances[0].validValues = instances[0].validValues || {};
-                            instances[0].validValues.strokeWidth = {
-                                numberRange: {
-                                    min: VisualConstants.ranges.shapeStrokeWidth.min,
-                                    max: VisualConstants.ranges.shapeStrokeWidth.max
-                                },
-                            };
-
-                        /** Turn off standard measure properties if we want to configure by measure */
-                            if (this.settings.lines.byMeasure) {
-                                /** Remove defaults */
-                                    delete instances[0].properties['strokeWidth'];
-                                    delete instances[0].properties['lineShape'];
-                                    delete instances[0].properties['lineStyle'];
-                                /** Enumerate measures and duplicate settings */
-                                    for (let measure of this.viewModelHandler.viewModel.measureMetadata) {
-                                        /** Use a hack by pushing an integer field without validation to create a 'heading' */
-                                            instances.push({
-                                                objectName: objectName,
-                                                displayName: '－－－－－－－－－－',
-                                                properties: {
-                                                    measureName: null
-                                                },
-                                                selector: {
-                                                    metadata: measure.metadata.queryName
-                                                }
-                                            });
-                                            instances.push({
-                                                objectName: objectName,
-                                                displayName: measure.metadata.displayName,
-                                                properties: {
-                                                    measureName: null
-                                                },
-                                                selector: {
-                                                    metadata: measure.metadata.queryName
-                                                }
-                                            });
-                                        /** The remainder of the other fields */
-                                            let i: VisualObjectInstance = {
-                                                objectName: objectName,
-                                                properties: {
-                                                    strokeWidth: measure.strokeWidth,
-                                                    lineShape: measure.lineShape,
-                                                    lineStyle: measure.lineStyle
-                                                },
-                                                selector: {
-                                                    metadata: measure.metadata.queryName
-                                                },
-                                                validValues: {
-                                                    strokeWidth: {
-                                                        numberRange: {
-                                                            min: VisualConstants.ranges.shapeStrokeWidth.min,
-                                                            max: VisualConstants.ranges.shapeStrokeWidth.max
-                                                        }
-                                                    }
-                                                }
-                                            };
-                                            instances.push(i);
+                        /** Remove default instance, and replace with measure-based properties */
+                            instances = [];
+                            for (let measure of this.viewModelHandler.viewModel.measureMetadata) {
+                                let displayName = measure.metadata.displayName,
+                                    containerIdx = enumerationObject.containers.push({displayName: displayName}) - 1;
+                                instances.push({
+                                    objectName: objectName,
+                                    properties: {
+                                        stroke: {
+                                            solid: {
+                                                color: measure.stroke
+                                            }
+                                        },
+                                        strokeWidth: measure.strokeWidth,
+                                        lineShape: measure.lineShape,
+                                        lineStyle: measure.lineStyle
+                                    },
+                                    selector: {
+                                        metadata: measure.metadata.queryName
+                                    },
+                                    containerIdx: containerIdx,
+                                    validValues: {
+                                        strokeWidth: {
+                                            numberRange: {
+                                                min: VisualConstants.ranges.shapeStrokeWidth.min,
+                                                max: VisualConstants.ranges.shapeStrokeWidth.max
+                                            }
                                         }
+                                    }
+                                });
                             }
 
                         break;
@@ -482,7 +458,9 @@
 
                 }
 
-                return instances;
+                enumerationObject.instances.push(...instances);
+                console.log(enumerationObject);
+                return enumerationObject;
 
             }
     }
