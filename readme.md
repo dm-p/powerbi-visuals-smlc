@@ -14,7 +14,7 @@
 * If you have a drillthrough page featuring the small multiple field, the visual will allow drillthrough via context menu
 * Standard tooltip configuration is now available, plus support for canvas tooltips
 * Implicit sorting has been removed and the user can now manage this using the standard menu
-* You can configure stroke width/shape and style for all lines, and independently
+* You can configure stroke width/shape and style for all lines, and independently. Colours have moved into this menu too.
 * Localised all capabilities
 * Flow or Fixed Columns Mode - Lots of doc here
 * \# Small multiples increased to 75; axis values up from 200 to 400
@@ -29,7 +29,6 @@ Bugs fixed:
 * If Small Multiple field contains (blank), then visual will now render ;)
 
 Need:
-* Migrate line colours for v1
 * Nice axes with linear values seems to casue spacig issues; we can allow categorical as a selection and that'll pporbably help
 * Landing page / clear if fields removed
 * Full-collapse (height or width too small)

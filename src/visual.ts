@@ -292,23 +292,9 @@
 
                     case 'colorSelector': {
 
-                        /** Enumerate measures and create colour pickers */
-                            for (let measure of this.viewModelHandler.viewModel.measureMetadata) {
-                                instances.push({
-                                    objectName: objectName,
-                                    displayName: measure.metadata.displayName,
-                                    properties: {
-                                        fill: {
-                                            solid: {
-                                                color: measure.stroke
-                                            }
-                                        }
-                                    },
-                                    selector: {
-                                        metadata: measure.metadata.queryName
-                                    }
-                                });
-                            }
+                        /** No longer needed, as all properties have been migrated */
+                            instances = [];
+
                         break;
 
                     }

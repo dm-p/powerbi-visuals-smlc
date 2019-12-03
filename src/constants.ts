@@ -1,6 +1,6 @@
 /** Constants used throughout visual */
     export const VisualConstants = {
-        debug: true,
+        debug: false,
         defaults: {
             features: {
                 axisLabelPlacement: false,

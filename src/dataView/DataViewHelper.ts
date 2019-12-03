@@ -4,6 +4,7 @@
     import VisualObjectInstance = powerbi.VisualObjectInstance;
     import IVisualHost = powerbi.extensibility.visual.IVisualHost;
     import DataView = powerbi.DataView;
+    import Fill = powerbi.Fill;
 
 /** Internal dependencies */
     import VisualSettings from '../settings/VisualSettings';
@@ -119,14 +120,41 @@
                     });
 
                 /** In v2 we introduce a 'flow' layout mode, but before this we relied on maximumMultiplesPerRow to manage this, so we need to manually
-                 *  override if maximumMultiplesPerRow is still set, so as not to confuse the end-user.
+                 *  override if maximumMultiplesPerRow is still set, so as not to confuse the end-user. We've also moved the measure-based colouring into
+                 *  the newer Line Styling menu, which consolidates shapes and colours in a single place.
                  */
-                    changes.replace.map((c) => {
-                        if (c.properties.numberOfColumns) {
-                            debug.log('Hard setting layout mode to \'column\'...');
-                            c.properties.mode = 'column';
-                        }
-                    });
+                    if (targetVersion === 2) {
+console.log('Migration needed');
+                        changes.replace.map((c) => {
+                            if (c.properties.numberOfColumns) {
+                                debug.log('Hard setting layout mode to \'column\'...');
+                                c.properties.mode = 'column';
+                            }
+                        });
+
+                        dataView.metadata.columns.filter((c) => 
+                            c.roles.values && c.objects && c.objects.colorSelector && c.objects.colorSelector.fill
+                        ).map((m) => {
+                            changes.replace.push({
+                                objectName: 'lines',
+                                selector: {
+                                    metadata: m.queryName
+                                },
+                                properties: {
+                                    stroke: (<Fill>m.objects.colorSelector.fill).solid.color
+                                }
+                            });
+                            changes.remove.push({
+                                objectName: 'colorSelector',
+                                selector: {
+                                    metadata: m.queryName
+                                },
+                                properties: {
+                                    fill: null
+                                }
+                            });
+                        });
+                    };
 
                 /** Add in target version */
                     changes.replace.push({
