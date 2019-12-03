@@ -1,4 +1,4 @@
-[Home](../readme.md) | Usage and Visual Properties | Examples | [Change Log](./doc/change_log.md) | **Privacy Policy** | Support
+[Home](../readme.md) | [Usage](./usage.md) | Examples | [Change Log](./change_log.md) | **Privacy Policy** | Support
 
 ---
 
