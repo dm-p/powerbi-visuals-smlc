@@ -1124,8 +1124,8 @@
                         "bool": true
                     }
                 },
-                "dataLabels": {
-                    "displayName": "Data Labels",
+                "axisLabelPlacement": {
+                    "displayName": "Axis Label Placement",
                     "type": {
                         "bool": true
                     }

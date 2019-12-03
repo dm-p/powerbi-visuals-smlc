@@ -3,7 +3,8 @@
         debug: true,
         defaults: {
             features: {
-                contextMenu: true
+                axisLabelPlacement: false,
+                contextMenu: true,                
             },
             font: {
                 size: 11,

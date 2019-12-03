@@ -228,6 +228,11 @@
                                 ];
                             }
 
+                        /** Axis placement */
+                            if (!this.settings.features.axisLabelPlacement) {
+                                delete instances[0].properties['labelPlacement'];
+                            }
+
                         break;
                     }
 
@@ -275,6 +280,11 @@
                             if (!this.settings.xAxis.showAxisLine) {
                                 delete instances[0].properties['axisLineColor'];
                                 delete instances[0].properties['axisLineStrokeWidth'];
+                            }
+
+                        /** Axis placement */
+                            if (!this.settings.features.axisLabelPlacement) {
+                                delete instances[0].properties['labelPlacement'];
                             }
 
                         break;
