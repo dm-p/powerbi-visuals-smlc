@@ -47,7 +47,7 @@ The **SM Layout** menu allows you to configure the layout of the 'grid' of small
     <tbody>
         <tr>
             <td>
-              <img src="./assets/png/sm_layout_flow.png" alt="SM Layout: Flow"/>
+              <img src="./assets/png/sm_layout_flow.png" width="172" height="349" alt="SM Layout: Flow"/>
             </td>
             <td>
                 <ul>
