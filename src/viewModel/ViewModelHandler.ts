@@ -454,16 +454,14 @@
                             this.debug.log('Creating linear scale...');
                             this.viewModel.xAxis.scaleType = EAxisScaleType.Linear;
                             this.viewModel.xAxis.scale = d3.scaleLinear()
-                                .domain(d3.extent(this.viewModel.categoryMetadata.values, (c) => <number>c))
-                                .nice();
+                                .domain(d3.extent(this.viewModel.categoryMetadata.values, (c) => <number>c));
                             break;
                         }
                         case this.categoryColumn.type.dateTime: {
                             this.debug.log('Creating linear scale...');
                             this.viewModel.xAxis.scaleType = EAxisScaleType.Time;
                             this.viewModel.xAxis.scale = d3.scaleTime()
-                                .domain(d3.extent(this.viewModel.categoryMetadata.values, (c) => new Date(<string>c)))
-                                .nice();
+                                .domain(d3.extent(this.viewModel.categoryMetadata.values, (c) => new Date(<string>c)));
                             break;
                         } default: {
                             this.debug.log('Creating categorical scale...');

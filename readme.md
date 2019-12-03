@@ -1,32 +1,28 @@
-# Change Log (to note)
+**Home** | Usage and Visual Properties | Examples | [Change Log](./doc/change_log.md) | Roadmap | [Privacy Policy](./doc/privacy_policy.md) | Support
 
-* Re-written all code for latest SDK
-* Properties have been tightened up to use correct controls
-* Added culture selection to Y-axis
-* Added support for additional data types on x-axis (categorical - will assume ordinal, and date/time)
-* Allowed suffix to be displayed with custom title
-* Small Multiple layout (grid) properties moved to Layout menu
-* Small Multiple label properties moved to Heading menu
-* "Zebra stripe" = "Alternate Background Color"
-* Alternate Backround Color can now be applied by column (original/default), by row, or across each small mutliple
-* Context menu available
-* Drilldown/expand on small multiple field is available
-* If you have a drillthrough page featuring the small multiple field, the visual will allow drillthrough via context menu
-* Standard tooltip configuration is now available, plus support for canvas tooltips
-* Implicit sorting has been removed and the user can now manage this using the standard menu
-* You can configure stroke width/shape and style for all lines, and independently. Colours have moved into this menu too.
-* Localised all capabilities
-* Flow or Fixed Columns Mode - Lots of doc here
-* \# Small multiples increased to 75; axis values up from 200 to 400
+# Small Multiple Line Chart for Power BI
 
-Bugs fixed:
-* Incorrect axis spacing when measure doesn't have a format applied in the data model
-* Fixed issues with label sizing and fit within small multiple
-* Fixed title/unit/both issue when enum issue when y-axis display units are not set
-* Fixed issues with border clipping
-* Measures will now auto-assign colours from the report theme correctly
-* Only supported field types can be used for data roles
-* If Small Multiple field contains (blank), then visual will now render ;)
+By Daniel Marsh-Patrick
+
+![github.png](doc\assets\png\github.png "GitHub: dm-p") [dm-p](https://github.com/dm-p) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![twitter.png](doc\assets\png\twitter.png "Twitter: @the_d_mp") [@run_dmp](https://twitter.com/the_d_mp) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ![linkedin.png](doc\assets\png\linkedin.png "in/daniel-m-p") [daniel-m-p](https://www.linkedin.com/in/daniel-m-p)  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; www.coacervo.co  |  [daniel@coacervo.co](mailto:daniel@coacervo.co) 
+
+----
+
+## What the Visual Does
+
+A small multiple is a series of charts using the same scale and axes, allowing them to be easily compared. This visual allows you to take a measure you might normally plot in a line chart, and duplicate this for the values of another category, e.g.:
+
+> ![SMLC_Introduction_Simple.png](https://bitbucket.org/repo/akedXeM/images/3440626957-SMLC_Introduction_Simple.png)
+
+In this example, we are able to take a measure (**Rate**), plotted by time (**Year**), but also split this out into individual charts by category (**Location**). Each small multiple uses the same X and Y scale to allow for visual comparison between categories.
+
+## Obtaining the Visual
+
+The latest version of the visual is **2.0.0.x**
+
+The visual is [available in AppSource](https://appsource.microsoft.com/en-us/product/power-bi-visuals/WA104381711?src=website&mktcmpid=repo_main_page) or through the Power BI marketplace. you can also download the following resources directly from this repository's [Releases section](/dm-p/powerbi-visuals-smlc/releases).
+
+----
 
 Need:
 * Nice axes with linear values seems to casue spacig issues; we can allow categorical as a selection and that'll pporbably help
@@ -46,7 +42,6 @@ Need:
             - Min
             - Max
     * Click to drill
-    * Move line colours to lines menu + test migration
     * Start a new 'group' with heading if expanded rather than drilled (identityFields > 1)
     * Add 'target, forecast and previous' measures. If measures has > 1 these cannot be used but we get addiitonal metrics in tooltip if we use them all
 
