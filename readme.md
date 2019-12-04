@@ -8,6 +8,8 @@ By Daniel Marsh-Patrick
 
 ----
 
+TODO: Release Status
+
 ## What the Visual Does
 
 A small multiple is a series of charts using the same scale and axes, allowing them to be easily compared. This visual allows you to take a measure you might normally plot in a line chart, and duplicate this for the values of another category, e.g.:
@@ -20,7 +22,7 @@ In this example, we are able to take a measure (**Rate**), plotted by time (**Ye
 
 The latest version of the visual is **2.0.0.x**
 
-The visual is [available in AppSource](https://appsource.microsoft.com/en-us/product/power-bi-visuals/WA104381711?src=website&mktcmpid=repo_main_page) or through the Power BI marketplace. you can also download the following resources directly from this repository's [Releases section](/dm-p/powerbi-visuals-smlc/releases).
+The visual is [available in AppSource](https://appsource.microsoft.com/en-us/product/power-bi-visuals/WA104381711?src=website&mktcmpid=repo_main_page) or through the Power BI marketplace. you can also download the following resources directly from this repository's [Releases section](https://github.com/dm-p/powerbi-visuals-smlc/releases).
 
 ----
 
