@@ -13,8 +13,8 @@ By Daniel Marsh-Patrick
 
 | | Development | Submitted | Approved | Available |
 |-|:--:|:-:|:-:|:-:|
-|1.0.1.0| | | | ✔ |
-| 2.0.0.x | 🚧 | | |
+| [1.0.1.0](./doc/change_log.md#1010-2018-11-29)| | | | ✔ |
+| [2.0.0.x](./doc/change_log.md#200x-tbc) | 🚧 | | |
 
 > **If a version is in any status other than *Available* this cannot be imported via file or via the Marketplace, even if the listing is showing the new version**. [More on this below](#More-About-Current-Status).
 
@@ -36,7 +36,7 @@ Please read the below or review the [Current Status](#Current-Status) table prio
 
 ## More About Current Status
 
-Custom visuals have a somewhat unconventional path to the marketplace, and the [Current Status](#Current-Status) table above tries to mirror this as simply as possible. This process takes as long as it takes and is entirely dependent on the current backlog of work with the Custom Visuals Team at Microsoft.
+Custom visuals have a somewhat unconventional path to the Marketplace, and the [Current Status](#Current-Status) table above tries to mirror this as simply as possible. This process takes as long as it takes and is entirely dependent on the current backlog of work with the Custom Visuals Team at Microsoft.
 
 If a custom visual is published to the Marketplace, **it will always be loaded from there**, even if you manually upload a specific version into your report. This is to ensure that reports are always using the latest version and the user doesn't have to manually upgrade all reports containing a particular visual when new versions become available.
 
