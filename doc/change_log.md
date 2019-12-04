@@ -1,8 +1,8 @@
+# Change Log
+---
 [Home](../readme.md) | [Usage](./usage.md) | Examples | **Change Log** | [Privacy Policy](./privacy_policy.md) | Support
 
 ---
-
-# Change Log
 
 ## 2.0.0.x (TBC)
 

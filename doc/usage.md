@@ -1,8 +1,9 @@
+# Usage
+
+---
 [Home](../readme.md) | **Usage** | Examples | [Change Log](./change_log.md) | [Privacy Policy](./privacy_policy.md) | Support
 
 ---
-
-# Usage
 
 Where possible, the visual utilises properties and concepts common to typical Power BI visuals but there are some specific properties that you might be able to get more use out of if correctly explained.
 
