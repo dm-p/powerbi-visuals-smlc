@@ -9,16 +9,16 @@
 ### Major Changes
 
 * In order to support new features, the visual has been completely re-written and runs in the latest custom visuals SDK. Extreme care has been taken to support transition from original versions of the visual to this version, but please be aware that some properties might need reviewing accordingly.
-* A **Line Styling** menu has been added, which allows you to configure the following properties per measure:
+* A [**Line Styling**](./usage.md#Line-Styling) menu has been added, which allows you to configure the following properties per measure:
     * Color
     * Stroke Width
     * Line Shape - **Linear**, Stepped, Curve (Cardinal), Curve (Natural)
     * Line Style - Dashed, **Solid**, Dotted, Dot-Dash
 * The **Small Multiples** menu contained too many properties, spanning too many features. These have been split up into submenus to better manage properties and make future enhancements easier:
-    * **SM Layout** - configuration of the small multiple 'grid', including mode (refer below)
-    * **SM Heading** - configuration of the small multiple heading (formerly known as *Label*).
-    * **SM Styling** - configuration of the small multiple background and border styling.
-* Added **Mode** property, which resides in the **SM Layout** menu and provides the following options:
+    * [**SM Layout**](./usage.md#SM-Layout) - configuration of the small multiple 'grid', including mode (refer below)
+    * [**SM Heading**](./usage.md#SM-Heading) - configuration of the small multiple heading (formerly known as *Label*).
+    * [**SM Styling**](./usage.md#SM-Styling) - configuration of the small multiple background and border styling.
+* Added [**Mode** property, which resides in the **SM Layout** menu](./usage.md#SM-Layout) and provides the following options:
     * **Flow** (default) - allows you to set desired fixed width and height of small multiples. 
         * The visual will fit as many per row as possible, based on the prescribed width, and 'flow' the remainer on to the next row.
         * This makes it easier to ensure that small mutliples appear consistently when interacting with other visuals and slicers in your report.
@@ -27,9 +27,9 @@
         * This is how the visual managed the small mutiple grid for previous versions, so if you've been using the visual beforehand, this is how you will be used to working with it.
         * If you're already using v1 of the visual in your report, this mode will be retained, to ensure continuity. You can set this to **Flow** by editing the report and setting this accordingly.
 * Core Tooltip support has been added, which includes:
-    * Standard tooltip configuration options, such as background, font, colours and transparency
+    * Standard tooltip configuration options, such as background, font, colors and transparency
     * Canvas (Report Page) tooltips
-* Context menu support has been added, which also includes drillthrough, if you have configured your report appropriately.
+* Context menu support has been added, which also allows drillthrough (if you have configured your report appropriately).
 
 ### Minor Enhancements
 
@@ -38,12 +38,13 @@
 * Standard sorting options have been enabled and can be supplied in the visual header - the visual used to previously sort implicitly by Small Multiple value.
 * Measures respect Power BI language and display culture.
 * "Zebra-Stripe" has been renamed to **Alternate Background Color**.
-* Altrernate Background Color can now be applied by:
+* Alternate Background Color can now be applied by:
     * Column (v1)
     * Row
     * Small Multiple.
 * If the visual is too small to draw components such the axis and legend, it will remove them to preserve as much space as possible for the small multiples.
-* Data limits have been raised from **50** small multiple values and **200** axis values (10K total) to **75** small multiple values and **400** axis values (30K total).
+* Data limits have been raised from **50** small multiple values and **200** axis values (10K total) to [**75** small multiple values and **400** axis values](./usage.md#Fields) (30K total).
+* Legend icons have been replaced with lines rather than circles (it is a line chart after all...).
 * Properties have all been corrected to have the correct controls and have sensible limits where possible.
 * We're now using GitHub to manage the source code and project.
 
@@ -53,7 +54,7 @@
 * Axis ticks would leave whitespace if the data model didn't have a format applied.
 * Small multiple labels would not always fit correctly if font size was set too large, or text was too wide. Labels will now fit vertically and truncate with an ellipsis (...) if text starts to overflow.
 * Due to size calculation issues, the border would not apply correctly and look inconsistent.
-* Measures do not always auto-assign colours from the palette.
+* Measures do not always auto-assign colors from the palette.
 * When using a legend, and specifying to use the range as suffix on the title and then manually overridng the title would prevent the suffix from being displayed.
 
 

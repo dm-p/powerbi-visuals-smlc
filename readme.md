@@ -1,4 +1,4 @@
-**Home** | Usage and Visual Properties | Examples | [Change Log](./doc/change_log.md) | Roadmap | [Privacy Policy](./doc/privacy_policy.md) | Support
+**Home** | [Usage](/doc/usage.md) | Examples | [Change Log](./doc/change_log.md) | [Privacy Policy](./doc/privacy_policy.md) | Support
 
 # Small Multiple Line Chart for Power BI
 
