@@ -132,6 +132,8 @@
     "Objects_YAxis_Precision_Description": "Specify the number of decimal places to use for values in the Y-axis labels.",
     "Objects_Lines": "Line Styling",
     "Objects_Lines_Description": "Configure the appearance of the lines used for measures in the visual.",
+    "Objects_Lines_Stroke": "Color",
+    "Objects_Lines_Stroke_Description": "Color for this measure.",
     "Objects_Lines_StrokeWidth": "Stroke Width",
     "Objects_Lines_StrokeWidth_Description": "The width of the line.",
     "Objects_Lines_LineShape": "Shape",

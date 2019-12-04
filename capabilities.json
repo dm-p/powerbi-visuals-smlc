@@ -438,6 +438,8 @@
                 "stroke": {
                     "displayNameKey": "Objects_Lines_Stroke",
                     "descriptionKey": "Objects_Lines_Stroke_Description",
+                    "displayName": "S",
+                    "description": "SD",
                     "type": {
                         "fill": {
                             "solid": {
@@ -449,6 +451,8 @@
                 "strokeWidth": {
                     "displayNameKey": "Objects_Lines_StrokeWidth",
                     "descriptionKey": "Objects_Lines_StrokeWidth_Description",
+                    "displayName": "SW",
+                    "description": "SWD",
                     "type": {
                         "integer": true
                     }
@@ -456,6 +460,8 @@
                 "lineShape": {
                     "displayNameKey": "Objects_Lines_LineShape",
                     "descriptionKey": "Objects_Lines_LineShape_Description",
+                    "displayName": "LS",
+                    "description": "LSD",
                     "type": {
                         "enumeration": [
                             {
@@ -484,6 +490,8 @@
                 "lineStyle": {
                     "displayNameKey": "Objects_Lines_LineStyle",
                     "descriptionKey": "Objects_Lines_LineStyle_Description",
+                    "displayName": "LSt",
+                    "description": "LStD",
                     "type": {
                         "enumeration": [
                             {
