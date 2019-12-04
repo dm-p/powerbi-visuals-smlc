@@ -24,7 +24,7 @@ In order to plot a chart, you will need the following added to the visual fields
 
 | Field | Purpose | Requirements | Max. Data Points | Data Reduction Algorithm* |
 | ----- | ------- | ---------- | ---------------- | ------------------------- |
-| Small Multiple | Attribute to partition your data, or chart by. If supplying more then one field, you can drill/expand. | One or More | 75 | Top |
+| Small Multiple | Attribute to partition your data, or chart by. If supplying more than one field, you can drill/expand. | One or More | 75 | Top |
 | Axis | Series to plot on the x-axis of your chart. Only continuous series such as dates or numbers are currently supported. Categorical/ordinal series are being worked on for a future version. | One | 400 | Sample |
 | Values | Measures to plot on your charts. | One or more | | |
 
