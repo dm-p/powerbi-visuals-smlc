@@ -35,7 +35,7 @@ If the above requirements are not met, then the chart will not render for you.
 
 ## Small Multiples
 
-There are three property menus that govern the behaviour of the small multiples in the visual.
+There are three property menus that govern the behaviour of the small multiples in the visual:
 
 ### SM Layout
 
@@ -46,7 +46,7 @@ Small multiples have a fixed size and a row is filled, they will flow onto the n
 
 > ℹ This is the default mode for any new report visuals created after installing the custom visual.
 
-* This guarantees the dimensions of your small multiples if you are unsure as to how many may be displayed in the visual at one time (for example, if your report contains interactions and users may be doing their own filtering).
+* This guarantees the sizing of your small multiples if you are unsure as to how many may be displayed in the visual at one time (for example, if your report contains interactions and users may be doing their own filtering).
 * **Multiple Height** & **Multiple Width** have a minimum value of **40** and a maximum value of **500** pixels.
 * If the height x number of rows exceeds the chart area, the visual will provide scrollbars to allow users to scroll vertically.
 
@@ -68,7 +68,7 @@ TODO: Screenshots
 The **SM Heading** menu allows you to configure the heading displayed on the small multiple.
 
 * Headings can be positioned at either the top or the bottom of the small multiple.
-* If **Alternate BackGround Color** is enabled in the [**SM Styling**](#SM-Styling) property menu, then you can also specify an **Alternate Font Color** for the heading, which will use the same **Color By** rule.
+* If **Alternate Background Color** is enabled in the [**SM Styling**](#SM-Styling) property menu, then you can also specify an **Alternate Font Color** for the heading, which will use the same **Color By** rule.
 
 TODO: Screenshots
 
@@ -76,7 +76,32 @@ TODO: Screenshots
 
 The **SM Styling** menu allows you to specify background and border configuration to the small multiples.
 
+You can also apply an alternating background by setting the **Alternate Background Color** property. This will provide you with the option to set a color and also a **Color By** rule, which provides the following options:
+
+* **Column** - the color is applied to each alternate column within each row.
+* **Row** - the color is applied to every small multiple in each alternate row.
+* **Small Multiple** - the color is applied to each alternate small multiple, across the whole visual. If you have an even number of small multiples in a row, this can look very similar to **Column**.
+
+TODO: Screenshots
+
 ## Line Styling
+
+The **Line Styling** menu allows you to tailor the appearence of the line produced for each measure in  your visual, consitently across each small multiple.
+
+* **Color** - allows you to specify the color for each measure.
+* **Stroke Width** - allows you to specify a particular width for your measure.
+* **Shape** - allows you to specify how the line is drawn. Values are as follows:
+    * **Linear** (default) - data points are connected by a straight line.
+    * **Stepped** - changes between each data point are drawn using vertical lines before drawing a horizontal line for the value.
+    * **Curve (Natural)** - produces a [natural cubic spline](https://en.wikipedia.org/wiki/Spline_interpolation) over data points.
+    * **Curve (Cardinal)** - produces a [cardinal spline](https://en.wikipedia.org/wiki/Cubic_Hermite_spline#Cardinal_spline) over data points.
+* **Style** - allows you to specify the style of the line for each measure. Values are:
+    * **Dashed**
+    * **Solid** (default)
+    * **Dotted**
+    * **Dot-Dash**
+
+TODO: Screenshots
 
 ## Additional Features
 

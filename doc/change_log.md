@@ -14,7 +14,7 @@
     * Stroke Width
     * Line Shape - **Linear**, Stepped, Curve (Cardinal), Curve (Natural)
     * Line Style - Dashed, **Solid**, Dotted, Dot-Dash
-* The **Small Multiples** menu contained too many properties, spanning too many features. These have been split up into submenus to better manage properties and make future enhancements easier:
+* The **Small Multiples** menu contained too many properties, spanning too many features. These have been split up into more-specific menus to better manage properties and make future enhancements easier:
     * [**SM Layout**](./usage.md#SM-Layout) - configuration of the small multiple 'grid', including mode (refer below)
     * [**SM Heading**](./usage.md#SM-Heading) - configuration of the small multiple heading (formerly known as *Label*).
     * [**SM Styling**](./usage.md#SM-Styling) - configuration of the small multiple background and border styling.
