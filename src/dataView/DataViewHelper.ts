@@ -8,7 +8,7 @@
 
 /** Internal dependencies */
     import VisualSettings from '../settings/VisualSettings';
-    import VisualDebugger from '../debug/VisualDebugger';
+    import Debugger from '../debug/Debugger';
     import {
         IMigrationObject,
         EMigrationObjectPropertyCase
@@ -47,12 +47,11 @@
          * @param dataView          Data view to search for objects/properties
          * @param host              Host services to use for object persistence
          * @param migrationList     Source/desintation mappings
-         * @param debug             Debugger
          * @param targetVersion     Version number to apply to metadata to confirm migration has been applied
          */
-            static migrateObjectProperties(dataView: DataView, host: IVisualHost, migrationList: IMigrationObject[], debug: VisualDebugger, targetVersion: number) {
+            static migrateObjectProperties(dataView: DataView, host: IVisualHost, migrationList: IMigrationObject[], targetVersion: number) {
 
-                debug.log('Performing property migration');
+                Debugger.log('Performing property migration');
 
                 /** We'll use this to accumulate changes to make to the object instances */
                     let changes: powerbi.VisualObjectInstancesToPersist = {
@@ -62,7 +61,7 @@
 
                 /** Step over our objects/properties, test and add changes accordingly */
                     migrationList.map((m, mi) => {
-                        debug.log(`Checking if migration needed for legacy object: ${m.source.object}.${m.source.property}...`);
+                        Debugger.log(`Checking if migration needed for legacy object: ${m.source.object}.${m.source.property}...`);
                         if (    dataView.metadata
                             &&  dataView.metadata.objects
                             &&  dataView.metadata.objects.hasOwnProperty(`${m.source.object}`)
@@ -70,7 +69,7 @@
                             &&  dataView.metadata.objects[m.source.object][m.source.property] !== VisualSettings.getDefault()[m.source.object][m.source.property]
                         ) {
 
-                            debug.log(`Adding migration ${m.source.object}.${m.source.property} to ${m.destination.object}.${m.destination.property} to changes...`);
+                            Debugger.log(`Adding migration ${m.source.object}.${m.source.property} to ${m.destination.object}.${m.destination.property} to changes...`);
 
                             /** Placeholder objects and results if already created four source/detination */
                                 let replace: VisualObjectInstance = {
@@ -115,7 +114,7 @@
                                 }
 
                         } else {
-                            debug.log(`Property doesn't need to be migrated. Skipping...`);
+                            Debugger.log(`Property doesn't need to be migrated. Skipping...`);
                         }
                     });
 
@@ -124,10 +123,9 @@
                  *  the newer Line Styling menu, which consolidates shapes and colours in a single place.
                  */
                     if (targetVersion === 2) {
-console.log('Migration needed');
                         changes.replace.map((c) => {
                             if (c.properties.numberOfColumns) {
-                                debug.log('Hard setting layout mode to \'column\'...');
+                                Debugger.log('Hard setting layout mode to \'column\'...');
                                 c.properties.mode = 'column';
                             }
                         });
@@ -166,10 +164,10 @@ console.log('Migration needed');
                     });
 
                     if (changes.remove.length || changes.replace.length) {
-                        debug.log('Changes to make', changes);
+                        Debugger.log('Changes to make', changes);
                         host.persistProperties(changes);
                     } else {
-                        debug.log('No migrations to apply!');
+                        Debugger.log('No migrations to apply!');
                     }
             }
 

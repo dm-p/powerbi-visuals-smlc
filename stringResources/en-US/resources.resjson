@@ -1,4 +1,9 @@
 {
+    "Visual_Name": "Small Multiple Line Chart",
+    "Landing_Page_Overview": "Thanks very much for using this visual! For basic usage, you will need to add the following fields to the visual (more detailed help can be obtained by clicking the question mark icon in the top-right of this page):",
+    "Landing_Page_Overview_Field_1": "Small Multiple - field to partition your data, or chart by, based on its unique values. If supplying more than one field, you can drill/expand.",
+    "Landing_Page_Overview_Field_2": "Axis - field to plot on the X-axis of your chart.",
+    "Landing_Page_Overview_Field_3": "Values - measures to plot on your charts.",
     "Visual_Blank_Descriptor": "(Blank)",
     "Roles_SmallMultiple": "Small Multiple",
     "Roles_SmallMultiple_Description": "Small multiples will be generated for all unique values of this field.",

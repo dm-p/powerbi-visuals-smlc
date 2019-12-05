@@ -52,8 +52,6 @@ Here's a bigger explanation for anyone who wants to know about what each status 
 ----
 
 Need:
-* Nice axes with linear values seems to casue spacig issues; we can allow categorical as a selection and that'll pporbably help
-* Landing page / clear if fields removed
 * Full-collapse (height or width too small)
 * Test IE/iPad
 * Code review and doc

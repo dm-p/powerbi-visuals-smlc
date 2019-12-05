@@ -26,17 +26,14 @@
 /** Internal dependencies */
     import IViewModel from '../viewModel/IViewModel';
     import VisualSettings from '../settings/VisualSettings';
-    import VisualDebugger from '../debug/VisualDebugger';
+    import Debugger from '../debug/Debugger';
     import { VisualConstants } from '../constants';
     import ISmallMultipleMeasureValue from '../viewModel/ISmallMutlipleMeasureValue';
-    import ISmallMultipleMeasure from '../viewModel/ISmallMultipleMeasure';
     import EAxisScaleType from '../viewModel/EAxisScaleType';
     import ISmallMultiple from '../viewModel/ISmallMultiple';
     import IAxis from '../viewModel/IAxis';
     import AxisSettings from '../settings/AxisSettings';
     import EAxisType from '../viewModel/EAxisType';
-    import IMeasure from '../viewModel/IMeasure';
-    import IMeasureDataLabelValue from '../viewModel/IMeasureDataLabelValue';
 
 /**
  *
@@ -59,8 +56,6 @@
             private legend: ILegend;
         /** View model */
             public viewModel: IViewModel;
-        /** Handles debugging based on visual constants */
-            private debug: VisualDebugger;
         /** Visual settings */
             public settings: VisualSettings;
         /** Host services */
@@ -71,23 +66,24 @@
             public tooltipServiceWrapper: ITooltipServiceWrapper;
 
         constructor(visualContainer: HTMLElement) {
-            this.debug = new VisualDebugger(VisualConstants.debug);
-            this.debug.log('Chart helper constructor');
+            Debugger.log('Chart helper constructor');
             this.visualContainer = visualContainer;
             this.createLegendContainer();
             this.createChartContainer();
             this.createLandingPageContainer();
-            this.debug.log('Chart helper instantiated!');
+            Debugger.log('Chart helper instantiated!');
         }
 
     /** Clear down our existing plot data as we need to re-draw the whole thing */
         clearChart() {
-            this.debug.log('Clearing chart canvas...');
+            Debugger.log('Clearing chart canvas...');
             this.chartContainer.selectAll('*').remove();
+            this.chartContainer.attr('style', null);
         }
 
     /** Creates the element used to hold the landing page */
         private createLandingPageContainer() {
+            Debugger.log('Creating landing page container...');
             this.landingContainer = d3.select(this.visualContainer)
                 .append('div')
                     .classed('landing-container', true);
@@ -95,6 +91,7 @@
 
     /** Creates the element used to manage the legend */
         private createLegendContainer() {
+            Debugger.log('Creating legend container...');
             this.legend = createLegend(
                 this.visualContainer,
                 false,
@@ -123,28 +120,28 @@
     /** Renders the legend, based on the properties supplied in the update method */
         renderLegend() {
 
-            this.debug.footer();
-            this.debug.log('Rendering legend...');
-            if (!this.viewModel || !this.viewModel.measureMetadata) {
-                this.debug.log('No measure metadata. Skipping render!');
+            Debugger.footer();
+            Debugger.log('Rendering legend...');
+            if (!this.viewModel || !this.viewModel.measureMetadata || !this.settings) {
+                Debugger.log('No measure metadata. Skipping render!');
                 return;
             }
 
             /** We need to draw the legend first to figure out how big it might be */
-                this.debug.log('Setting position...');
-                const position: LegendPosition = (this.settings.legend.show && this.viewModel.dataViewIsValid)
+                Debugger.log('Setting position...');
+                const position: LegendPosition = (this.settings.legend.show && this.viewModel.dataViewIsValid && this.viewModel.measureMetadata.length > 0)
                     ? LegendPosition[this.settings.legend.position]
                     : LegendPosition.None;
-                this.debug.log(`Position: ${LegendPosition[position]}`);
+                Debugger.log(`Position: ${LegendPosition[position]}`);
 
-                this.debug.log('Setting orientation...');
+                Debugger.log('Setting orientation...');
                 this.legend.changeOrientation(position);
                 this.legend.drawLegend(this.viewModel.legend, this.viewModel.viewport);
                 positionChartArea(this.chartContainer, this.legend);
 
             /** We need to test the viewport. If there's not enough room, we remove the legend */
-                this.debug.log('Testing and adjusting viewport to fit legend...');
-                this.debug.log('Previous dimensions', JSON.stringify(this.viewModel.viewport));
+                Debugger.log('Testing and adjusting viewport to fit legend...');
+                Debugger.log('Previous dimensions', JSON.stringify(this.viewModel.viewport));
                 let width = this.legend.getMargins().width,
                     height = this.legend.getMargins().height;
                 switch (this.legend.getOrientation()) {
@@ -153,10 +150,10 @@
                     case LegendPosition.Right:
                     case LegendPosition.RightCenter:
                         if (this.viewModel.viewport.width - width < VisualConstants.ranges.canvas.minWidth) {
-                            this.debug.log('Viewport cannot support legend in this orientation. Will be hidden.');
+                            Debugger.log('Viewport cannot support legend in this orientation. Will be hidden.');
                             this.removeLegend();
                         } else {
-                            this.debug.log('Legend will fit.');
+                            Debugger.log('Legend will fit.');
                             this.viewModel.viewport.width -= width;
                         }
                         break;
@@ -165,20 +162,20 @@
                     case LegendPosition.Bottom:
                     case LegendPosition.BottomCenter:
                         if (this.viewModel.viewport.height - height < VisualConstants.ranges.canvas.minWidth) {
-                            this.debug.log('Viewport cannot support legend in this orientation. Will be hidden.');
+                            Debugger.log('Viewport cannot support legend in this orientation. Will be hidden.');
                             this.removeLegend();
                         } else {
-                            this.debug.log('Legend will fit.');
+                            Debugger.log('Legend will fit.');
                             this.viewModel.viewport.height -= height;
                         }
                         break;
                 }
-                this.debug.log('Adjusted dimensions', JSON.stringify(this.viewModel.viewport));
+                Debugger.log('Adjusted dimensions', JSON.stringify(this.viewModel.viewport));
         }
 
     /** Resizes the main SVG container based on where the legend is */
         sizeContainer() {
-            this.debug.log('Sizing chart container for viewport...');
+            Debugger.log('Sizing chart container for viewport...');
             this.chartContainer
                 .attr('height', this.viewModel.layout.visualViewport.height)
                 .attr('width', this.viewModel.layout.visualViewport.width);
@@ -186,7 +183,7 @@
 
     /** We add containers to hold the individual axis titles, so that we can have scrolling within the main chart viewport */
         addMasterAxisContainers() {
-            this.debug.log('Adding container for Y-axis title...');
+            Debugger.log('Adding container for Y-axis title...');
             this.yTitleContainer = this.chartContainer
                 .append('div')
                     .classed('y-title', true)
@@ -198,7 +195,7 @@
             this.chartContainer
                 .style('grid-template-columns', `${this.viewModel.yAxis.masterTitle.textHeight}px ${this.viewModel.viewport.width - this.viewModel.yAxis.masterTitle.textHeight}px`);
 
-            this.debug.log('Adding container for X-axis title...');
+            Debugger.log('Adding container for X-axis title...');
             this.xTitleContainer = this.chartContainer
                 .append('div')
                     .classed('x-title', true)
@@ -223,16 +220,16 @@
 
     /** Adds master X and Y axis elements to the DOM */
         renderMasterAxes() {
-            this.debug.log('Adding master axes group...');
+            Debugger.log('Adding master axes group...');
             let group = this.canvasContainer
                 .append('g')
                     .classed('small-multiple-master-axis-container', true);
 
             /** Y-axis */
                 if (this.settings.yAxis.show) {
-                    this.debug.log('Rendering Y-axis...');
+                    Debugger.log('Rendering Y-axis...');
                     for (let r = 0; r < this.viewModel.layout.rows; r++) {
-                        this.debug.log('Rendering Y-axis ticks...');
+                        Debugger.log('Rendering Y-axis ticks...');
                         this.renderAxis(
                             group,
                             this.viewModel.yAxis.tickLabels.textWidth,
@@ -248,9 +245,9 @@
 
             /** X-axis */
                 if (this.settings.xAxis.show) {
-                    this.debug.log('Rendering X-axis...');
+                    Debugger.log('Rendering X-axis...');
                     for (let c = 0; c < this.viewModel.layout.columns; c++) {
-                        this.debug.log('Rendering X-axis ticks...');
+                        Debugger.log('Rendering X-axis ticks...');
                         this.renderAxis(
                             group,
                             this.viewModel.yAxis.tickLabels.textWidth
@@ -276,7 +273,7 @@
 
             /** Add rows to group */
                 for (let r = 0; r < this.viewModel.layout.rows; r++) {
-                    this.debug.log(`Rendering row #${r}...`);
+                    Debugger.log(`Rendering row #${r}...`);
 
                     /** Row (of multiples) element */
                         let row = this.renderSmallMultipleRow(viewport, r);
@@ -298,7 +295,7 @@
 
                     /** Add y-axis */
                         if (this.settings.yAxis.show) {
-                            this.debug.log('Rendering Y-axis...');
+                            Debugger.log('Rendering Y-axis...');
                             this.renderAxis(
                                 multiples,
                                 0,
@@ -311,7 +308,7 @@
 
                     /** Add x-axis */
                         if (this.settings.xAxis.show) {
-                            this.debug.log('Rendering X-axis...');
+                            Debugger.log('Rendering X-axis...');
                             this.renderAxis(
                                 multiples,
                                 this.viewModel.layout.smallMultipleMargin.left,
@@ -358,12 +355,12 @@
     /** Binds the context menu to the small multiple the mouse is over */
         private bindContextMenu() {
             if (this.settings.features.contextMenu) {
-                this.debug.log('Binding context menu...');
+                Debugger.log('Binding context menu...');
                 this.chartContainer
                     .on('contextmenu', () => {
                         const mouseEvent: MouseEvent = d3.event as MouseEvent,
                             eventTarget: EventTarget = mouseEvent.target;
-                        this.debug.log('Context menu click', d3.select(<d3.BaseType>eventTarget).datum());
+                        Debugger.log('Context menu click', d3.select(<d3.BaseType>eventTarget).datum());
                         let dataPoint = <ISmallMultiple>d3.select(<d3.BaseType>eventTarget).datum();
                         this.selectionManager.showContextMenu(
                             dataPoint
@@ -381,7 +378,7 @@
 
     /** Binds mouse events for tooltip handling to the specified element(s) */
         private bindTooltipEvents(element: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>) {
-            this.debug.log('Binding mouse events...');
+            Debugger.log('Binding mouse events...');
 
             /** Bind the tooltipWrapper event listener to each small multiple */
                 this.tooltipServiceWrapper.addTooltip(
@@ -438,7 +435,7 @@
 
     /** Retrieves the small multiples for the specified row number from the view model */
         private getSmallMultiplesForRow(row: number): ISmallMultiple[] {
-            this.debug.log('Getting small multiples for this row...');
+            Debugger.log('Getting small multiples for this row...');
             return this.viewModel.multiples
                 .map((m) => m)
                 .slice(row * this.viewModel.layout.columns, (row * this.viewModel.layout.columns) + this.viewModel.layout.columns);
@@ -446,7 +443,7 @@
 
     /** Retrieve tooltip data from specified data points */
         private getTooltipData(tooltipEvent: any, tooltipType = 'default'): VisualTooltipDataItem[] | ISelectionId {
-            this.debug.log('Instantiating tooltip...');
+            Debugger.log('Instantiating tooltip...');
             let overlay = tooltipEvent.context
                         .closest('.small-multiple-canvas');
             let dataPoints = this.getHighlightedDataPoints(overlay);
@@ -527,7 +524,7 @@
 
     /** Generator function for measure lines */
         private measureLineGenerator(): d3.Line<ISmallMultipleMeasureValue> {
-            this.debug.log('Building line generation function for measures...');
+            Debugger.log('Building line generation function for measures...');
             return d3.line<ISmallMultipleMeasureValue>()
                 .x((d) => {
                         switch (this.viewModel.xAxis.scaleType) {
@@ -560,7 +557,7 @@
 
             switch (axis.axisType) {
                 case EAxisType.Value: {
-                    this.debug.log('Setting up ticks for Y-axis...');
+                    Debugger.log('Setting up ticks for Y-axis...');
                     ticks
                         .call(d3.axisLeft(<d3.ScaleLinear<number, number>>axis.scale)
                                 .ticks(axis.ticks)
@@ -573,7 +570,7 @@
                     break;
                 }
                 case EAxisType.Category: {
-                    this.debug.log('Setting up ticks for X-axis...');
+                    Debugger.log('Setting up ticks for X-axis...');
                     let d3Axis: d3.Axis<number | Date | { valueOf(): number; }> | d3.Axis<String>;
 
                     /** Handle the tick values based on scale type; Linear/Time need formatting */
@@ -607,7 +604,7 @@
 
                     /** Apply gridline settings */
                         .call((g) => {
-                                this.debug.log('Applying gridline settings...');
+                                Debugger.log('Applying gridline settings...');
                                 if (axisSettings.gridlines && !isMasterAxis) {
                                     g.selectAll('.tick line')
                                         .classed(axisSettings.gridlineStrokeLineStyle, true)
@@ -623,7 +620,7 @@
 
                     /** Apply tick label settings */
                         .call((g) => {
-                                this.debug.log('Applying tick label settings...');
+                                Debugger.log('Applying tick label settings...');
                                 if (axisSettings.showLabels && isMasterAxis) {
                                     /** Font configuration & tooltip value */
                                         g.selectAll('.tick text')
@@ -669,7 +666,7 @@
 
                     /** Remove the domain line for everything but the master X-axis (if we still want it) */
                         .call((g) => {
-                                this.debug.log('Applying domain line settings...');
+                                Debugger.log('Applying domain line settings...');
                                 if (!(axis.axisType === EAxisType.Category && isMasterAxis && this.settings.xAxis.showAxisLine) || axis.ticksAreCollapsed) {
                                     g.select('.domain').remove();
                                 }
@@ -684,7 +681,7 @@
     /** Determines if the specified axis title is required, and adds it to the DOM if so */
         private renderAxisTitle(element: d3.Selection<SVGGElement, any, any, any>, axis: IAxis, axisSettings: AxisSettings) {
             if (axisSettings.showTitle && !axis.titleIsCollapsed) {
-                this.debug.log('Adding axis title...');
+                Debugger.log('Adding axis title...');
                 element
                     .append('text')
                         .classed('master-axis', true)
@@ -705,7 +702,7 @@
 
     /** Adds the background element to the small multiple and applies desired settings */
         private renderSmallMultipleBackground(element: d3.Selection<SVGGElement, ISmallMultiple, any, any>) {
-            this.debug.log('Adding small mutliple background...');
+            Debugger.log('Adding small mutliple background...');
             element
                 .append('rect')
                     .classed('small-multiple-background', true)
@@ -717,7 +714,7 @@
 
     /** Adds the small multiple chart to the viewport */
         private renderSmallMultipleChartViewport(): d3.Selection<SVGGElement, any, any, any> {
-            this.debug.log('Rendering chart viewport...');
+            Debugger.log('Rendering chart viewport...');
             return this.canvasContainer
                 .append('g')
                     .classed('small-multiple-container', true)
@@ -729,7 +726,7 @@
     /** Determines if the small multiple label is required and adds it to the DOM if so, with specified settings */
         private renderSmallMultipleLabel(element: d3.Selection<SVGGElement, any, any, any>) {
             if (this.settings.heading.show) {
-                this.debug.log('Adding small multiple label...');
+                Debugger.log('Adding small multiple label...');
                 element
                     .append('text')
                         .classed('small-multiple-label', true)
@@ -758,7 +755,7 @@
                 this.viewModel.measureMetadata.slice(0).reverse().map((m, mi) => {
                     let inverse = this.viewModel.measureMetadata.length - 1 - mi;
                     lineGen.curve(d3[`${m.lineShape}`]);
-                    this.debug.log(`Plotting line for measure ${m.metadata.displayName}...`);
+                    Debugger.log(`Plotting line for measure ${m.metadata.displayName}...`);
                     element
                         .append('path')
                             .classed('small-multiple-measure', true)
@@ -781,7 +778,7 @@
 
     /** Adds an element to manage plotting measures to the small mutliple */
         private renderSmallMutliplePlotArea(element: d3.Selection<SVGGElement, any, any, any>): d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any> {
-            this.debug.log('Adding plot area...');
+            Debugger.log('Adding plot area...');
             return element
                 .append('g')
                     .classed('small-multiple-chart-path', true)
@@ -791,7 +788,7 @@
 
     /** Adds a small multiple row group to the chart viewport */
         private renderSmallMultipleRow(element: d3.Selection<SVGGElement, any, any, any>, row: number): d3.Selection<SVGGElement, any, any, any> {
-            this.debug.log('Rendering row group...');
+            Debugger.log('Rendering row group...');
             return element
                 .append('g')
                     .classed('small-multiple-row-container', true)
@@ -803,7 +800,7 @@
     /** Adds a clipPath to the specified row group element (used to ensure that the chart clips if the Y-axis has been limited, and doesn't exceed
      *  the bounds of the small multiple) */
         private renderSmallMultipleRowClipPath(element: d3.Selection<SVGGElement, any, any, any>) {
-            this.debug.log('Setting up clipPath...');
+            Debugger.log('Setting up clipPath...');
             element.selectAll('defs').remove();
             element
                 .append('defs')
@@ -817,7 +814,7 @@
 
     /** Adds all main SVG element containers for each small multipe for the specified row group */
         private renderSmallMultiplesForRow(element: d3.Selection<SVGGElement, any, any, any>, row: number): d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any> {
-            this.debug.log('Rendering small multiples for row...');
+            Debugger.log('Rendering small multiples for row...');
             return element
                 .selectAll('svg')
                     .data(this.getSmallMultiplesForRow(row))
@@ -833,7 +830,7 @@
      *  that we had in the initial version, as borders would get clipped inside the main SVG) */
         private renderSmallMultipleBorders(element: d3.Selection<SVGGElement, any, any, any>, row: number) {
             if (this.settings.smallMultiple.border) {
-                this.debug.log('Rendering small multiple borders...');
+                Debugger.log('Rendering small multiple borders...');
                 element
                     .selectAll('.small-multiple-border')
                         .data(this.getSmallMultiplesForRow(row))
@@ -863,7 +860,7 @@
 
     /** Adds boilerplate overlay to specified small multiple element(s) for tooltip tracking and info */
         private renderSmallMultipleTooltipOverlay(element: d3.Selection<SVGGElement, any, any, any>): d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any> {
-            this.debug.log('Adding tooltip overlay...');
+            Debugger.log('Adding tooltip overlay...');
             let overlay = element
                 .append('g')
                     .classed('small-multiple-tooltip-overlay', true)
@@ -881,7 +878,7 @@
 
     /** Adds a line to the specified overlay element, which is used to track mouse position to the nearest category */
         private renderSmallMultipleTooltipMouseLine(element: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>) {
-            this.debug.log('Adding tooltip mouse line to overlay...');
+            Debugger.log('Adding tooltip mouse line to overlay...');
             element
                 .append('line')
                     .classed('hover-line', true)

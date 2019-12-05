@@ -21,7 +21,7 @@
     import * as d3 from 'd3';
 
 /** Internal dependencies */
-    import VisualDebugger from '../debug/VisualDebugger';
+    import Debugger from '../debug/Debugger';
     import VisualSettings from '../settings/VisualSettings';
     import IViewModel from './IViewModel';
     import ISmallMultipleMeasure from './ISmallMultipleMeasure';
@@ -43,8 +43,6 @@
 
         /** View model */
             public viewModel: IViewModel;
-        /** Handles debugging based on visual constants */
-            private debug: VisualDebugger;
         /** Host services */
             private host: IVisualHost;
         /** Data view mapping metadata */
@@ -61,8 +59,7 @@
             private localisationManager: ILocalizationManager;
 
             constructor(host: IVisualHost) {
-                this.debug = new VisualDebugger(VisualConstants.debug);
-                this.debug.log('View model constructor');
+                Debugger.log('View model constructor');
                 this.host = host;
                 this.localisationManager = host.createLocalizationManager();
                 this.reset();
@@ -72,9 +69,9 @@
          * Resets view model back to initial state, ensuring that anything is cleaned-up from previous execution
          */
             private reset() {
-                this.debug.log('Resetting view model...');
+                Debugger.log('Resetting view model...');
                 this.viewModel = ViewModelHandler.initialState();
-                this.debug.log('Finished resetting view model.');
+                Debugger.log('Finished resetting view model.');
             }
 
         /** Template view model for instantiation */
@@ -173,12 +170,12 @@
          * Also sets flags in the view model that we can use to drive behaviour later on.
          */
             validateDataViewMapping(options: VisualUpdateOptions) {
-                this.debug.log('Resolving data view mapping...');
+                Debugger.log('Resolving data view mapping...');
                 this.reset();
                 let dataViews = options.dataViews;
 
                 /** Test 1: Data view has valid bare-minimum entries */
-                    this.debug.log('Test 1: Valid data view mapping...');
+                    Debugger.log('Test 1: Valid data view mapping...');
                     if (!dataViews
                         || !dataViews[0]
                         || !dataViews[0].categorical
@@ -189,12 +186,12 @@
                         || !dataViews[0].categorical.values[0].source
                         || !dataViews[0].categorical.values[0].source.groupName
                     ) {
-                        this.debug.log('Test 1 FAILED. Not all objects are present.');
+                        Debugger.log('Test 1 FAILED. Not all objects are present.');
                         this.viewModel.dataViewIsValid = false;
                         return;
                     }
-                    this.debug.log('Test 1 PASSED. Data view mappings are valid :)');
-                    this.debug.footer();
+                    Debugger.log('Test 1 PASSED. Data view mappings are valid :)');
+                    Debugger.footer();
                     this.metadata = dataViews[0].metadata;
                     this.categorical = dataViews[0].categorical;
                     this.smallMultipleColumn = this.categorical.categories[0];
@@ -207,10 +204,10 @@
         /** Maps everything we need from the data view to the view model */
             mapDataView() {
 
-                this.debug.log('Mapping Data View to View Model');
+                Debugger.log('Mapping Data View to View Model');
 
                 /** Map out measures into view model */
-                    this.debug.log('Mapping measures...');
+                    Debugger.log('Mapping measures...');
 
                     this.metadata.columns.filter((m) => m.roles.values && !m.groupName).map((m, mi) => {
 
@@ -270,15 +267,15 @@
                     this.viewModel.categoryMetadata.extents = this.getCategoryExtents();
 
                 /** Map out by small multiple */
-                    this.debug.log('Mapping small multiples...');
+                    Debugger.log('Mapping small multiples...');
                     this.smallMultipleColumn.values.map((c: string, ci) => {
                         let name = c || this.localisationManager.getDisplayName('Visual_Blank_Descriptor');
-                        this.debug.log(`Processing ${name}...`);
+                        Debugger.log(`Processing ${name}...`);
                         let measures: ISmallMultipleMeasure[] = [];
 
                         /** Add measures to multiple */
                             this.viewModel.measureMetadata.map((m, mi) => {
-                                this.debug.log(`Measure: ${m.metadata.displayName}`);
+                                Debugger.log(`Measure: ${m.metadata.displayName}`);
                                 let values: ISmallMultipleMeasureValue[] = [];
 
                                 /** Filter values by measure and add to array element */
@@ -345,7 +342,7 @@
                                     });
                             });
 
-                            this.debug.log('Adding to multiples array...');
+                            Debugger.log('Adding to multiples array...');
                             this.viewModel.multiples.push({
                                 name: name,
                                 measures: measures,
@@ -376,7 +373,7 @@
 
         /** Populates legend data */
             populateLegend() {
-                this.debug.log('Populating legend data...');
+                Debugger.log('Populating legend data...');
                 this.viewModel.legend = {
                     title: (this.settings.legend.showTitle
                                 ?   (
@@ -412,11 +409,11 @@
         /** Works out what axes shoud look like in an ideal world */
             initialiseAxes() {
 
-                this.debug.footer();
-                this.debug.log('Initialising axes...');
+                Debugger.footer();
+                Debugger.log('Initialising axes...');
 
                 /** Y-axis setup */
-                    this.debug.log('Master Y-axis number formatting...');
+                    Debugger.log('Master Y-axis number formatting...');
                     this.viewModel.yAxis.numberFormat = valueFormatter.create({
                         format: this.viewModel.measureMetadata[0].metadata.format || '#0.#',
                         value: this.settings.yAxis.labelDisplayUnits === 0
@@ -426,10 +423,10 @@
                         cultureSelector: this.viewModel.locale
                     });
 
-                    this.debug.log('Master Y-axis title...');
+                    Debugger.log('Master Y-axis title...');
                     this.viewModel.yAxis.masterTitle = this.resolveMasterAxisTitle(this.viewModel.yAxis, this.settings.yAxis);
 
-                    this.debug.log('Y-axis scale & domain...');
+                    Debugger.log('Y-axis scale & domain...');
                     this.viewModel.yAxis.scale = d3.scaleLinear()
                         .domain([
                                     this.settings.yAxis.start === 0
@@ -441,30 +438,30 @@
                                 ])
                         .nice();
 
-                    this.debug.log('Y-axis ticks...');
+                    Debugger.log('Y-axis ticks...');
                     this.viewModel.yAxis.tickLabels = this.resolveMasterAxisTickLabel(this.viewModel.yAxis, this.settings.yAxis, this.viewModel.measureMetadata[0].metadata);
 
                 /** X-Axis setup */
-                    this.debug.log('Master X-axis title...');
+                    Debugger.log('Master X-axis title...');
                     this.viewModel.xAxis.masterTitle = this.resolveMasterAxisTitle(this.viewModel.xAxis, this.settings.xAxis);
 
-                    this.debug.log('X-axis scale & domain...');
+                    Debugger.log('X-axis scale & domain...');
                     switch (true) {
                         case this.categoryColumn.type.numeric: {
-                            this.debug.log('Creating linear scale...');
+                            Debugger.log('Creating linear scale...');
                             this.viewModel.xAxis.scaleType = EAxisScaleType.Linear;
                             this.viewModel.xAxis.scale = d3.scaleLinear()
                                 .domain(d3.extent(this.viewModel.categoryMetadata.values, (c) => <number>c));
                             break;
                         }
                         case this.categoryColumn.type.dateTime: {
-                            this.debug.log('Creating linear scale...');
+                            Debugger.log('Creating linear scale...');
                             this.viewModel.xAxis.scaleType = EAxisScaleType.Time;
                             this.viewModel.xAxis.scale = d3.scaleTime()
                                 .domain(d3.extent(this.viewModel.categoryMetadata.values, (c) => new Date(<string>c)));
                             break;
                         } default: {
-                            this.debug.log('Creating categorical scale...');
+                            Debugger.log('Creating categorical scale...');
                             this.viewModel.xAxis.scaleType = EAxisScaleType.Point;
                             this.viewModel.xAxis.scale = d3.scaleBand()
                                 .domain(<string[]>this.viewModel.categoryMetadata.values);
@@ -472,7 +469,7 @@
                     }
 
                     if (this.viewModel.xAxis.scaleType !== EAxisScaleType.Point) {
-                        this.debug.log('Master X-axis is linear. Applying number formatting...');
+                        Debugger.log('Master X-axis is linear. Applying number formatting...');
                         this.viewModel.xAxis.numberFormat = valueFormatter.create({
                             format: this.categoryColumn.format,
                             value: this.viewModel.categoryMetadata[0],
@@ -480,14 +477,14 @@
                         });
                     }
 
-                    this.debug.log('X-axis ticks...');
+                    Debugger.log('X-axis ticks...');
                     this.viewModel.xAxis.tickLabels = this.resolveMasterAxisTickLabel(this.viewModel.xAxis, this.settings.xAxis, this.categoryColumn);
 
             }
 
         /** Resolves the initial viewport size, and what the minimum accepted viewport would be, based on minimum sizes and grid */
             calculateInitialViewport() {
-                this.debug.log('Calculating initial viewport...');
+                Debugger.log('Calculating initial viewport...');
                 this.viewModel.layout.minimumViewport = {
                     height: VisualConstants.ranges.canvas.minHeight,
                     width: VisualConstants.ranges.canvas.minWidth
@@ -501,8 +498,8 @@
         /** Calculate all visual dimensions required to render */
             resolveAxisTitles() {
 
-                this.debug.footer();
-                this.debug.log('Resolving axis dimensions and doing responsiveness checks...');
+                Debugger.footer();
+                Debugger.log('Resolving axis dimensions and doing responsiveness checks...');
 
                 /** Get text dimensions for each title */
                     this.resolveXAxisTitleHeight();
@@ -530,9 +527,9 @@
          * @param useMinimums   - Specifies whether to calculate for minimum-allowable dimensions once the grid size is known
          */
             private resetChartViewport(useMinimums = false) {
-                this.debug.log('Setting chart viewport...');
+                Debugger.log('Setting chart viewport...');
                 if (useMinimums) {
-                    this.debug.log('Adjusting for minimum dimensions...');
+                    Debugger.log('Adjusting for minimum dimensions...');
                     this.viewModel.layout.chartViewport = {
                         height: (this.viewModel.layout.rowDimensions.height * this.viewModel.layout.rows)
                             +   this.viewModel.xAxis.tickLabels.textHeight
@@ -542,14 +539,14 @@
                             +   this.viewModel.layout.smallMultipleBorderOffset
                     };
                 } else {
-                    this.debug.log('Setting to standard viewport size...');
+                    Debugger.log('Setting to standard viewport size...');
                     this.viewModel.layout.chartViewport = this.viewModel.layout.visualViewport;
                 }
             }
 
         /** Works out X/Y coordinates of axis titles, based on viewport */
             private resolveAxisTitleCoordinates() {
-                this.debug.log('Resolving axis title coordinates...');
+                Debugger.log('Resolving axis title coordinates...');
                 this.viewModel.xAxis.masterTitle.x = this.viewModel.layout.visualViewport.width - (this.viewModel.layout.visualViewport.width / 2);
                 this.viewModel.xAxis.masterTitle.y = this.viewModel.xAxis.masterTitle.textHeight / 2;
                 this.viewModel.yAxis.masterTitle.x = -this.viewModel.layout.visualViewport.height / 2;
@@ -557,7 +554,7 @@
             }
 
             private resolveChartContainerPosition() {
-                this.debug.log('Resolving chart container position...');
+                Debugger.log('Resolving chart container position...');
                 this.viewModel.layout.smallMultipleBorderOffset = this.settings.smallMultiple.border && this.settings.smallMultiple.borderStrokeWidth || 0;
                 this.viewModel.layout.x = this.viewModel.yAxis.tickLabels.textWidth + this.viewModel.layout.smallMultipleBorderOffset;
                 this.viewModel.layout.y = this.viewModel.layout.smallMultipleBorderOffset;
@@ -566,7 +563,7 @@
 
         /** based on grid configuration and minimum dimensions, calculate space required */
             private resolveSmallMultipleRowColDimensions() {
-                this.debug.log('Resolving small multiple row and column dimensions...');
+                Debugger.log('Resolving small multiple row and column dimensions...');
                 let vph = this.viewModel.layout.chartViewport.height,
                     vpw = this.viewModel.layout.chartViewport.width,
                     r = this.viewModel.layout.rows,
@@ -630,8 +627,8 @@
         /** Work out how the chart area needs to be laid out, including any additional responsiveness */
             resolveChartArea() {
 
-                this.debug.footer();
-                this.debug.log('Resolving small multiple chart area...');
+                Debugger.footer();
+                Debugger.log('Resolving small multiple chart area...');
 
                 /** Start with an initial viewport */
                     this.resetChartViewport();
@@ -663,16 +660,16 @@
          *  Will adjust remaining viewport based on calculated values if it can/should be displayed.
          */
             private resolveXAxisTitleHeight() {
-                this.debug.log('Resolving X-axis title for viewport height and settings...');
+                Debugger.log('Resolving X-axis title for viewport height and settings...');
                 if (    this.willViewportFit(this.viewModel.xAxis.masterTitle.textHeight, 0)
                     &&  this.settings.xAxis.showTitle
                     &&  this.viewModel.xAxis.masterTitle.textHeight > 0
                     ) {
-                        this.debug.log('[RESPONSIVENESS] Viewport can support X-axis title.');
+                        Debugger.log('[RESPONSIVENESS] Viewport can support X-axis title.');
                         this.viewModel.layout.visualViewport.height -= this.viewModel.xAxis.masterTitle.textHeight;
                         this.viewModel.xAxis.titleIsCollapsed = false;
                 } else {
-                    this.debug.log('[RESPONSIVENESS] X-axis title not required for viewport, or won\'t fit. Will not be included in chart.');
+                    Debugger.log('[RESPONSIVENESS] X-axis title not required for viewport, or won\'t fit. Will not be included in chart.');
                     this.viewModel.xAxis.masterTitle.textHeight = 0;
                     this.viewModel.xAxis.titleIsCollapsed = true;
                 }
@@ -680,7 +677,7 @@
 
         /** Do a check of all X-axis min and max values to see if they are all tailored down to nothing, and reduce the tect heigh if so */
             private resolveXAxisTickValidity() {
-                this.debug.log('Checking validity of X-axis ticks...');
+                Debugger.log('Checking validity of X-axis ticks...');
                 let totalValues = this.viewModel.xAxis.tickValues.length,
                     emptyValues = 0;
                 if (this.viewModel.xAxis.tickLabels.properties) {
@@ -705,11 +702,11 @@
                     &&  this.settings.yAxis.showTitle
                     &&  this.viewModel.yAxis.masterTitle.textHeight
                 ) {
-                    this.debug.log('[RESPONSIVENESS] Viewport can support Y-axis title.');
+                    Debugger.log('[RESPONSIVENESS] Viewport can support Y-axis title.');
                     this.viewModel.layout.visualViewport.width -= this.viewModel.yAxis.masterTitle.textHeight;
                     this.viewModel.yAxis.titleIsCollapsed = false;
                 } else {
-                    this.debug.log('[RESPONSIVENESS] Y-axis title not required for viewport, or won\'t fit. Will not be included in chart.');
+                    Debugger.log('[RESPONSIVENESS] Y-axis title not required for viewport, or won\'t fit. Will not be included in chart.');
                     this.viewModel.yAxis.masterTitle.textHeight = 0;
                     this.viewModel.yAxis.titleIsCollapsed = true;
                 }
@@ -735,11 +732,11 @@
                     &&  this.settings.yAxis.labelPlacement === 'row'
                     &&  this.viewModel.yAxis.ticks !== 0
                 ) {
-                    this.debug.log('[RESPONSIVENESS] Viewport can support Y-axis tick labels.');
+                    Debugger.log('[RESPONSIVENESS] Viewport can support Y-axis tick labels.');
                     this.viewModel.layout.chartViewport.width -= this.viewModel.yAxis.tickLabels.textWidth;
                     this.viewModel.yAxis.ticksAreCollapsed = false;
                 } else {
-                    this.debug.log('[RESPONSIVENESS] Y-axis tick labels not required for viewport, or won\'t fit. Will not be included in chart.');
+                    Debugger.log('[RESPONSIVENESS] Y-axis tick labels not required for viewport, or won\'t fit. Will not be included in chart.');
                     this.viewModel.yAxis.tickLabels.textWidth = 0;
                     this.viewModel.yAxis.ticksAreCollapsed = true;
                 }
@@ -759,7 +756,7 @@
          *  Will adjust remaining viewport based on calculated values if they can/should be displayed.
          */
             private resolveXAxisTickLabelHeight() {
-                this.debug.log('Resolving X-axis ticks for viewport height and settings...');
+                Debugger.log('Resolving X-axis ticks for viewport height and settings...');
                     +   (
                             this.settings.xAxis.showAxisLine
                             ?   VisualConstants.ranges.axisLineStrokeWidth.max
@@ -770,11 +767,11 @@
                         &&  this.viewModel.xAxis.tickLabels.textHeight > 0
                         &&  this.settings.xAxis.labelPlacement === 'column'
                 ) {
-                    this.debug.log('[RESPONSIVENESS] Viewport can support X-axis tick labels.');
+                    Debugger.log('[RESPONSIVENESS] Viewport can support X-axis tick labels.');
                     this.viewModel.layout.chartViewport.height -= this.viewModel.xAxis.tickLabels.textHeight;
                     this.viewModel.xAxis.ticksAreCollapsed = false;
                 } else {
-                    this.debug.log('[RESPONSIVENESS] X-axis tick labels not required for viewport, or won\'t fit. Will not be included in chart.');
+                    Debugger.log('[RESPONSIVENESS] X-axis tick labels not required for viewport, or won\'t fit. Will not be included in chart.');
                     this.viewModel.xAxis.tickLabels.textHeight = 0;
                     this.viewModel.xAxis.ticksAreCollapsed = true;
                 }
@@ -782,7 +779,7 @@
 
         /** Resolves row and column count based on settings, and updates the view model */
             private calculateGridSize() {
-                this.debug.log('Calculating grid rows/columns');
+                Debugger.log('Calculating grid rows/columns');
                 let multiples = this.viewModel.multiples,
                     columnCap = this.settings.layout.numberOfColumns || VisualConstants.defaults.layout.multipleDataReductionCap;
                 switch (this.settings.layout.mode) {
@@ -790,9 +787,12 @@
                         this.viewModel.layout.columns =
                             Math.min(
                                 multiples.length,
-                                Math.floor(
-                                        (this.viewModel.layout.chartViewport.width)
-                                    /   (this.settings.layout.multipleWidth + this.settings.layout.spacingBetweenColumns)
+                                Math.max(
+                                    Math.floor(
+                                            (this.viewModel.layout.chartViewport.width)
+                                        /   (this.settings.layout.multipleWidth + this.settings.layout.spacingBetweenColumns)
+                                    ),
+                                    1
                                 )
                             );
                         break;
@@ -811,11 +811,11 @@
 
         /** Calculates small multiple grid coordinates and applies specific formatting properties */
             private resolveSmallMultipleGridSpecifics() {
-                this.debug.log('Resolving small multiple grid dependencies...');
+                Debugger.log('Resolving small multiple grid dependencies...');
                 let cols = this.viewModel.layout.columns,
                     rows = this.viewModel.layout.rows,
                     total = this.viewModel.multiples.length;
-                this.debug.log('Columns', cols, 'Rows', rows, '# Multiples', total);
+                Debugger.log('Columns', cols, 'Rows', rows, '# Multiples', total);
                 this.viewModel.multiples.map((sm, smi) => {
                     let row = sm.row = Math.floor(smi / ((cols * rows) / rows)),
                         col = sm.column = Math.floor(smi % ((cols * rows) / rows));
@@ -860,7 +860,7 @@
 
         /** Adjusts the top and bottom margins based on axis tick label settings */
             private resolveSmallMultipleVerticalMarginsForTicks() {
-                this.debug.log('Resolving small multiple vertical margins for axis tick labels...');
+                Debugger.log('Resolving small multiple vertical margins for axis tick labels...');
                 this.viewModel.layout.smallMultipleMargin.top = VisualConstants.defaults.smallMultiple.margin.top
                     +   (
                             this.settings.heading.show
@@ -883,7 +883,7 @@
 
         /** Adjusts the top and bottom margins based on category label settings */
             private resolveSmallMultipleVerticalMarginsForLabel() {
-                this.debug.log('Resolving small multiple vertical margins for displayed category label...');
+                Debugger.log('Resolving small multiple vertical margins for displayed category label...');
                 this.viewModel.label.text = this.resolveMultipleTitle();
                 switch (true) {
                     case this.settings.heading.labelPosition === 'top' && this.settings.heading.show: {
@@ -903,7 +903,7 @@
 
         /** Calculates available height for chart based on multiples and margins */
             private calculateSmallMultipleChartHeight() {
-                this.debug.log('Calculating chart dimensions: height...');
+                Debugger.log('Calculating chart dimensions: height...');
                 this.viewModel.layout.smallMultipleChartDimensions.height = this.viewModel.layout.smallMultipleDimensions.height
                     - this.viewModel.layout.smallMultipleMargin.top
                     - this.viewModel.layout.smallMultipleMargin.bottom;
@@ -931,7 +931,7 @@
 
         /** Resolves all horizontal dimensions based on the remaining space after Y-axis resolution */
             private calculateHorizontalDimensions() {
-                this.debug.log('Calculating horizontal dimensions...');
+                Debugger.log('Calculating horizontal dimensions...');
                 this.viewModel.layout.smallMultipleChartDimensions.width = this.viewModel.layout.smallMultipleDimensions.width
                     - this.viewModel.layout.smallMultipleMargin.right
                     - this.viewModel.layout.smallMultipleMargin.left;
@@ -984,7 +984,7 @@
             }
 
             private getCategoryExtents(): [any, any] {
-                this.debug.log('Getting X-axis extents and formatting...');
+                Debugger.log('Getting X-axis extents and formatting...');
                 return [
                     this.viewModel.categoryMetadata.values[0],
                     this.viewModel.categoryMetadata.values[this.viewModel.categoryMetadata.values.length - 1],
@@ -992,7 +992,7 @@
             }
 
             private willViewportFit(dh: number, dw: number): boolean {
-                this.debug.log(`Testing new viewport for dh ${dh}px and dw ${dw}px...`);
+                Debugger.log(`Testing new viewport for dh ${dh}px and dw ${dw}px...`);
                 return this.viewModel.layout.visualViewport.width - dw >= this.viewModel.layout.minimumViewport.width
                     && this.viewModel.layout.visualViewport.height - dh >= this.viewModel.layout.minimumViewport.height;
             }
@@ -1016,7 +1016,7 @@
 
         /** Works out axis label object for the specified axis and settings */
             private resolveMasterAxisTickLabel(axis: IAxis, axisSettings: ValueAxisSettings | CategoryAxisSettings, metadata: DataViewMetadataColumn): IText {
-                this.debug.log('Resolving axis label settings...');
+                Debugger.log('Resolving axis label settings...');
                 if (axisSettings.show && axisSettings.showLabels) {
                     let length = axis.scale && axis.scale.domain && axis.scale.domain().length || -1,
                         lowest = axis.scale.domain()[0],
@@ -1053,7 +1053,7 @@
 
         /** Works out master title object for the specified axis and settings */
             private resolveMasterAxisTitle(axis: IAxis, axisSettings: ValueAxisSettings | CategoryAxisSettings): IText {
-                this.debug.log('Resolving master axis settings...');
+                Debugger.log('Resolving master axis settings...');
                 if (axisSettings.show && axisSettings.showTitle) {
                     let text = () => {
                             /** Resolve title text to use concatenated measures if not supplied */
@@ -1069,15 +1069,15 @@
                             /** Resolve the correct text based on title text and display units */
                                 switch (true) {
                                     case (axis.numberFormat && axis.numberFormat.displayUnit && axisSettings.titleStyle === 'unit'): {
-                                        this.debug.log('Using number format for axis.');
+                                        Debugger.log('Using number format for axis.');
                                         return (axis.numberFormat.displayUnit.title) || '';
                                     }
                                     case (axis.numberFormat && axis.numberFormat.displayUnit && axisSettings.titleStyle === 'both'): {
-                                        this.debug.log('Using measure and number format for axis.');
+                                        Debugger.log('Using measure and number format for axis.');
                                         return `${titleText} (${axis.numberFormat.displayUnit.title})`;
                                     }
                                     default: {
-                                        this.debug.log('Using specified title for axis.');
+                                        Debugger.log('Using specified title for axis.');
                                         return titleText;
                                     }
                                 }

@@ -17,13 +17,13 @@
 
 /** Internal Dependencies */
     import VisualSettings from './settings/VisualSettings';
-    import VisualDebugger from './debug/VisualDebugger';
+    import Debugger from './debug/Debugger';
     import ViewModelHandler from './viewModel/ViewModelHandler';
     import ChartHelper from './dom/ChartHelper';
     import { VisualConstants } from './constants';
     import { objectMigrationV1ToV2 } from './propertyMigration';
     import DataViewHelper from './dataView/DataViewHelper';
-    import LandingPageHandler from './landing/LandingPageHandler';
+    import LandingPageHandler from './dom/LandingPageHandler';
 
     export class Visual implements IVisual {
         /** The root element for the entire visual */
@@ -36,8 +36,6 @@
             private events: IVisualEventService;
         /** Handle localisation of visual text */
             private localisationManager: ILocalizationManager;
-        /** Debugger (runs if we've set the debug flag in code) */
-            private debug: VisualDebugger;
         /** Keeps our view model managed */
             private viewModelHandler: ViewModelHandler;
         /** Manages drawing stuff in our visual */
@@ -49,15 +47,26 @@
             constructor(options: VisualConstructorOptions) {
                 this.host = options.host;
                 this.visualContainer = options.element;
-                this.debug = new VisualDebugger(VisualConstants.debug);
-                this.viewModelHandler = new ViewModelHandler(this.host);
-                this.localisationManager = this.host.createLocalizationManager();
-                this.chartHelper = new ChartHelper(this.visualContainer);
-                this.landingPageHandler = new LandingPageHandler(this.chartHelper.landingContainer.node(), this.localisationManager);
-                this.chartHelper.host = this.host;
-                this.chartHelper.selectionManager = this.host.createSelectionManager();
-                this.chartHelper.tooltipServiceWrapper = createTooltipServiceWrapper(this.host.tooltipService, options.element);
-                this.events = this.host.eventService;
+
+                try {
+
+                    this.viewModelHandler = new ViewModelHandler(this.host);
+                    this.localisationManager = this.host.createLocalizationManager();
+                    this.chartHelper = new ChartHelper(this.visualContainer);
+                    this.landingPageHandler = new LandingPageHandler(this.chartHelper.landingContainer, this.localisationManager);
+                    this.chartHelper.host = this.host;
+                    this.chartHelper.selectionManager = this.host.createSelectionManager();
+                    this.chartHelper.tooltipServiceWrapper = createTooltipServiceWrapper(this.host.tooltipService, options.element);
+                    this.events = this.host.eventService;
+                    Debugger.log('Visual constructor ran successfully :)');
+
+                } catch (e) {
+
+                    /** Signal that we've encountered an error */
+                        Debugger.heading('Rendering failed');
+                        Debugger.log(e);
+
+                }
             }
 
         /** Runs when data roles added or something changes */
@@ -69,82 +78,87 @@
                         /** Signal we've begun rendering */
                             this.events.renderingStarted(options);
                             this.chartHelper.clearChart();
-                            this.debug.clear();
-                            this.debug.heading('Visual update');
-                            this.debug.log(`Update type: ${options.type}`);
-                            this.debug.log('Edit Mode', options.editMode, options.editMode ? '(Editor On)' : '(Editor Off)');
+                            Debugger.clear();
+                            Debugger.heading('Visual update');
+                            Debugger.log(`Update type: ${options.type}`);
+                            Debugger.log('Edit Mode', options.editMode, options.editMode ? '(Editor On)' : '(Editor Off)');
 
                         /** Parse the settings for use in the visual */
-                            this.debug.log('Parsing settings...');
-                            this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0], this.host, this.debug);
+                            Debugger.log('Parsing settings...');
+                            this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0], this.host);
                             this.viewModelHandler.settings = this.chartHelper.settings = this.settings;
-                            this.debug.log('Settings', this.settings);
-                            this.debug.footer();
+                            Debugger.log('Settings', this.settings);
+                            Debugger.footer();
 
                         /** Initialise view model and test */
                             switch (options.type) {
                                 case VisualUpdateType.Data:
                                 case VisualUpdateType.All: {
-                                    this.debug.log('Data changed. We need to re-map from data view...');
+                                    Debugger.log('Data changed. We need to re-map from data view...');
                                     this.viewModelHandler.validateDataViewMapping(options);
                                     if (this.viewModelHandler.viewModel.dataViewIsValid) {
                                         this.viewModelHandler.mapDataView();
                                         this.viewModelHandler.populateLegend();
-                                        /** Additional stuff */
                                     }
                                     break;
                                 }
                                 default: {
-                                    this.debug.log('No need to re-map data. Skipping over...');
+                                    Debugger.log('No need to re-map data. Skipping over...');
                                 }
                             }
                             this.chartHelper.viewModel = this.viewModelHandler.viewModel;
 
                         /** If we're good to go, let's plot stuff */
                             if (this.viewModelHandler.viewModel.dataViewIsValid) {
-                                this.debug.footer();
-                                this.debug.log('Drawing Chart');
-                                this.debug.log('Passing initial viewport...');
+                                Debugger.footer();
+                                Debugger.log('Drawing Chart');
+                                Debugger.log('Passing initial viewport...');
                                 this.viewModelHandler.viewModel.initialViewport = this.viewModelHandler.viewModel.viewport = options.viewport;
                                 this.chartHelper.renderLegend();
+                                this.landingPageHandler.handleLandingPage(options, this.host);
                                 this.viewModelHandler.calculateInitialViewport();
                                 this.viewModelHandler.initialiseAxes();
                                 this.viewModelHandler.resolveAxisTitles();
                                 this.viewModelHandler.resolveVisualViewport();
                                 this.viewModelHandler.resolveChartArea();
                                 this.chartHelper.addMasterAxisContainers();
-                                this.chartHelper.sizeContainer(); /** This needs fixing for calcluated viewport */
+                                this.chartHelper.sizeContainer();
                                 this.chartHelper.addCanvas();
                                 this.chartHelper.renderMasterAxes();
                                 this.chartHelper.renderSmallMultiples();
                             } else {
-                                this.debug.log('View model is not valid!');
+                                Debugger.log('View model is not valid!');
                                 this.chartHelper.renderLegend();
+                                this.landingPageHandler.handleLandingPage(options, this.host);
                             }
 
                         /** Signal that we've finished rendering */
                             this.events.renderingFinished(options);
-                            this.debug.log('Finished rendering');
-                            this.debug.log('View Model', this.viewModelHandler.viewModel);
-                            this.debug.footer();
+                            Debugger.log('Finished rendering');
+                            Debugger.log('View Model', this.viewModelHandler.viewModel);
+                            Debugger.footer();
                             return;
 
                     } catch (e) {
 
                         /** Signal that we've encountered an error */
                             this.events.renderingFailed(options, e);
-                            this.debug.heading('Rendering failed');
-                            this.debug.log('View Model', this.viewModelHandler.viewModel);
-                            this.debug.log(e);
+                            Debugger.heading('Rendering failed');
+                            Debugger.log('View Model', this.viewModelHandler.viewModel);
+                            Debugger.log(e);
 
                     }
 
             }
 
-            private static parseSettings(dataView: DataView, host: IVisualHost, debug: VisualDebugger): VisualSettings {
+            private static parseSettings(dataView: DataView, host: IVisualHost): VisualSettings {
 
-                let objects = dataView.metadata.objects;
+                if (!dataView) {
+                    return;
+                }
 
+                let objects = dataView && dataView.metadata && dataView.metadata.objects;
+                
                 /** All Small Multiple configuration used to be underneath a single menu in 1.0. A lot of this has since been refactored
                  *  into more specific locations. However, we need to ensure that any user-defined properties are migrated across to their
                  *  correct location and removed for subsequent versions. If we don't remove them, 'reset to default' will fall back to the
@@ -155,10 +169,10 @@
                         ||  !objects.features.objectVersion
                         ||  objects.features.objectVersion < 2
                     ) {
-                        debug.log('v2 object schema unconfirmed. Existing v1 properties will be migrated.');
-                        DataViewHelper.migrateObjectProperties(dataView, host, objectMigrationV1ToV2, debug, 2);
+                        Debugger.log('v2 object schema unconfirmed. Existing v1 properties will be migrated.');
+                        DataViewHelper.migrateObjectProperties(dataView, host, objectMigrationV1ToV2, 2);
                     } else {
-                        debug.log('Object schema is already on v2. No need to set up.');
+                        Debugger.log('Object schema is already on v2. No need to set up.');
                     }
 
                     return VisualSettings.parse(dataView) as VisualSettings;
@@ -459,7 +473,6 @@
                 }
 
                 enumerationObject.instances.push(...instances);
-                console.log(enumerationObject);
                 return enumerationObject;
 
             }
