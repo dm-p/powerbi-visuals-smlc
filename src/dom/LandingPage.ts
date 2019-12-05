@@ -52,6 +52,7 @@
                         .append('div')
                             .classed('w3-container', true)
                             .classed('w3-theme-l5', true)
+                            .classed('small-multiple-watermark', true)
                             .classed('small-multiple-help', true);
 
             /** Add title */
