@@ -23,6 +23,7 @@
     import { VisualConstants } from './constants';
     import { objectMigrationV1ToV2 } from './propertyMigration';
     import DataViewHelper from './dataView/DataViewHelper';
+    import LandingPageHandler from './landing/LandingPageHandler';
 
     export class Visual implements IVisual {
         /** The root element for the entire visual */
@@ -41,6 +42,8 @@
             private viewModelHandler: ViewModelHandler;
         /** Manages drawing stuff in our visual */
             private chartHelper: ChartHelper;
+        /** Handles landing page */
+            private landingPageHandler: LandingPageHandler;
 
         /** Runs when the visual is initialised */
             constructor(options: VisualConstructorOptions) {
@@ -50,6 +53,7 @@
                 this.viewModelHandler = new ViewModelHandler(this.host);
                 this.localisationManager = this.host.createLocalizationManager();
                 this.chartHelper = new ChartHelper(this.visualContainer);
+                this.landingPageHandler = new LandingPageHandler(this.chartHelper.landingContainer.node(), this.localisationManager);
                 this.chartHelper.host = this.host;
                 this.chartHelper.selectionManager = this.host.createSelectionManager();
                 this.chartHelper.tooltipServiceWrapper = createTooltipServiceWrapper(this.host.tooltipService, options.element);

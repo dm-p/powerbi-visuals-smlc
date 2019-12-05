@@ -1,6 +1,10 @@
 /** Constants used throughout visual */
     export const VisualConstants = {
         debug: false,
+        about: {
+            version: '2.0.0',
+            usageUrl: ''
+        },
         defaults: {
             features: {
                 axisLabelPlacement: false,

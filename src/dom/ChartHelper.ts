@@ -47,6 +47,8 @@
             private visualContainer: HTMLElement;
         /** The chart container */
             private chartContainer: d3.Selection<any, any, any, any>;
+        /** The chart container */
+            public landingContainer: d3.Selection<any, any, any, any>;
         /** Y-axis title container */
             private yTitleContainer: d3.Selection<any, any, any, any>;
         /** X-axis title container */
@@ -74,6 +76,7 @@
             this.visualContainer = visualContainer;
             this.createLegendContainer();
             this.createChartContainer();
+            this.createLandingPageContainer();
             this.debug.log('Chart helper instantiated!');
         }
 
@@ -81,6 +84,13 @@
         clearChart() {
             this.debug.log('Clearing chart canvas...');
             this.chartContainer.selectAll('*').remove();
+        }
+
+    /** Creates the element used to hold the landing page */
+        private createLandingPageContainer() {
+            this.landingContainer = d3.select(this.visualContainer)
+                .append('div')
+                    .classed('landing-container', true);
         }
 
     /** Creates the element used to manage the legend */

@@ -21,7 +21,7 @@
         public smallMultiple: SmallMultipleSettings = new SmallMultipleSettings();
         public legend: LegendSettings = new LegendSettings();
         public colorSelector: ColorSelectorSettings = new ColorSelectorSettings();
-        public lines: LineSettings = new LineSettings();
+        // public lines: LineSettings = new LineSettings();
         public yAxis: ValueAxisSettings = new ValueAxisSettings();
         public xAxis: CategoryAxisSettings = new CategoryAxisSettings();
         public features: FeatureSettings = VisualConstants.debug && new FeatureSettings();
