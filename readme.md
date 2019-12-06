@@ -57,6 +57,7 @@ Need:
 * Code review and doc
 * Stretch goals:
     * Specify axis on small multiple or by row/column and get axes rendering
+    * Allow single measure, multiple categories
     * Add label to line rather than top/bottom
     * Data point/measure highlight - will need bookmark support also
     * Test allow interactions - https://microsoft.github.io/PowerBI-visuals/docs/how-to-guide/allow-interactions/ - this works okay, as we're not doing highlighting yet

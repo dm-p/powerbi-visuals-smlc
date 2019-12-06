@@ -24,5 +24,5 @@
         // public lines: LineSettings = new LineSettings();
         public yAxis: ValueAxisSettings = new ValueAxisSettings();
         public xAxis: CategoryAxisSettings = new CategoryAxisSettings();
-        public features: FeatureSettings = VisualConstants.debug && new FeatureSettings();
+        public features: FeatureSettings = new FeatureSettings();
     }
