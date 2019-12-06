@@ -839,21 +839,14 @@
                                 .classed('small-multiple-border', true)
                             .append('rect')
                                 .classed(this.settings.smallMultiple.borderStyle, true)
+                                .style('stroke', this.settings.smallMultiple.borderColor)
+                                .style('stroke-width', this.settings.smallMultiple.border
+                                        ? this.settings.smallMultiple.borderStrokeWidth
+                                        : 0
+                                    )
                                 .attr('x', (d, i) => i * this.viewModel.layout.smallMultipleXConstant)
                                 .attr('height', this.viewModel.layout.smallMultipleDimensions.height)
-                                .attr('width', this.viewModel.layout.smallMultipleDimensions.width)
-                                .style('outline-style', this.settings.smallMultiple.border
-                                        ?   this.settings.smallMultiple.borderStyle
-                                        :   null
-                                    )
-                                .style('outline-width', `${this.settings.smallMultiple.border
-                                        ?   this.settings.smallMultiple.borderStrokeWidth
-                                        :   0}px`
-                                    )
-                                .style('outline-color', this.settings.smallMultiple.border
-                                        ?   this.settings.smallMultiple.borderColor
-                                        :   null
-                                    );
+                                .attr('width', this.viewModel.layout.smallMultipleDimensions.width);
             }
 
         }
