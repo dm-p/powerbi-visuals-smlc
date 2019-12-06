@@ -5,7 +5,7 @@
 
 ---
 
-Where possible, the visual utilises properties and concepts common to typical Power BI visuals but there are some specific properties that you might be able to get more use out of if correctly explained.
+Where possible, the visual utilises properties and concepts common to typical Power BI visuals but there are some specific properties that you might be able to get more use out of if you have a read through this page.
 
 * [Fields](#Fields)
 * [Small Multiples](#Small-Multiples)

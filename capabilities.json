@@ -1005,7 +1005,7 @@
             "displayNameKey": "Objects_Legend",
             "descriptionKey": "Objects_Legend_Description",
             "displayName": "Legend",
-            "description": "Legend descipition.",
+            "description": "Legend descripition.",
             "properties": {
                 "show": {
                     "type": {
@@ -1075,7 +1075,7 @@
                     "displayNameKey": "Objects_Legend_TitleText",
                     "descriptionKey": "Objects_Legend_TitleText_Description",
                     "displayName": "Title Text",
-                    "description": "Title TExt description.",
+                    "description": "Title Text description.",
                     "type": {
                         "text": true
                     },

@@ -379,7 +379,7 @@
                                 ?   (
                                         this.settings.legend.titleText
                                             ?   this.settings.legend.titleText
-                                            :   this.smallMultipleColumn.source.displayName
+                                            :   this.categoryColumn.displayName
                                     )
                                     + (
                                         this.settings.legend.includeRanges
