@@ -435,6 +435,11 @@
             "displayName": "Lines",
             "description": "Lines description.",
             "properties": {
+                "measureName": {
+                    "type": {
+                        "integer": true
+                    }
+                },
                 "stroke": {
                     "displayNameKey": "Objects_Lines_Stroke",
                     "descriptionKey": "Objects_Lines_Stroke_Description",

@@ -158,7 +158,7 @@
                 }
 
                 let objects = dataView && dataView.metadata && dataView.metadata.objects;
-                
+
                 /** All Small Multiple configuration used to be underneath a single menu in 1.0. A lot of this has since been refactored
                  *  into more specific locations. However, we need to ensure that any user-defined properties are migrated across to their
                  *  correct location and removed for subsequent versions. If we don't remove them, 'reset to default' will fall back to the
@@ -187,7 +187,7 @@
                 let instances: VisualObjectInstance[] = (
                     VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options) as VisualObjectInstanceEnumerationObject).instances;
                 let objectName = options.objectName;
-                
+
                 const enumerationObject: powerbi.VisualObjectInstanceEnumerationObject = {
                     containers: [],
                     instances: [],
@@ -324,7 +324,31 @@
                             for (let measure of this.viewModelHandler.viewModel.measureMetadata) {
                                 let displayName = measure.metadata.displayName,
                                     containerIdx = enumerationObject.containers.push({displayName: displayName}) - 1;
-                                instances.push({
+                                /** containerIdx doesn't work properly in the SDK yet, and there's no ETA on when it will. Until then, 
+                                 *  we'll use a hack by pushing an integer field without validation to create a 'heading' */
+                                    if (containerIdx > 0) {
+                                        instances.push({
+                                            objectName: objectName,
+                                            displayName: '－－－－－－－－－－',
+                                            properties: {
+                                                measureName: null
+                                            },
+                                            selector: {
+                                                metadata: measure.metadata.queryName
+                                            }
+                                        });
+                                    }
+                                    instances.push({
+                                        objectName: objectName,
+                                        displayName: measure.metadata.displayName,
+                                        properties: {
+                                            measureName: null
+                                        },
+                                        selector: {
+                                            metadata: measure.metadata.queryName
+                                        }
+                                    });
+                                    instances.push({
                                     objectName: objectName,
                                     properties: {
                                         stroke: {
@@ -339,7 +363,7 @@
                                     selector: {
                                         metadata: measure.metadata.queryName
                                     },
-                                    containerIdx: containerIdx,
+                                    /** containerIdx: containerIdx, */
                                     validValues: {
                                         strokeWidth: {
                                             numberRange: {

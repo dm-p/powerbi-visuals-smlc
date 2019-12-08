@@ -72,9 +72,9 @@
                         }
                     } else {
                         Debugger.log('No need to show landing page.');
-                        this.element.selectAll('*').remove();  
+                        this.element.selectAll('*').remove();
                         if (this.landingPageEnabled && !this.landingPageRemoved) {
-                            this.landingPageRemoved = true;                      
+                            this.landingPageRemoved = true;
                         }
                         this.landingPageEnabled = false;
                     }

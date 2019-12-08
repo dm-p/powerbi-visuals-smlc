@@ -22,7 +22,7 @@
         }
 
         render(element: d3.Selection<any, any, any, any>) {
-            
+
             Debugger.footer();
             Debugger.log('Rendering landing page...');
             Debugger.log(element);
@@ -46,7 +46,7 @@
                             .classed('w3-container', true)
                             .classed('w3-theme-l3', true)
                             .classed('w3-small', true);
-                
+
                 Debugger.log('Adding help box...');
                 let helpBox = container
                         .append('div')
@@ -65,7 +65,7 @@
                 Debugger.log('Adding version number...');
                 version
                     .text(this.version);
-            
+
             /** Help box content */
 
                 /** Button / remote link*/

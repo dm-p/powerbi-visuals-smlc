@@ -130,7 +130,7 @@
                             }
                         });
 
-                        dataView.metadata.columns.filter((c) => 
+                        dataView.metadata.columns.filter((c) =>
                             c.roles.values && c.objects && c.objects.colorSelector && c.objects.colorSelector.fill
                         ).map((m) => {
                             changes.replace.push({
@@ -152,7 +152,7 @@
                                 }
                             });
                         });
-                    };
+                    }
 
                 /** Add in target version */
                     changes.replace.push({
