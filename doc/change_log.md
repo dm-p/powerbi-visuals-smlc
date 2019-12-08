@@ -29,6 +29,7 @@
 * Core Tooltip support has been added, which includes:
     * Standard tooltip configuration options, such as background, font, colors and transparency
     * Canvas (Report Page) tooltips
+    * Visual header tooltips
 * Context menu support has been added, which also allows drillthrough (if you have configured your report appropriately).
 
 ### Minor Enhancements

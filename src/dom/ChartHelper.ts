@@ -10,8 +10,6 @@
     import { textMeasurementService, valueFormatter } from 'powerbi-visuals-utils-formattingutils';
     import getTailoredTextOrDefault = textMeasurementService.textMeasurementService.getTailoredTextOrDefault;
     import measureSvgTextWidth = textMeasurementService.textMeasurementService.measureSvgTextWidth;
-    import TextProperties = textMeasurementService.TextProperties;
-    import measureSvgTextHeight = textMeasurementService.textMeasurementService.measureSvgTextHeight;
     import ISelectionManager = powerbi.extensibility.ISelectionManager;
     import {
         TooltipEventArgs,
@@ -34,6 +32,7 @@
     import IAxis from '../viewModel/IAxis';
     import AxisSettings from '../settings/AxisSettings';
     import EAxisType from '../viewModel/EAxisType';
+    import LandingPageHandler from './LandingPageHandler';
 
 /**
  *
@@ -101,6 +100,18 @@
             );
         }
 
+    /** Handles the issue where the visual is too small to display */
+        displayMinimised(landingPageHandler: LandingPageHandler) {
+            Debugger.log('Chart too small to render...');
+            landingPageHandler.clear();
+            this.chartContainer
+                .append('div')
+                    .classed('w3-container', true)
+                    .classed('w3-theme-l5', true)
+                    .classed('small-multiple-minimised', true)
+                    .classed('small-multiple-watermark', true);
+        }
+
     /** Creates the container for the small multiple chart */
         private createChartContainer() {
             this.chartContainer = d3.select(this.visualContainer)
@@ -149,7 +160,7 @@
                     case LegendPosition.LeftCenter:
                     case LegendPosition.Right:
                     case LegendPosition.RightCenter:
-                        if (this.viewModel.viewport.width - width < VisualConstants.ranges.canvas.minWidth) {
+                        if (this.viewModel.viewport.width - width < VisualConstants.visual.minPx) {
                             Debugger.log('Viewport cannot support legend in this orientation. Will be hidden.');
                             this.removeLegend();
                         } else {
@@ -161,7 +172,7 @@
                     case LegendPosition.TopCenter:
                     case LegendPosition.Bottom:
                     case LegendPosition.BottomCenter:
-                        if (this.viewModel.viewport.height - height < VisualConstants.ranges.canvas.minWidth) {
+                        if (this.viewModel.viewport.height - height < VisualConstants.visual.minPx) {
                             Debugger.log('Viewport cannot support legend in this orientation. Will be hidden.');
                             this.removeLegend();
                         } else {

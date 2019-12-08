@@ -218,10 +218,10 @@
                                     }
                                 };
 
-                        /** We seem to be unable to increment the colour index when looping in this particular case. Not sure why, as it works
-                         *  for categories. Might be a bug with `getColor`... will see if I can find a solid solution and report to the visuals
-                         *  team if I can figure it out. The issue seems to stem form the fact that we can't increment the colorIndex in the
-                         *  palette, so I'm going to override it manually. This basically forces the palette to assign the next colour.
+                        /** We seem to be unable to increment the colour index when looping in this particular case. Not sure why. Might be
+                         *  a bug with `getColor`... will see if I can find a solid solution and report to the visuals team if I can figure
+                         *  it out. The issue seems to stem form the fact that we can't increment the colorIndex in the palette, so I'm going
+                         *  to override it manually. This basically forces the palette to assign the next colour.
                          */
                             this.host.colorPalette['colorIndex'] = mi + 1;
 
@@ -232,15 +232,9 @@
                                 selectionId: this.host.createSelectionIdBuilder()
                                     .withMeasure(m.queryName)
                                     .createSelectionId(),
-                                strokeWidth: /*this.settings.lines.byMeasure
-                                    ?   */DataViewHelper.getMetadataObjectValue<number>(m, 'lines', 'strokeWidth', VisualConstants.defaults.lines.strokeWidth)/*
-                                    :   this.settings.lines.strokeWidth*/,
-                                lineShape: /*this.settings.lines.byMeasure
-                                    ?   */DataViewHelper.getMetadataObjectValue<string>(m, 'lines', 'lineShape', VisualConstants.defaults.lines.lineShape)/*
-                                    :   this.settings.lines.lineShape*/,
-                                lineStyle: /*this.settings.lines.byMeasure
-                                    ?   */DataViewHelper.getMetadataObjectValue<string>(m, 'lines', 'lineStyle', VisualConstants.defaults.lines.lineStyle)/*
-                                    :   this.settings.lines.lineStyle*/
+                                strokeWidth: DataViewHelper.getMetadataObjectValue<number>(m, 'lines', 'strokeWidth', VisualConstants.defaults.lines.strokeWidth),
+                                lineShape: DataViewHelper.getMetadataObjectValue<string>(m, 'lines', 'lineShape', VisualConstants.defaults.lines.lineShape),
+                                lineStyle: DataViewHelper.getMetadataObjectValue<string>(m, 'lines', 'lineStyle', VisualConstants.defaults.lines.lineStyle)
                             });
 
                     });
@@ -486,8 +480,8 @@
             calculateInitialViewport() {
                 Debugger.log('Calculating initial viewport...');
                 this.viewModel.layout.minimumViewport = {
-                    height: VisualConstants.ranges.canvas.minHeight,
-                    width: VisualConstants.ranges.canvas.minWidth
+                    height: VisualConstants.visual.minPx,
+                    width: VisualConstants.visual.minPx
                 };
                 this.viewModel.layout.visualViewport = {
                     height: this.viewModel.viewport.height,
@@ -651,7 +645,7 @@
                         this.resolveChartDimensionsPostYAxis();
                     }
 
-                /** Complete by setting label alignment */
+                /** Set label alignment */
                     this.resolveSmallMultipleLabelHorizontalAlignment();
 
             }

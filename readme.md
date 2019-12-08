@@ -52,7 +52,6 @@ Here's a bigger explanation for anyone who wants to know about what each status 
 ----
 
 Need:
-* Full-collapse (height or width too small)
 * Test IE/iPad
 * Code review and doc
 * Stretch goals:

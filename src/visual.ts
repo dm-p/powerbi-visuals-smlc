@@ -108,6 +108,17 @@
                             }
                             this.chartHelper.viewModel = this.viewModelHandler.viewModel;
 
+                        /** Test viewport */
+                            if (    options.viewport.width < VisualConstants.visual.minPx
+                                ||  options.viewport.height < VisualConstants.visual.minPx
+                            ) {
+                                Debugger.log('Visual is too small to render!');
+                                this.chartHelper.renderLegend();
+                                this.chartHelper.displayMinimised(this.landingPageHandler);
+                                this.events.renderingFinished(options);
+                                return;
+                            }
+
                         /** If we're good to go, let's plot stuff */
                             if (this.viewModelHandler.viewModel.dataViewIsValid) {
                                 Debugger.footer();
@@ -324,7 +335,7 @@
                             for (let measure of this.viewModelHandler.viewModel.measureMetadata) {
                                 let displayName = measure.metadata.displayName,
                                     containerIdx = enumerationObject.containers.push({displayName: displayName}) - 1;
-                                /** containerIdx doesn't work properly in the SDK yet, and there's no ETA on when it will. Until then, 
+                                /** containerIdx doesn't work properly in the SDK yet, and there's no ETA on when it will. Until then,
                                  *  we'll use a hack by pushing an integer field without validation to create a 'heading' */
                                     if (containerIdx > 0) {
                                         instances.push({

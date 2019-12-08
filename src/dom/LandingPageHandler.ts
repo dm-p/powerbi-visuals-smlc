@@ -9,7 +9,6 @@
 
 /** Internal dependencies */
     import Debugger from '../debug/Debugger';
-    import { LandingPage } from './LandingPage';
     import { VisualConstants } from '../constants';
 
 /**
@@ -24,8 +23,6 @@
             private element: d3.Selection<any, any, any, any>;
         /** Handle localisation of visual text */
             private localisationManager: ILocalizationManager;
-        /** The generated landing page */
-            private landingPage: LandingPage;
 
         /**
          * @param element                                   - main visual element
@@ -60,28 +57,106 @@
                         if (!this.landingPageEnabled) {
                             Debugger.log('Showing landing page....');
                             this.landingPageEnabled = true;
-                            if (!this.landingPage) {
-                                this.landingPage = new LandingPage(
-                                    host,
-                                    VisualConstants.about.usageUrl,
-                                    VisualConstants.about.version,
-                                    this.localisationManager
-                                );
-                            }
-                            this.landingPage.render(this.element);
+                            this.render(host);
                         }
                     } else {
                         Debugger.log('No need to show landing page.');
-                        this.element.selectAll('*').remove();
-                        if (this.landingPageEnabled && !this.landingPageRemoved) {
-                            this.landingPageRemoved = true;
-                        }
-                        this.landingPageEnabled = false;
+                        this.clear();
                     }
 
                 /** We're done! */
                     Debugger.log('Finished handleLandingPage');
                     Debugger.footer();
+            }
+
+            clear() {
+                Debugger.log('Clearing landing page...');
+                this.element.selectAll('*').remove();
+                if (this.landingPageEnabled && !this.landingPageRemoved) {
+                    this.landingPageRemoved = true;
+                }
+                this.landingPageEnabled = false;
+            }
+
+            render(host: IVisualHost) {
+
+                Debugger.footer();
+                Debugger.log('Rendering landing page...');
+                Debugger.log(this.element);
+
+                /** Top-level elements */
+                    Debugger.log('Adding container...');
+                    let container = this.element
+                            .append('div')
+                                .classed('small-multiple-landing-page', true)
+                                .classed('w3-card-4', true);
+
+                    Debugger.log('Adding heading...');
+                    let heading = container
+                            .append('div')
+                                .classed('w3-container', true)
+                                .classed('w3-theme', true);
+
+                    Debugger.log('Adding version...');
+                    let version = container
+                            .append('div')
+                                .classed('w3-container', true)
+                                .classed('w3-theme-l3', true)
+                                .classed('w3-small', true);
+
+                    Debugger.log('Adding help box...');
+                    let helpBox = container
+                            .append('div')
+                                .classed('w3-container', true)
+                                .classed('w3-theme-l5', true)
+                                .classed('small-multiple-watermark', true)
+                                .classed('small-multiple-help', true);
+
+                /** Add title */
+                    Debugger.log('Adding title...');
+                    heading
+                        .append('h5')
+                            .text(this.localisationManager.getDisplayName('Visual_Name'));
+
+                /** Add version number */
+                    Debugger.log('Adding version number...');
+                    version
+                        .text(VisualConstants.about.version);
+
+                /** Help box content */
+
+                    /** Button / remote link*/
+                        helpBox
+                            .append('button')
+                                .classed('w3-button', true)
+                                .classed('w3-theme-action', true)
+                                .classed('w3-circle', true)
+                                .style('position', 'fixed')
+                                .style('top', '24px')
+                                .style('right', '12px')
+                                .on('click', () => host.launchUrl(VisualConstants.about.usageUrl))
+                                .text('?');
+
+                    /** Intro paragraph */
+                        helpBox
+                            .append('p')
+                            .classed('w3-small', true)
+                            .text(this.localisationManager.getDisplayName('Landing_Page_Overview'));
+
+                    /** Bullet list */
+                        let bulletList = helpBox
+                                .append('ul')
+                                    .classed('w3-ul', true)
+                                    .classed('w3-border-0', true);
+                        bulletList
+                            .append('li')
+                                .text(this.localisationManager.getDisplayName('Landing_Page_Overview_Field_1'));
+                        bulletList
+                            .append('li')
+                                .text(this.localisationManager.getDisplayName('Landing_Page_Overview_Field_2'));
+                        bulletList
+                            .append('li')
+                                .text(this.localisationManager.getDisplayName('Landing_Page_Overview_Field_3'));
             }
 
     }

@@ -1,9 +1,12 @@
 /** Constants used throughout visual */
     export const VisualConstants = {
-        debug: true,
+        debug: false,
         about: {
             version: '2.0.0',
             usageUrl: 'https://bit.ly/powerbi-smlc'
+        },
+        visual: {
+            minPx: 75
         },
         defaults: {
             features: {
@@ -92,10 +95,6 @@
             }
         },
         ranges: {
-            canvas: {
-                minWidth: 75,
-                minHeight: 75
-            },
             spacing: {
                 min: 0,
                 max: 20
