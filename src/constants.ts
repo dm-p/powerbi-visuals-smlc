@@ -1,6 +1,6 @@
 /** Constants used throughout visual */
     export const VisualConstants = {
-        debug: false,
+        debug: true,
         about: {
             version: '2.0.0',
             usageUrl: 'https://bit.ly/powerbi-smlc'

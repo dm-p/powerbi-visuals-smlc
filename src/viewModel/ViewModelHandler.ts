@@ -35,6 +35,7 @@
     import EAxisScaleType from './EAxisScaleType';
     import DataViewHelper from '../dataView/DataViewHelper';
     import IStatistics from './IStatistics';
+    import SmallMultiplesHelper from '../smallMultiple/SmallMultiplesHelper';
 
 /**
  *
@@ -773,34 +774,16 @@
 
         /** Resolves row and column count based on settings, and updates the view model */
             private calculateGridSize() {
+                let smh: SmallMultiplesHelper = new SmallMultiplesHelper(this.viewModel.multiples, this.settings.layout.mode);
                 Debugger.log('Calculating grid rows/columns');
-                let multiples = this.viewModel.multiples,
-                    columnCap = this.settings.layout.numberOfColumns || VisualConstants.defaults.layout.multipleDataReductionCap;
-                switch (this.settings.layout.mode) {
-                    case 'flow': {
-                        this.viewModel.layout.columns =
-                            Math.min(
-                                multiples.length,
-                                Math.max(
-                                    Math.floor(
-                                            (this.viewModel.layout.chartViewport.width)
-                                        /   (this.settings.layout.multipleWidth + this.settings.layout.spacingBetweenColumns)
-                                    ),
-                                    1
-                                )
-                            );
-                        break;
-                    }
-                    case 'column': {
-                        this.viewModel.layout.columns = (
-                            multiples.length < columnCap
-                                ?   multiples.length
-                                :   columnCap
-                        );
-                        break;
-                    }
-                }
-                this.viewModel.layout.rows = Math.ceil(this.viewModel.multiples.length / this.viewModel.layout.columns);
+                let grid = smh.gridDimensions({
+                    chartWidth: this.viewModel.layout.chartViewport.width,
+                    smallMultipleWidth: this.settings.layout.multipleWidth,
+                    columnSpacing: this.settings.layout.spacingBetweenColumns,
+                    columnCap: this.settings.layout.numberOfColumns || VisualConstants.defaults.layout.multipleDataReductionCap
+                });
+                this.viewModel.layout.columns = grid.columns;
+                this.viewModel.layout.rows = grid.rows;
             }
 
         /** Calculates small multiple grid coordinates and applies specific formatting properties */
