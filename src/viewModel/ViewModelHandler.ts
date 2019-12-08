@@ -58,6 +58,8 @@
             public settings: VisualSettings;
         /** Localisation manager */
             private localisationManager: ILocalizationManager;
+        /** Small Multiples Helper */
+            private smallMultiplesHelper: SmallMultiplesHelper;
 
             constructor(host: IVisualHost) {
                 Debugger.log('View model constructor');
@@ -363,6 +365,8 @@
                             });
 
                     });
+
+                    this.smallMultiplesHelper = new SmallMultiplesHelper(this.viewModel.multiples, this.settings.layout.mode)
 
             }
 
@@ -774,9 +778,8 @@
 
         /** Resolves row and column count based on settings, and updates the view model */
             private calculateGridSize() {
-                let smh: SmallMultiplesHelper = new SmallMultiplesHelper(this.viewModel.multiples, this.settings.layout.mode);
                 Debugger.log('Calculating grid rows/columns');
-                let grid = smh.gridDimensions({
+                let grid = this.smallMultiplesHelper.gridDimensions({
                     chartWidth: this.viewModel.layout.chartViewport.width,
                     smallMultipleWidth: this.settings.layout.multipleWidth,
                     columnSpacing: this.settings.layout.spacingBetweenColumns,
