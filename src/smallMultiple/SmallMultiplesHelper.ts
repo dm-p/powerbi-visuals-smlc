@@ -3,7 +3,8 @@
     import ISmallMultiple from '../viewModel/ISmallMultiple';
     import {
         ISmallMultipleGrid,
-        ISmallMultipleLayoutOptions
+        ISmallMultipleLayoutOptions,
+        ISmallMultipleLayout
     } from './interfaces';
     import {
         LayoutMode
@@ -14,40 +15,36 @@
  */
     export default class SmallMultiplesHelper {
 
+        public layout: ISmallMultipleLayout;
+        public options: ISmallMultipleLayoutOptions;
         private smallMultiples: ISmallMultiple[];
-        private mode: LayoutMode;
         
-        constructor(smallMultiples: ISmallMultiple[], mode: string = 'flow') {
+        constructor(smallMultiples: ISmallMultiple[], options: ISmallMultipleLayoutOptions) {
             Debugger.log('SmallMultiplesHelper initialised :)');
-            Debugger.log('Mode', mode);
             this.smallMultiples = smallMultiples;
-            switch (mode) {
-                case 'column': {
-                    this.mode = LayoutMode.Column;
-                    break;
+            this.options = options;
+            this.layout = {
+                grid: {
+                    columns: 0,
+                    rows: 0
                 }
-                default: {
-                    this.mode = LayoutMode.Flow;
-                }
-            }
+            };
         }
 
-        gridDimensions(options: ISmallMultipleLayoutOptions): ISmallMultipleGrid {
+    /** Resolves row and column count based on settings */
+        calculateGridDimensions() {
             Debugger.log('Calculating small multiple grid dimensions...');
-            Debugger.log('Mode', this.mode);
-            Debugger.log('Options', options);
-            let columns: number = 0;
-            switch (this.mode) {
-                case LayoutMode.Flow: {
-                    if (options.chartWidth && options.columnSpacing && options.smallMultipleWidth) {
+            switch (this.options.mode) {
+                case LayoutMode.flow: {
+                    if (this.options.chartWidth && this.options.columnSpacing && this.options.smallMultipleWidth) {
                         Debugger.log('Calculating columns for Flow mode...');
-                        columns =
+                        this.layout.grid.columns =
                             Math.min(
                                 this.smallMultiples.length,
                                 Math.max(
                                     Math.floor(
-                                            (options.chartWidth)
-                                        /   (options.smallMultipleWidth + options.columnSpacing)
+                                            (this.options.chartWidth)
+                                        /   (this.options.smallMultipleWidth + this.options.columnSpacing)
                                     ),
                                     1
                                 )
@@ -55,22 +52,18 @@
                     }
                     break;
                 }
-                case LayoutMode.Column: {
-                    if (options.columnCap) {
+                case LayoutMode.column: {
+                    if (this.options.columnCap) {
                         Debugger.log('Calculating columns for Column mode...');
-                        columns = (
-                            this.smallMultiples.length < options.columnCap
+                        this.layout.grid.columns = (
+                            this.smallMultiples.length < this.options.columnCap
                                 ?   this.smallMultiples.length
-                                :   options.columnCap
+                                :   this.options.columnCap
                         );
                     }                    
                     break;
                 }
             }
-            return {
-                columns: columns,
-                rows: columns && Math.ceil(this.smallMultiples.length / columns)
-            }
+            this.layout.grid.rows = this.layout.grid.columns && Math.ceil(this.smallMultiples.length / this.layout.grid.columns);
         }
-
     }

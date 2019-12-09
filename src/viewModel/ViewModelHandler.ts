@@ -36,6 +36,7 @@
     import DataViewHelper from '../dataView/DataViewHelper';
     import IStatistics from './IStatistics';
     import SmallMultiplesHelper from '../smallMultiple/SmallMultiplesHelper';
+    import { LayoutMode } from '../smallMultiple/enums';
 
 /**
  *
@@ -97,8 +98,10 @@
                     layout: {
                         visualViewport: null,
                         chartViewport: null,
-                        rows: 1,
-                        columns: VisualConstants.defaults.layout.multipleDataReductionCap,
+                        grid: {
+                            rows: 1,
+                            columns: VisualConstants.defaults.layout.multipleDataReductionCap
+                        },
                         x: 0,
                         y: 0,
                         minimumViewport: {
@@ -366,7 +369,12 @@
 
                     });
 
-                    this.smallMultiplesHelper = new SmallMultiplesHelper(this.viewModel.multiples, this.settings.layout.mode)
+                    this.smallMultiplesHelper = new SmallMultiplesHelper(this.viewModel.multiples, {
+                        mode: LayoutMode[this.settings.layout.mode],
+                        columnCap: this.settings.layout.numberOfColumns || VisualConstants.defaults.layout.multipleDataReductionCap,
+                        columnSpacing: this.settings.layout.spacingBetweenColumns,
+                        smallMultipleWidth: this.settings.layout.multipleWidth
+                    });
 
             }
 
@@ -530,7 +538,7 @@
                 if (useMinimums) {
                     Debugger.log('Adjusting for minimum dimensions...');
                     this.viewModel.layout.chartViewport = {
-                        height: (this.viewModel.layout.rowDimensions.height * this.viewModel.layout.rows)
+                        height: (this.viewModel.layout.rowDimensions.height * this.viewModel.layout.grid.rows)
                             +   this.viewModel.xAxis.tickLabels.textHeight
                             +   (this.viewModel.layout.smallMultipleBorderOffset * 2),
                         width:  this.viewModel.layout.rowDimensions.width
@@ -565,8 +573,8 @@
                 Debugger.log('Resolving small multiple row and column dimensions...');
                 let vph = this.viewModel.layout.chartViewport.height,
                     vpw = this.viewModel.layout.chartViewport.width,
-                    r = this.viewModel.layout.rows,
-                    c = this.viewModel.layout.columns,
+                    r = this.viewModel.layout.grid.rows,
+                    c = this.viewModel.layout.grid.columns,
                     rh = 0,
                     cw = 0,
                     smh = 0,
@@ -574,15 +582,15 @@
 
                 switch (this.settings.layout.mode) {
                     case 'flow': {
-                        rh = this.settings.layout.multipleHeight + (this.viewModel.layout.rows > 1 ? this.settings.layout.spacingBetweenRows : 0);
+                        rh = this.settings.layout.multipleHeight + (this.viewModel.layout.grid.rows > 1 ? this.settings.layout.spacingBetweenRows : 0);
                         smh = this.settings.layout.multipleHeight;
-                        cw = this.settings.layout.multipleWidth + (this.viewModel.layout.columns > 1 ? this.settings.layout.spacingBetweenColumns : 0);
+                        cw = this.settings.layout.multipleWidth + (this.viewModel.layout.grid.columns > 1 ? this.settings.layout.spacingBetweenColumns : 0);
                         smw = this.settings.layout.multipleWidth;
                         break;
                     }
                     case 'column': {
                         rh = Math.max(VisualConstants.ranges.multipleSize.min, vph / r);
-                        smh = rh - (this.viewModel.layout.rows > 1 ? this.settings.layout.spacingBetweenRows : 0);
+                        smh = rh - (this.viewModel.layout.grid.rows > 1 ? this.settings.layout.spacingBetweenRows : 0);
                         cw = Math.max(VisualConstants.ranges.multipleSize.min, vpw / c);
                         smw = cw - (this.settings.layout.spacingBetweenColumns || 0);
                         break;
@@ -601,7 +609,15 @@
                     this.resolveYAxisTickLabelWidth();
                     this.resolveXAxisTickLabelHeight();
                     this.resolveChartContainerPosition();
-                    this.calculateGridSize();
+
+                    this.smallMultiplesHelper.options = {
+                        ...{
+                            chartWidth: this.viewModel.layout.chartViewport.width,
+                        },
+                        ...this.smallMultiplesHelper.options
+                    };
+                    this.smallMultiplesHelper.calculateGridDimensions();
+                    this.viewModel.layout.grid = this.smallMultiplesHelper.layout.grid;
                     this.resolveSmallMultipleGridSpecifics();
                     this.resolveSmallMultipleRowColDimensions();
 
@@ -776,24 +792,11 @@
                 }
             }
 
-        /** Resolves row and column count based on settings, and updates the view model */
-            private calculateGridSize() {
-                Debugger.log('Calculating grid rows/columns');
-                let grid = this.smallMultiplesHelper.gridDimensions({
-                    chartWidth: this.viewModel.layout.chartViewport.width,
-                    smallMultipleWidth: this.settings.layout.multipleWidth,
-                    columnSpacing: this.settings.layout.spacingBetweenColumns,
-                    columnCap: this.settings.layout.numberOfColumns || VisualConstants.defaults.layout.multipleDataReductionCap
-                });
-                this.viewModel.layout.columns = grid.columns;
-                this.viewModel.layout.rows = grid.rows;
-            }
-
         /** Calculates small multiple grid coordinates and applies specific formatting properties */
             private resolveSmallMultipleGridSpecifics() {
                 Debugger.log('Resolving small multiple grid dependencies...');
-                let cols = this.viewModel.layout.columns,
-                    rows = this.viewModel.layout.rows,
+                let cols = this.viewModel.layout.grid.columns,
+                    rows = this.viewModel.layout.grid.rows,
                     total = this.viewModel.multiples.length;
                 Debugger.log('Columns', cols, 'Rows', rows, '# Multiples', total);
                 this.viewModel.multiples.map((sm, smi) => {

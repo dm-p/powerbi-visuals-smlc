@@ -1,4 +1,4 @@
 export enum LayoutMode {
-    Flow = 'flow',
-    Column = 'column'    
+    flow = 'flow',
+    column = 'column'    
 }

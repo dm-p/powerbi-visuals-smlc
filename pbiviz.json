@@ -4,7 +4,7 @@
         "displayName": "Small Multiple Line Chart",
         "guid": "smallMultipleLineChart6FA6C19AAE3840AFB9CD11A23CA7D7C7DEV",
         "visualClassName": "Visual",
-        "version": "2.0.0.106",
+        "version": "2.0.0.107",
         "description": "Provides the ability to plot a line chart with small multiples.",
         "supportUrl": "www.coacervo.co",
         "gitHubUrl": "https://github.com/dm-p/powerbi-visuals-small-multiple-line-chart"

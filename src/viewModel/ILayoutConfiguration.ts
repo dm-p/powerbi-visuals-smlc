@@ -5,16 +5,18 @@
 /** Internal dependencies */
     import IDimensions from './IDimensions';
     import IElementSideDimension from './IElementSideDimension';
+    import { ISmallMultipleGrid } from '../smallMultiple/interfaces';
 
 /**
  *
  */
     export default interface ILayoutConfiguration {
+        grid: ISmallMultipleGrid;
+
+        
         visualViewport: IViewport;
         chartViewport: IViewport;
         minimumViewport: IViewport;
-        columns: number;
-        rows: number;
         x: number;
         y: number;
         smallMultipleDimensions: IDimensions;

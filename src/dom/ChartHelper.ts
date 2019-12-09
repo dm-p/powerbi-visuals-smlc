@@ -239,7 +239,7 @@
             /** Y-axis */
                 if (this.settings.yAxis.show) {
                     Debugger.log('Rendering Y-axis...');
-                    for (let r = 0; r < this.viewModel.layout.rows; r++) {
+                    for (let r = 0; r < this.viewModel.layout.grid.rows; r++) {
                         Debugger.log('Rendering Y-axis ticks...');
                         this.renderAxis(
                             group,
@@ -257,7 +257,7 @@
             /** X-axis */
                 if (this.settings.xAxis.show) {
                     Debugger.log('Rendering X-axis...');
-                    for (let c = 0; c < this.viewModel.layout.columns; c++) {
+                    for (let c = 0; c < this.viewModel.layout.grid.columns; c++) {
                         Debugger.log('Rendering X-axis ticks...');
                         this.renderAxis(
                             group,
@@ -283,7 +283,7 @@
                 let viewport = this.renderSmallMultipleChartViewport();
 
             /** Add rows to group */
-                for (let r = 0; r < this.viewModel.layout.rows; r++) {
+                for (let r = 0; r < this.viewModel.layout.grid.rows; r++) {
                     Debugger.log(`Rendering row #${r}...`);
 
                     /** Row (of multiples) element */
@@ -449,7 +449,7 @@
             Debugger.log('Getting small multiples for this row...');
             return this.viewModel.multiples
                 .map((m) => m)
-                .slice(row * this.viewModel.layout.columns, (row * this.viewModel.layout.columns) + this.viewModel.layout.columns);
+                .slice(row * this.viewModel.layout.grid.columns, (row * this.viewModel.layout.grid.columns) + this.viewModel.layout.grid.columns);
         }
 
     /** Retrieve tooltip data from specified data points */
