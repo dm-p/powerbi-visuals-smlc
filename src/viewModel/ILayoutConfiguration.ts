@@ -13,7 +13,7 @@
     export default interface ILayoutConfiguration {
         grid: ISmallMultipleGrid;
 
-        
+
         visualViewport: IViewport;
         chartViewport: IViewport;
         minimumViewport: IViewport;

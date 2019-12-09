@@ -8,22 +8,27 @@
     } from './interfaces';
     import {
         LayoutMode
-    } from './enums'
+    } from './enums';
 
 /**
- * 
+ *
  */
     export default class SmallMultiplesHelper {
 
         public layout: ISmallMultipleLayout;
         public options: ISmallMultipleLayoutOptions;
         private smallMultiples: ISmallMultiple[];
-        
+
         constructor(smallMultiples: ISmallMultiple[], options: ISmallMultipleLayoutOptions) {
             Debugger.log('SmallMultiplesHelper initialised :)');
             this.smallMultiples = smallMultiples;
             this.options = options;
-            this.layout = {
+            this.layout = SmallMultiplesHelper.initialState();
+        }
+
+    /** Initial state of small multiples view model */
+        private static initialState(): ISmallMultipleLayout {
+            return {
                 grid: {
                     columns: 0,
                     rows: 0
@@ -60,7 +65,7 @@
                                 ?   this.smallMultiples.length
                                 :   this.options.columnCap
                         );
-                    }                    
+                    }
                     break;
                 }
             }
