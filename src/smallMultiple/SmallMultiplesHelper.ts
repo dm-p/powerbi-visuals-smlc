@@ -39,6 +39,7 @@
     /** Resolves row and column count based on settings */
         calculateGridDimensions() {
             Debugger.log('Calculating small multiple grid dimensions...');
+            Debugger.log('Options', this.options);
             switch (this.options.mode) {
                 case LayoutMode.flow: {
                     if (    this.options.chartWidth

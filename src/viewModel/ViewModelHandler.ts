@@ -212,10 +212,9 @@
 
                 Debugger.log('Mapping Data View to View Model');
 
-                /** Map out measures into view model */
+                /** Map out measures into view model - use `grouped()` to get the correct order of measures based on the dataView */
                     Debugger.log('Mapping measures...');
-
-                    this.metadata.columns.filter((m) => m.roles.values && !m.groupName).map((m, mi) => {
+                    this.categorical.values.grouped()[0].values.map((v) => v.source).map((m, mi) => {
 
                         /** Initialise new values */
                             let defaultColour: Fill = {
@@ -619,10 +618,10 @@
                     this.resolveChartContainerPosition();
 
                     this.smallMultiplesHelper.options = {
+                        ...this.smallMultiplesHelper.options,
                         ...{
                             chartWidth: this.viewModel.layout.chartViewport.width,
-                        },
-                        ...this.smallMultiplesHelper.options
+                        }
                     };
                     this.smallMultiplesHelper.calculateGridDimensions();
                     this.viewModel.layout.grid = this.smallMultiplesHelper.layout.grid;
