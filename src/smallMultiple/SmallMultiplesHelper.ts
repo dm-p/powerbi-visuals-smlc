@@ -41,7 +41,8 @@
             Debugger.log('Calculating small multiple grid dimensions...');
             switch (this.options.mode) {
                 case LayoutMode.flow: {
-                    if (this.options.chartWidth && this.options.columnSpacing && this.options.smallMultipleWidth) {
+                    if (    this.options.chartWidth
+                        &&  this.options.smallMultipleWidth) {
                         Debugger.log('Calculating columns for Flow mode...');
                         this.layout.grid.columns =
                             Math.min(

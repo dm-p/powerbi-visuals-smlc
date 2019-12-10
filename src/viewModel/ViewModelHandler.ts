@@ -424,7 +424,7 @@
                     this.viewModel.yAxis.numberFormat = valueFormatter.create({
                         format: this.viewModel.measureMetadata[0].metadata.format || '#0.#',
                         value: this.settings.yAxis.labelDisplayUnits === 0
-                            ?   this.viewModel.statistics.max
+                            ?   this.viewModel.statistics.max.value
                             :   this.settings.yAxis.labelDisplayUnits,
                         precision: this.settings.yAxis.precision,
                         cultureSelector: this.viewModel.locale
@@ -589,9 +589,17 @@
                         break;
                     }
                     case 'column': {
-                        rh = Math.max(VisualConstants.ranges.multipleSize.min, vph / r);
-                        smh = rh - (this.viewModel.layout.grid.rows > 1 ? this.settings.layout.spacingBetweenRows : 0);
-                        cw = Math.max(VisualConstants.ranges.multipleSize.min, vpw / c);
+                        let reduce = (this.settings.smallMultiple.border ? this.settings.smallMultiple.borderStrokeWidth : 0);
+                        rh = Math.max(
+                            VisualConstants.ranges.multipleSize.min,
+                            (vph / r) - reduce
+                        );
+                        smh = rh
+                            - (this.viewModel.layout.grid.rows > 1 ? this.settings.layout.spacingBetweenRows : 0);
+                        cw = Math.max(
+                            VisualConstants.ranges.multipleSize.min,
+                            (vpw - reduce) / c
+                        );
                         smw = cw - (this.settings.layout.spacingBetweenColumns || 0);
                         break;
                     }
