@@ -52,7 +52,6 @@ Here's a bigger explanation for anyone who wants to know about what each status 
 ----
 
 Need:
-* Test IE/iPad
 * Code review and doc
 * Stretch goals:
     * Specify axis on small multiple or by row/column and get axes rendering

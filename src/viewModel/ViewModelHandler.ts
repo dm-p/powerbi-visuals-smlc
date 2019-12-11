@@ -233,6 +233,11 @@
                         /** Persist out measure metadata and config */
                             this.viewModel.measureMetadata.push({
                                 metadata: m,
+                                formatter: valueFormatter.create({
+                                    format: '',
+                                    cultureSelector: this.viewModel.locale,
+                                    precision: 3
+                                }),
                                 stroke: DataViewHelper.getMetadataObjectValue<Fill>(m, 'lines', 'stroke', defaultColour).solid.color,
                                 selectionId: this.host.createSelectionIdBuilder()
                                     .withMeasure(m.queryName)
@@ -307,9 +312,9 @@
                                                     .createSelectionId(),
                                                 tooltip: value
                                                     ?   {
-                                                            header: `${name} - ${valueFormatter.format(category, this.categoryColumn.format)}`,
+                                                            header: `${name} - ${valueFormatter.format(category, this.categoryColumn.format, false, this.viewModel.locale)}`,
                                                             displayName: m.metadata.displayName,
-                                                            value: valueFormatter.format(value, m.metadata.format),
+                                                            value: m.formatter.format(value),
                                                             color: m.stroke
                                                         }
                                                     :   null
@@ -390,9 +395,9 @@
                                     + (
                                         this.settings.legend.includeRanges
                                             ? ` (${
-                                                    valueFormatter.format(this.viewModel.categoryMetadata.extents[0], this.categoryColumn.format)
+                                                    valueFormatter.format(this.viewModel.categoryMetadata.extents[0], this.categoryColumn.format, false, this.viewModel.locale)
                                                 } - ${
-                                                    valueFormatter.format(this.viewModel.categoryMetadata.extents[1], this.categoryColumn.format)
+                                                    valueFormatter.format(this.viewModel.categoryMetadata.extents[1], this.categoryColumn.format, false, this.viewModel.locale)
                                                 })`
                                             : ''
                                     )
@@ -421,14 +426,13 @@
                 /** Y-axis setup */
                     Debugger.log('Master Y-axis number formatting...');
                     this.viewModel.yAxis.numberFormat = valueFormatter.create({
-                        format: this.viewModel.measureMetadata[0].metadata.format || '#0.#',
+                        format: valueFormatter.getFormatStringByColumn(this.viewModel.measureMetadata[0].metadata),
                         value: this.settings.yAxis.labelDisplayUnits === 0
                             ?   this.viewModel.statistics.max.value
                             :   this.settings.yAxis.labelDisplayUnits,
                         precision: this.settings.yAxis.precision,
                         cultureSelector: this.viewModel.locale
                     });
-
                     Debugger.log('Master Y-axis title...');
                     this.viewModel.yAxis.masterTitle = this.resolveMasterAxisTitle(this.viewModel.yAxis, this.settings.yAxis);
 
@@ -705,7 +709,7 @@
                 if (this.viewModel.xAxis.tickLabels.properties) {
                     this.viewModel.xAxis.tickValues.forEach((tv) => {
                         let properties = this.viewModel.xAxis.tickLabels.properties;
-                        properties.text = valueFormatter.format(tv, this.viewModel.categoryMetadata.metadata.format);
+                        properties.text = valueFormatter.format(tv, this.viewModel.categoryMetadata.metadata.format, false, this.viewModel.locale);
                         if (getTailoredTextOrDefault(properties, this.viewModel.layout.smallMultipleChartDimensions.width * 0.5) === '...') {
                             emptyValues ++;
                         }
