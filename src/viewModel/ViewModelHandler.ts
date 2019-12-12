@@ -233,9 +233,8 @@
                             this.viewModel.measureMetadata.push({
                                 metadata: m,
                                 formatter: valueFormatter.create({
-                                    format: '',
-                                    cultureSelector: this.viewModel.locale,
-                                    precision: 3
+                                    format: valueFormatter.getFormatStringByColumn(m),
+                                    cultureSelector: this.viewModel.locale
                                 }),
                                 stroke: DataViewHelper.getMetadataObjectValue<Fill>(m, 'lines', 'stroke', defaultColour).solid.color,
                                 selectionId: this.host.createSelectionIdBuilder()
