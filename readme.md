@@ -22,9 +22,11 @@ By Daniel Marsh-Patrick
 
 A small multiple is a series of charts using the same scale and axes, allowing them to be easily compared. This visual allows you to take a measure you might normally plot in a line chart, and duplicate this for the values of another category, e.g.:
 
-> ![SMLC_Introduction_Simple.png](https://bitbucket.org/repo/akedXeM/images/3440626957-SMLC_Introduction_Simple.png)
+> ![Simple example by month and city](./doc/assets/png/sm_landing_example.png)
 
-In this example, we are able to take a measure (**Rate**), plotted by time (**Year**), but also split this out into individual charts by category (**Location**). Each small multiple uses the same X and Y scale to allow for visual comparison between categories.
+In this example, we are able to take a measure - **Mean Temperature (°C)** - plotted by **Month Name** and then split this out into individual charts by a category (**City**). 
+
+Each small multiple uses the same X and Y scale to allow for consistent visual comparison between categories.
 
 ## Obtaining the Visual
 
