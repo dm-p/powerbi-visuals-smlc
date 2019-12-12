@@ -3,7 +3,7 @@ name: Bug Report
 about: Let us know that something might be wrong, so that we can improve the visual
   for others
 title: "[BUG]"
-labels: ''
+labels: bug
 assignees: dm-p
 
 ---
