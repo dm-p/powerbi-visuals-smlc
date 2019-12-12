@@ -22,7 +22,7 @@ By Daniel Marsh-Patrick
 
 A small multiple is a series of charts using the same scale and axes, allowing them to be easily compared. This visual allows you to take a measure you might normally plot in a line chart, and duplicate this for the values of another category, e.g.:
 
-> ![Simple example by month and city](./doc/assets/png/sm_landing_example.png)
+![Simple example by month and city](./doc/assets/png/sm_landing_example.png)
 
 In this example, we are able to take a measure - **Mean Temperature (°C)** - plotted by **Month Name** and then split this out into individual charts by a category (**City**). 
 
@@ -50,30 +50,3 @@ Here's a bigger explanation for anyone who wants to know about what each status 
 * **Submitted** - the visual has been submitted to AppSource and is undergoing initial review.
 * **Approved** - the visual listing is updated **but not yet fully available while MS do internal testing and verification**.
 * **Available** - the visual is fully available and can be obtained from the marketplace as normal. Any reports using the visual will be automatically updated.
-
-----
-
-Need:
-* Code review and doc
-* Stretch goals:
-    * Specify axis on small multiple or by row/column and get axes rendering
-    * Allow single measure, multiple categories
-    * Add label to line rather than top/bottom
-    * Data point/measure highlight - will need bookmark support also
-    * Test allow interactions - https://microsoft.github.io/PowerBI-visuals/docs/how-to-guide/allow-interactions/ - this works okay, as we're not doing highlighting yet
-    * Data Labels:
-        - Specific points (bool)
-            - First
-            - Last
-            - Min
-            - Max
-    * Click to drill
-    * Start a new 'group' with heading if expanded rather than drilled (identityFields > 1)
-    * Add 'target, forecast and previous' measures. If measures has > 1 these cannot be used but we get addiitonal metrics in tooltip if we use them all
-
-Examples:
-
-Time series
-Date series
-Category series
-Linear series
