@@ -855,20 +855,28 @@
             private resolveSmallMultipleVerticalMarginsForTicks() {
                 Debugger.log('Resolving small multiple vertical margins for axis tick labels...');
                 this.viewModel.layout.smallMultipleMargin.top = VisualConstants.defaults.smallMultiple.margin.top
+                    +   (       this.settings.smallMultiple.border
+                                ?   this.settings.smallMultiple.borderStrokeWidth
+                                :   0
+                        )
                     +   (
-                            this.settings.heading.show
-                            && this.settings.heading.labelPosition === 'top'
+                                this.settings.heading.show
+                            &&  this.settings.heading.labelPosition === 'top'
                                 ?   0
-                                :   this.settings.yAxis.showLabels
+                                :   this.settings.yAxis.showLabels && this.settings.yAxis && this.viewModel.yAxis.ticks > 1
                                     ?   (this.viewModel.yAxis.tickLabels.textHeight / 2)
                                     :   0
                         );
                 this.viewModel.layout.smallMultipleMargin.bottom = VisualConstants.defaults.smallMultiple.margin.bottom
+                    +   (       this.settings.smallMultiple.border
+                            ?   this.settings.smallMultiple.borderStrokeWidth
+                            :   0
+                        )
                     +   (
-                            this.settings.heading.show
-                            && this.settings.heading.labelPosition === 'bottom'
+                                this.settings.heading.show
+                            &&  this.settings.heading.labelPosition === 'bottom'
                                 ?   0
-                                :   this.settings.yAxis.showLabels
+                                :   this.settings.yAxis.showLabels && this.settings.yAxis && this.viewModel.yAxis.ticks > 1
                                     ?   (this.viewModel.yAxis.tickLabels.textHeight / 2)
                                     :   0
                     );
@@ -878,17 +886,18 @@
             private resolveSmallMultipleVerticalMarginsForLabel() {
                 Debugger.log('Resolving small multiple vertical margins for displayed category label...');
                 this.viewModel.label.text = this.resolveMultipleTitle();
+                this.viewModel.label.dominantBaseline = 'hanging';
                 switch (true) {
                     case this.settings.heading.labelPosition === 'top' && this.settings.heading.show: {
+                        Debugger.log('Adjusting for top...');
                         this.viewModel.label.text.y = this.viewModel.layout.smallMultipleMargin.top;
                         this.viewModel.layout.smallMultipleMargin.top += this.viewModel.label.text.textHeight;
-                        this.viewModel.label.dominantBaseline = 'hanging';
                         break;
                     }
                     case this.settings.heading.labelPosition === 'bottom' && this.settings.heading.show: {
+                        Debugger.log('Adjusting for bottom...');
                         this.viewModel.layout.smallMultipleMargin.bottom += this.viewModel.label.text.textHeight;
                         this.viewModel.label.text.y = this.viewModel.layout.smallMultipleDimensions.height - this.viewModel.layout.smallMultipleMargin.bottom;
-                        this.viewModel.label.dominantBaseline = 'hanging';
                         break;
                     }
                 }
