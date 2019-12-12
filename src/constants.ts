@@ -1,4 +1,9 @@
 /** Constants used throughout visual */
+    const
+        maxCategories = 100, /** Manually copied from capabilities */
+        strokeWidthMin = 1,
+        strokeWidthMax = 5;
+
     export const VisualConstants = {
         debug: true,
         about: {
@@ -67,7 +72,7 @@
                 fontSize: 8
             },
             layout: {
-                multipleDataReductionCap: 75, /** Manually copied from capabilities */
+                multipleDataReductionCap: maxCategories,
                 mode: 'flow',
                 multipleHeight: 125,
                 multipleWidth: 125,
@@ -100,28 +105,28 @@
                 max: 20
             },
             borderStrokeWidth: {
-                min: 1,
-                max: 5
+                min: strokeWidthMin,
+                max: strokeWidthMax
             },
             numberOfColumns: {
                 min: 1,
-                max: 75
+                max: maxCategories
             },
             axisLineStrokeWidth: {
-                min: 1,
-                max: 5
+                min: strokeWidthMin,
+                max: strokeWidthMax
             },
             gridlineStrokeWidth: {
-                min: 1,
-                max: 5
+                min: strokeWidthMin,
+                max: strokeWidthMax
             },
             precision: {
                 min: 0,
                 max: 10
             },
             shapeStrokeWidth: {
-                min: 1,
-                max: 5
+                min: strokeWidthMin,
+                max: strokeWidthMax
             },
             multipleSize: {
                 min: 40,

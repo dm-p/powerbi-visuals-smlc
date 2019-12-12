@@ -44,7 +44,7 @@
     * Row
     * Small Multiple.
 * If the visual is too small to draw components such the axis and legend, it will remove them to preserve as much space as possible for the small multiples.
-* Data limits have been raised from **50** small multiple values and **200** axis values (10K total) to [**75** small multiple values and **400** axis values](./usage.md#Fields) (30K total).
+* Data limits have been raised from **50** small multiple values and **200** axis values (10K total) to [**100** small multiple values and **300** axis values](./usage.md#Fields) (30K total).
 * Legend icons have been replaced with lines rather than circles (it is a line chart after all...).
 * Properties have all been corrected to have the correct controls and have sensible limits where possible.
 * We're now using GitHub to manage the source code and project.

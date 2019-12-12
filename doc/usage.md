@@ -24,8 +24,8 @@ In order to plot a chart, you will need the following added to the visual fields
 
 | Field | Purpose | Requirements | Max. Data Points | Data Reduction Algorithm* |
 | ----- | ------- | ---------- | ---------------- | ------------------------- |
-| Small Multiple | Field to partition your data, or chart by, based on its unique values. If supplying more than one field, you can drill/expand. | One or More | 75 | Top |
-| Axis | Field to plot on the x-axis of your chart. | One | 400 | Sample |
+| Small Multiple | Field to partition your data, or chart by, based on its unique values. If supplying more than one field, you can drill/expand. | One or More | 100 | Top |
+| Axis | Field to plot on the x-axis of your chart. | One | 300 | Sample |
 | Values | Measures to plot on your charts. | One or more | | |
 
 If the above requirements are not met, then the chart will not render for you.

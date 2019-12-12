@@ -1165,7 +1165,7 @@
                     },
                     "dataReductionAlgorithm": {
                         "top": {
-                            "count": 75
+                            "count": 100
                         }
                     }
                 },
@@ -1181,7 +1181,7 @@
                         ],
                         "dataReductionAlgorithm": {
                             "sample": {
-                                "count": 400
+                                "count": 300
                             }
                         }
                     }
