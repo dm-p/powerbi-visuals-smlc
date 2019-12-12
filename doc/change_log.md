@@ -1,6 +1,6 @@
 # Change Log
 ---
-[Home](../readme.md) | [Usage](./usage.md) | Examples | **Change Log** | [Privacy Policy](./privacy_policy.md) | Support
+[Home](../readme.md) | [Usage](./usage.md) | [Theming](./theming.md) | Examples | **Change Log** | [Privacy Policy](./privacy_policy.md) | Support
 
 ---
 

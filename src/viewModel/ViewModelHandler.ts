@@ -204,7 +204,6 @@
                     this.categoryColumn = this.metadata.columns.filter((c) => c.roles.category)[0];
                     this.viewModel.dataViewIsValid = true;
                     this.viewModel.locale = this.host.locale;
-
             }
 
         /** Maps everything we need from the data view to the view model */

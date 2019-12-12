@@ -45,7 +45,7 @@
     "Objects_SmallMultiple_BackgroundColor_Description": "Background color to apply to each small multiple.",
     "Objects_SmallMultiple_BackgroundTransparency": "Transparency",
     "Objects_SmallMultiple_BackgroundTransparency_Description": "Amount of transparency to apply to each small multiple background.",
-    "Objects_SmallMultiple_ZebraStripe": "Alternate Background Color",
+    "Objects_SmallMultiple_ZebraStripe": "Alternate Background",
     "Objects_SmallMultiple_ZebraStripe_Description": "Apply an alternating background color to small multiples.",
     "Objects_SmallMultiple_ZebraStripeApply": "Color By",
     "Objects_SmallMultiple_ZebraStripeApply_Description": "Specify how to apply the alternate background color. This can be by column, by row, or alternating across all small multiples.",
