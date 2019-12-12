@@ -365,7 +365,7 @@
 
     /** Binds the context menu to the small multiple the mouse is over */
         private bindContextMenu() {
-            if (this.settings.features.contextMenu) {
+            if (this.settings.features.contextMenu && this.host.allowInteractions) {
                 Debugger.log('Binding context menu...');
                 this.chartContainer
                     .on('contextmenu', () => {
