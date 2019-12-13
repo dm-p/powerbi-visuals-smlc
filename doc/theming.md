@@ -89,11 +89,11 @@ Theme Property Name: `layout`
 "layout": [
     {
         "mode": "flow | column",
-        "multipleHeight": number [40-500],
-        "multipleWidth": number [40-500],
-        "numberOfColumns" : number [0-75 | null],
-        "spacingBetweenColumns": number [0-20],
-        "spacingBetweenRows": number [0-20]
+        "multipleHeight": [40-500],
+        "multipleWidth": [40-500],
+        "numberOfColumns" : [0-75, null],
+        "spacingBetweenColumns": [0-20],
+        "spacingBetweenRows": [0-20]
     }
 ]
 ```
@@ -114,21 +114,21 @@ Theme Property Name: `heading`
 ```json
 "heading": [
     {
-        "show": boolean,
+        "show": true,
         "fontColour": {
             "solid": {
-                "color": hex code
+                "color": "#000000"
             }
         },
         "fontColourAlternate": {
             "solid": {
-                "color": hex code
+                "color": "#000000"
             }
         },
         "labelPosition": "top | bottom",
         "labelAlignment" : "left | center | right",
-        "fontSize": number [8-60],
-        "fontFamily": string
+        "fontSize": [8-60],
+        "fontFamily": "Arial"
     }
 ]
 ```
@@ -152,24 +152,24 @@ Theme Property Name: `smallMultiple`
     {
         "backgroundColor": {
             "solid": {
-                "color": hex code
+                "color": "#000000"
             }
         },
-        "backgroundTransparency": number [0-50],
-        "zebraStripe": boolean,
+        "backgroundTransparency": [0-50],
+        "zebraStripe": true,
         "zebraStripeApply": "column | row | multiple",
         "backgroundColorAlternate": {
             "solid": {
-                "color": hex code
+                "color": "#000000"
             }
         },
-        "border": boolean,
+        "border": true,
         "borderColor" : {
             "solid": {
-                "color": hex code
+                "color": "#000000"
             }
         },
-        "borderStrokeWidth": number,
+        "borderStrokeWidth": [1-5],
         "borderStyle": "dashed | solid | dotted"
     }
 ]
