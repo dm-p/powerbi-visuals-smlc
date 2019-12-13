@@ -40,7 +40,7 @@ To confirm what this looks like, let's do a simple example where you'd want to s
 
 Your intended visual would look like this:
 
-![Simple Theming Example](./assets/png/sm_theming_simple_example.png)
+&nbsp;&nbsp;&nbsp;&nbsp;![Simple Theming Example](./assets/png/sm_theming_simple_example.png)
 
 The `visualStyles` definition would be set up as follows:
 

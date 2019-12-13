@@ -22,7 +22,7 @@ By Daniel Marsh-Patrick
 
 A small multiple is a series of charts using the same scale and axes, allowing them to be easily compared. This visual allows you to take a measure you might normally plot in a line chart, and duplicate this for the values of another category, e.g.:
 
-![Simple example by month and city](./doc/assets/png/sm_landing_example.png)
+&nbsp;&nbsp;&nbsp;&nbsp;![Simple example by month and city](./doc/assets/png/sm_landing_example.png)
 
 In this example, we are able to take a measure - **Mean Temperature (°C)** - plotted by **Month Name** and then split this out into individual charts by a category (**City**). 
 

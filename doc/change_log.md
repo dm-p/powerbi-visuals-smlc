@@ -58,6 +58,9 @@
 * Measures do not always auto-assign colors from the palette.
 * When using a legend, and specifying to use the range as suffix on the title and then manually overridng the title would prevent the suffix from being displayed.
 
+### Known Issues
+
+* If your measure contains a specific number format, the visual will not render this with respect to the user's locale. This appears to be an issue with one of the APIs, as the visual is coded to support locale. I've raised an issue for this with the custom visuals team and will advise as soon as possible.
 
 ## 1.0.1.0 (2018-11-29)
 

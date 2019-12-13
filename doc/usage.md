@@ -30,13 +30,13 @@ In order to plot a chart, you will need the following added to the visual fields
 
 If the above requirements are not met, then the chart will not render for you.
 
-> *\* The Data Reduction method applies if the number of data points for that field are exceeded. This is to keep the rendered chart sensible for lots of data. In these cases, it is suggested that you create multiple instances of the chart if you wish to exceed these amounts.*
+> *\* The Data Reduction Algorithm applies if the number of data points for that field are exceeded. This is to keep the rendered chart sensible for lots of data. In these cases, it is suggested that you create multiple instances of the chart if you wish to exceed these amounts.*
 >
 > *For an overview of how these data reduction algorithms are applied, you can refer to the [PowerBI-Visuals documentation](https://docs.microsoft.com/en-nz/power-bi/developer/visuals/dataview-mappings#data-reduction-algorithm-types).*
 
 ## Small Multiples
 
-There are three property menus that govern the behaviour of the small multiples in the visual:
+There are three property menus that govern the behaviour of small multiples in the visual:
 
 ### SM Layout
 
@@ -51,7 +51,9 @@ Small multiples have a fixed size and a row is filled, they will flow onto the n
 * **Multiple Height** & **Multiple Width** have a minimum value of **40** and a maximum value of **500** pixels.
 * If the height x number of rows exceeds the chart area, the visual will provide scrollbars to allow users to scroll vertically.
 
-TODO: Screenshots
+>The example below has the **Multiple Height** and **Multiple Width** properties set to **75** pixels each, so the visual will fit as many as possible before moving onto the next row (visual border included to help illustrate).
+
+&nbsp;&nbsp;&nbsp;&nbsp;![Simple example of Flow layout](./assets/png/sm_layout_flow.png)
 
 #### Fixed Columns
 
@@ -62,7 +64,9 @@ Small multiples will automatically fit the prescribed number of columns into eac
 * The width and height of each small multiple is automatically calculated based on the available chart area.
 * The visual will not allow the calculated height or width to resolve to less than **40** pixels. If this occurs, then the visual will provide horizontal or vertical scroll bars as appropriate. 
 
-TODO: Screenshots
+>The example below has the same data as the previous **Flow** example, but has been set to fit **3** columns per row. The visual will spread them evenly across the visual width and height.
+
+&nbsp;&nbsp;&nbsp;&nbsp;![Simple example of Flow layout](./assets/png/sm_layout_fixed_columns.png)
 
 ### SM Heading
 
@@ -71,7 +75,7 @@ The **SM Heading** menu allows you to configure the heading displayed on the sma
 * Headings can be positioned at either the top or the bottom of the small multiple.
 * If **Alternate Background Color** is enabled in the [**SM Styling**](#SM-Styling) property menu, then you can also specify an **Alternate Font Color** for the heading, which will use the same **Color By** rule.
 
-TODO: Screenshots
+&nbsp;&nbsp;&nbsp;&nbsp;![Simple example of SM Heading configuration](./assets/png/sm_heading_examples.png)
 
 ### SM Styling
 
@@ -80,10 +84,11 @@ The **SM Styling** menu allows you to specify background and border configuratio
 You can also apply an alternating background by setting the **Alternate Background Color** property. This will provide you with the option to set a color and also a **Color By** rule, which provides the following options:
 
 * **Column** - the color is applied to each alternate column within each row.
+![Simple example of SM Alternate Background by column](./assets/png/sm_background_alternate_column.png)
 * **Row** - the color is applied to every small multiple in each alternate row.
+![Simple example of SM Alternate Background by row](./assets/png/sm_background_alternate_row.png)
 * **Small Multiple** - the color is applied to each alternate small multiple, across the whole visual. If you have an even number of small multiples in a row, this can look very similar to **Column**.
-
-TODO: Screenshots
+![Simple example of SM Alternate Background by small multiple](./assets/png/sm_background_alternate_sm.png)
 
 ## Line Styling
 
