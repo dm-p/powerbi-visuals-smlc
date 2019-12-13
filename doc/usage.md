@@ -84,11 +84,11 @@ The **SM Styling** menu allows you to specify background and border configuratio
 You can also apply an alternating background by setting the **Alternate Background Color** property. This will provide you with the option to set a color and also a **Color By** rule, which provides the following options:
 
 * **Column** - the color is applied to each alternate column within each row.
-![Simple example of SM Alternate Background by column](./assets/png/sm_background_alternate_column.png)
+<br>![Simple example of SM Alternate Background by column](./assets/png/sm_background_alternate_column.png)
 * **Row** - the color is applied to every small multiple in each alternate row.
-![Simple example of SM Alternate Background by row](./assets/png/sm_background_alternate_row.png)
+<br>![Simple example of SM Alternate Background by row](./assets/png/sm_background_alternate_row.png)
 * **Small Multiple** - the color is applied to each alternate small multiple, across the whole visual. If you have an even number of small multiples in a row, this can look very similar to **Column**.
-![Simple example of SM Alternate Background by small multiple](./assets/png/sm_background_alternate_sm.png)
+<br>![Simple example of SM Alternate Background by small multiple](./assets/png/sm_background_alternate_sm.png)
 
 ## Line Styling
 
