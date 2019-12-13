@@ -51,7 +51,7 @@ Small multiples have a fixed size and a row is filled, they will flow onto the n
 * **Multiple Height** & **Multiple Width** have a minimum value of **40** and a maximum value of **500** pixels.
 * If the height x number of rows exceeds the chart area, the visual will provide scrollbars to allow users to scroll vertically.
 
->The example below has the **Multiple Height** and **Multiple Width** properties set to **75** pixels each, so the visual will fit as many as possible before moving onto the next row (visual border included to help illustrate).
+The example below has the **Multiple Height** and **Multiple Width** properties set to **75** pixels each, so the visual will fit as many as possible before moving onto the next row (visual border included to help illustrate).
 
 &nbsp;&nbsp;&nbsp;&nbsp;![Simple example of Flow layout](./assets/png/sm_layout_flow.png)
 
@@ -64,7 +64,7 @@ Small multiples will automatically fit the prescribed number of columns into eac
 * The width and height of each small multiple is automatically calculated based on the available chart area.
 * The visual will not allow the calculated height or width to resolve to less than **40** pixels. If this occurs, then the visual will provide horizontal or vertical scroll bars as appropriate. 
 
->The example below has the same data as the previous **Flow** example, but has been set to fit **3** columns per row. The visual will spread them evenly across the visual width and height.
+The example below has the same data as the previous **Flow** example, but has been set to fit **3** columns per row. The visual will spread them evenly across the visual width and height.
 
 &nbsp;&nbsp;&nbsp;&nbsp;![Simple example of Flow layout](./assets/png/sm_layout_fixed_columns.png)
 
@@ -107,7 +107,9 @@ The **Line Styling** menu allows you to tailor the appearence of the line produc
     * **Dotted**
     * **Dot-Dash**
 
-TODO: Screenshots
+The example below uses line styling to place a less subtle measure that shows the mean temperature for all cities within each small multiple, allowing it to be compared visually.
+
+&nbsp;&nbsp;&nbsp;&nbsp;![Simple example of Line Styling](./assets/png/sm_line_styling.png)
 
 ## Additional Features
 
@@ -118,7 +120,7 @@ The behaviour and configuration of the chart's Y-axis is very much the same as a
 | Component | Remarks |
 | --------- | ------- |
 | Labels | To reduce clutter, axis labels are displayed at the start of each row of small multiples. |
-| Title | The title is vertically centered across all small multiple rows. |
+| Title | The title is vertically centered across the visual viewport. |
 | Gridlines | Gridlines are displayed within the confines of each small multiple. They are not shown across column spacing, so if you want a continuous line then it is advisable to set spacing to **0**. | 
 
 > ℹ *Disabling an axis in the properties pane will prevent you from setting any properties for it, which is why the components have individual on/off switches.*

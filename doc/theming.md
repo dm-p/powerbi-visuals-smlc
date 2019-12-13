@@ -45,31 +45,28 @@ Your intended visual would look like this:
 The `visualStyles` definition would be set up as follows:
 
 ```json
-{
-    ... rest of theme ...
-    "visualStyles": {
-        "smallMultipleLineChart6FA6C19AAE3840AFB9CD11A23CA7D7C7DEV": {
-            "*": {
-                "layout": [
-                    {
-                        "multipleHeight": 100,
-                        "multipleWidth": 150,
-                        "spacingBetweenColumns": 10,
-                        "spacingBetweenRows": 10
-                    }
-                ],
-                "smallMultiple": [
-                    {
-                        "border": true,
-                        "borderColor": {
-                            "solid": {
-                                "color": "#FF0000"
-                            }
-                        },
-                        "borderStrokeWidth": 2
-                    }
-                ]
-            }
+"visualStyles": {
+    "smallMultipleLineChart6FA6C19AAE3840AFB9CD11A23CA7D7C7DEV": {
+        "*": {
+            "layout": [
+                {
+                    "multipleHeight": 100,
+                    "multipleWidth": 150,
+                    "spacingBetweenColumns": 10,
+                    "spacingBetweenRows": 10
+                }
+            ],
+            "smallMultiple": [
+                {
+                    "border": true,
+                    "borderColor": {
+                        "solid": {
+                            "color": "#FF0000"
+                        }
+                    },
+                    "borderStrokeWidth": 2
+                }
+            ]
         }
     }
 }
