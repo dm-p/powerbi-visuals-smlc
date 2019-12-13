@@ -102,7 +102,7 @@ Theme Property Name: `layout`
 | Multiple Width | `multipleWidth` | Only applies when Mode = `flow`.<br> Supported ranges: `40` - `500`. |
 | # of Columns | `numberOfColumns` | Only applies when Mode = `column`.<br>Supported ranges: `0` - `75` or `null` for all columns.
 | Column Spacing | `spacingBetweenColumns` | Supported ranges: `0` - `20`. |
-| Row Spacing | `spacingBetweenRows` | SUpported ranges: `0` - `20`.<br>If using `column`, will only take effect if number of columns results in > 1 row. |
+| Row Spacing | `spacingBetweenRows` | Supported ranges: `0` - `20`.<br>If using `column`, will only take effect if number of columns results in > 1 row. |
 
 ### SM Heading
 
