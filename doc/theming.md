@@ -132,13 +132,13 @@ Theme Property Name: `heading`
 
 | Field | Theme Property Name | Remarks |
 |-|-|-|
-| On/Off | `show` | |
-| Font Color | `fontColour` | |
-| Alternate Font Color | `fontColourAlternate` | |
-| Position | `labelPosition` | |
-| Alignment | `labelAlignment` | |
-| Text Size | `fontSize` | |
-| Font Family | `fontFamily` | |
+| On/Off | `show` | Valid values are either `true` or `false`. |
+| Font Color | `fontColour` | Remember to specify a valid `color` object, in addition to the desired hex code. |
+| Alternate Font Color | `fontColourAlternate` | Applies if `zebraStripe` (Alternate Background Color) is enabled in the **SM Styling** menu. |
+| Position | `labelPosition` | Valid values: <li>`top`</li><li>`bottom`</li> |
+| Alignment | `labelAlignment` | Valid values: <li>`left`</li><li>`center`</li><li>`right`</li> |
+| Text Size | `fontSize` | Supported ranges: `8` - `60`. |
+| Font Family | `fontFamily` | A valid Power BI font family. |
 
 ### SM Styling
 
@@ -174,15 +174,15 @@ Theme Property Name: `smallMultiple`
 
 | Field | Theme Property Name | Remarks |
 |-|-|-|
-| Background Color | `backgroundColor` | |
-| Transparency | `backgroundTransparency` | |
-| Alternate Background | `zebraStripe` | |
-| Color By | `zebraStripeApply` | |
-| Alternate Background Color | `backgroundColorAlternate` | |
-| Border | `border` | |
-| Border Color | `borderColor` | |
-| Border Stroke Width | `borderStrokeWidth` | |
-| Border Style | `borderStyle` | |
+| Background Color | `backgroundColor` | Remember to specify a valid `color` object, in addition to the desired hex code. |
+| Transparency | `backgroundTransparency` | Supported ranges: `0` - `100`. |
+| Alternate Background | `zebraStripe` | Valid values are either `true` or `false`. |
+| Color By | `zebraStripeApply` | Applies if `zebraStripe` (Alternate Background Color) is enabled. Valid values: <li>`column` - apply alternate background color to alternate columns</li><li>`row` - apply alternate background color to alternate rows</li><li>`multiple` - apply alternate background color ro alternate small multiples</li> |
+| Alternate Background Color | `backgroundColorAlternate` | Applies if `zebraStripe` (Alternate Background Color) is enabled. Remember to specify a valid `color` object, in addition to the desired hex code. |
+| Border | `border` | Valid values are either `true` or `false`. |
+| Border Color | `borderColor` | Applies if `border` is enabled. Remember to specify a valid `color` object, in addition to the desired hex code. |
+| Border Stroke Width | `borderStrokeWidth` | Applies if `border` is enabled. Supported ranges: `1` - `5`. |
+| Border Style | `borderStyle` | Applies if `border` is enabled. Valid values: <li>`dashed`</li><li>`solid`</li><li>`dotted`</li> |
 
 ### Line Styling
 
