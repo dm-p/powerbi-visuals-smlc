@@ -371,7 +371,7 @@
 
                     });
 
-                    this.smallMultiplesHelper = new SmallMultiplesHelper(this.viewModel.multiples, {
+                    this.smallMultiplesHelper = new SmallMultiplesHelper(this.viewModel.multiples.length, {
                         mode: LayoutMode[this.settings.layout.mode],
                         columnCap: this.settings.layout.numberOfColumns || VisualConstants.defaults.layout.multipleDataReductionCap,
                         columnSpacing: this.settings.layout.spacingBetweenColumns,
@@ -619,8 +619,8 @@
                     this.resolveXAxisTickLabelHeight();
                     this.resolveChartContainerPosition();
 
-                    this.smallMultiplesHelper.options = {
-                        ...this.smallMultiplesHelper.options,
+                    this.smallMultiplesHelper.layoutOptions = {
+                        ...this.smallMultiplesHelper.layoutOptions,
                         ...{
                             chartWidth: this.viewModel.layout.chartViewport.width,
                         }

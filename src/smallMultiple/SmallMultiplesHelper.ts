@@ -1,8 +1,6 @@
 /** Internal dependencies */
     import Debugger from '../debug/Debugger';
-    import ISmallMultiple from '../viewModel/ISmallMultiple';
     import {
-        ISmallMultipleGrid,
         ISmallMultipleLayoutOptions,
         ISmallMultipleLayout
     } from './interfaces';
@@ -11,24 +9,31 @@
     } from './enums';
 
 /**
- *
+ * Manages the calculation and handling of small multiples within the visual viewport.
  */
     export default class SmallMultiplesHelper {
 
-        public layout: ISmallMultipleLayout;
-        public options: ISmallMultipleLayoutOptions;
-        private smallMultiples: ISmallMultiple[];
+        /** View model, representing layout configuration for the small multiples. */
+            public layout: ISmallMultipleLayout;
+        /** Specific options to consider when resolving layout.*/
+            public layoutOptions: ISmallMultipleLayoutOptions;
 
-        constructor(smallMultiples: ISmallMultiple[], options: ISmallMultipleLayoutOptions) {
+    /**
+     * Instantiates a new `SmallMultiplesHelper`.
+     * @param count         - Number of small multiples to work with.
+     * @param layoutOptions - Specific options to consider when resolving layout.
+     */
+        constructor(count: number, layoutOptions: ISmallMultipleLayoutOptions) {
             Debugger.log('SmallMultiplesHelper initialised :)');
-            this.smallMultiples = smallMultiples;
-            this.options = options;
             this.layout = SmallMultiplesHelper.initialState();
+            this.layout.count = count;
+            this.layoutOptions = layoutOptions;
         }
 
-    /** Initial state of small multiples view model */
+    /** Represents the initial state of the small multiples view model and can be used to reset it back. */
         private static initialState(): ISmallMultipleLayout {
             return {
+                count: 0,
                 grid: {
                     columns: 0,
                     rows: 0
@@ -36,22 +41,22 @@
             };
         }
 
-    /** Resolves row and column count based on settings */
+    /** Resolves row and column count based on settings. */
         calculateGridDimensions() {
             Debugger.log('Calculating small multiple grid dimensions...');
-            Debugger.log('Options', this.options);
-            switch (this.options.mode) {
+            Debugger.log('Options', this.layoutOptions);
+            switch (this.layoutOptions.mode) {
                 case LayoutMode.flow: {
-                    if (    this.options.chartWidth
-                        &&  this.options.smallMultipleWidth) {
+                    if (    this.layoutOptions.chartWidth
+                        &&  this.layoutOptions.smallMultipleWidth) {
                         Debugger.log('Calculating columns for Flow mode...');
                         this.layout.grid.columns =
                             Math.min(
-                                this.smallMultiples.length,
+                                this.layout.count,
                                 Math.max(
                                     Math.floor(
-                                            (this.options.chartWidth)
-                                        /   (this.options.smallMultipleWidth + this.options.columnSpacing)
+                                            (this.layoutOptions.chartWidth)
+                                        /   (this.layoutOptions.smallMultipleWidth + this.layoutOptions.columnSpacing)
                                     ),
                                     1
                                 )
@@ -60,17 +65,17 @@
                     break;
                 }
                 case LayoutMode.column: {
-                    if (this.options.columnCap) {
+                    if (this.layoutOptions.columnCap) {
                         Debugger.log('Calculating columns for Column mode...');
                         this.layout.grid.columns = (
-                            this.smallMultiples.length < this.options.columnCap
-                                ?   this.smallMultiples.length
-                                :   this.options.columnCap
+                            this.layout.count < this.layoutOptions.columnCap
+                                ?   this.layout.count
+                                :   this.layoutOptions.columnCap
                         );
                     }
                     break;
                 }
             }
-            this.layout.grid.rows = this.layout.grid.columns && Math.ceil(this.smallMultiples.length / this.layout.grid.columns);
+            this.layout.grid.rows = this.layout.grid.columns && Math.ceil(this.layout.count / this.layout.grid.columns);
         }
     }
