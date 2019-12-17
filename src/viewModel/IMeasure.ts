@@ -16,4 +16,6 @@
         strokeWidth: number;
         lineShape: string;
         lineStyle: string;
+        showArea: boolean;
+        backgroundTransparency: number;
     }

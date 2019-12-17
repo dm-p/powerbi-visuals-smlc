@@ -359,31 +359,38 @@
                                             metadata: measure.metadata.queryName
                                         }
                                     });
-                                    instances.push({
-                                    objectName: objectName,
-                                    properties: {
-                                        stroke: {
-                                            solid: {
-                                                color: measure.stroke
-                                            }
+                                /** The main body of our measure configuration */
+                                    let inst: VisualObjectInstance = {
+                                        objectName: objectName,
+                                        properties: {
+                                            stroke: {
+                                                solid: {
+                                                    color: measure.stroke
+                                                }
+                                            },
+                                            strokeWidth: measure.strokeWidth,
+                                            showArea: measure.showArea,
+                                            backgroundTransparency: measure.backgroundTransparency,
+                                            lineShape: measure.lineShape,
+                                            lineStyle: measure.lineStyle
                                         },
-                                        strokeWidth: measure.strokeWidth,
-                                        lineShape: measure.lineShape,
-                                        lineStyle: measure.lineStyle
-                                    },
-                                    selector: {
-                                        metadata: measure.metadata.queryName
-                                    },
-                                    /** containerIdx: containerIdx, */
-                                    validValues: {
-                                        strokeWidth: {
-                                            numberRange: {
-                                                min: VisualConstants.ranges.shapeStrokeWidth.min,
-                                                max: VisualConstants.ranges.shapeStrokeWidth.max
+                                        selector: {
+                                            metadata: measure.metadata.queryName
+                                        },
+                                        /** containerIdx: containerIdx, */
+                                        validValues: {
+                                            strokeWidth: {
+                                                numberRange: {
+                                                    min: VisualConstants.ranges.shapeStrokeWidth.min,
+                                                    max: VisualConstants.ranges.shapeStrokeWidth.max
+                                                }
                                             }
                                         }
                                     }
-                                });
+                                    if (!measure.showArea) {
+                                        delete inst.properties.backgroundTransparency;
+                                    }
+                                    instances.push(inst);
                             }
 
                         break;

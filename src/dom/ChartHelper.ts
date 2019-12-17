@@ -338,7 +338,8 @@
 
                     /** Plot lines and tooltip markers */
                         this.renderSmallMultipleTooltipMouseLine(overlay);
-                        this.renderSmallMultipleMeasure(plotArea, overlay);
+                        this.renderSmallMultipleMeasureArea(plotArea, overlay);
+                        this.renderSmallMultipleMeasureLine(plotArea, overlay);
 
                     /** Bind tooltip events */
                         this.bindTooltipEvents(multiples);
@@ -533,24 +534,39 @@
                 .filter((v) => v.category === xData)[0];
         }
 
+    /** Resolves and retrieves x-axis coordinate for a data point */
+        private getLineXCoordinate(dataPoint: ISmallMultipleMeasureValue) {
+            switch (this.viewModel.xAxis.scaleType) {
+                case EAxisScaleType.Linear: {
+                    return (<d3.ScaleLinear<number, number>>this.viewModel.xAxis.scale)(<number>dataPoint.category);
+                }
+                case EAxisScaleType.Time: {
+                    return (<d3.ScaleTime<number, number>>this.viewModel.xAxis.scale)(<Date>dataPoint.category);
+                }
+                default: {
+                    return this.scaleXPoint(<string>dataPoint.category);
+                }
+            }
+        }
+
     /** Generator function for measure lines */
         private measureLineGenerator(): d3.Line<ISmallMultipleMeasureValue> {
             Debugger.log('Building line generation function for measures...');
+            let yAxis = (<d3.ScaleLinear<number, number>>this.viewModel.yAxis.scale);
             return d3.line<ISmallMultipleMeasureValue>()
-                .x((d) => {
-                        switch (this.viewModel.xAxis.scaleType) {
-                            case EAxisScaleType.Linear: {
-                                return (<d3.ScaleLinear<number, number>>this.viewModel.xAxis.scale)(<number>d.category);
-                            }
-                            case EAxisScaleType.Time: {
-                                return (<d3.ScaleTime<number, number>>this.viewModel.xAxis.scale)(<Date>d.category);
-                            }
-                            default: {
-                                return this.scaleXPoint(<string>d.category);
-                            }
-                        }
-                    })
-                .y((d) => (<d3.ScaleLinear<number, number>>this.viewModel.yAxis.scale)(d.value))
+                .x((d) => this.getLineXCoordinate(d))
+                .y((d) => yAxis(d.value))
+                .defined((d) => d.value !== null);
+        }
+
+    /** Generator function for measure areas */
+        private measureAreaGenerator(): d3.Line<ISmallMultipleMeasureValue> {
+            Debugger.log('Building area generation function for measures...');
+            let yAxis = (<d3.ScaleLinear<number, number>>this.viewModel.yAxis.scale);
+            return d3.area<ISmallMultipleMeasureValue>()
+                .x((d) => this.getLineXCoordinate(d))
+                .y0(yAxis(yAxis.domain()[0]))
+                .y1((d) => yAxis(d.value))
                 .defined((d) => d.value !== null);
         }
 
@@ -760,7 +776,7 @@
         }
 
     /** Manages the rendering of measure line and tooltip overlay markers for specified small multiple element */
-        private renderSmallMultipleMeasure(element: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>, overlay: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>) {
+        private renderSmallMultipleMeasureLine(element: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>, overlay: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>) {
             let lineGen = this.measureLineGenerator();
             /** We step through in reverse to draw first line last */
                 this.viewModel.measureMetadata.slice(0).reverse().map((m, mi) => {
@@ -769,10 +785,9 @@
                     Debugger.log(`Plotting line for measure ${m.metadata.displayName}...`);
                     element
                         .append('path')
-                            .classed('small-multiple-measure', true)
+                            .classed('small-multiple-measure-line', true)
                             .classed(m.lineStyle, true)
                             .attr('d', (d) => lineGen(d.measures[inverse].values.filter(lineGen.defined())))
-                            .attr('transform', 'translate(0, 0)')
                             .style('stroke', m.stroke)
                             .style('stroke-linecap', 'round')
                             .style('fill', 'none')
@@ -784,6 +799,26 @@
                                 .classed('circle-item', true)
                                 .attr('r', 3)
                                 .attr('fill', (d) => m.stroke);
+                });
+        }
+
+    /** Manages the rendering of measure line and tooltip overlay markers for specified small multiple element */
+        private renderSmallMultipleMeasureArea(element: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>, overlay: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>) {
+            let areaGen = this.measureAreaGenerator();
+            /** We step through in reverse to draw first line last */
+                this.viewModel.measureMetadata.slice(0).reverse().map((m, mi) => {
+                    if (m.showArea) {
+                        let inverse = this.viewModel.measureMetadata.length - 1 - mi;
+                        Debugger.log(`Plotting line for measure ${m.metadata.displayName}...`);
+                        areaGen.curve(d3[`${m.lineShape}`]);
+                        element
+                            .append('path')
+                                .classed('small-multiple-measure-area', true)
+                                .attr('d', (d) => areaGen(d.measures[inverse].values.filter(areaGen.defined())))
+                                .style('fill', m.stroke)
+                                .attr('fill-opacity', 1 - (m.backgroundTransparency / 100))
+                                .style('stroke-width', 0);
+                    }
                 });
         }
 

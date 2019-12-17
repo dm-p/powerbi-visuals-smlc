@@ -242,7 +242,9 @@
                                     .createSelectionId(),
                                 strokeWidth: DataViewHelper.getMetadataObjectValue<number>(m, 'lines', 'strokeWidth', VisualConstants.defaults.lines.strokeWidth),
                                 lineShape: DataViewHelper.getMetadataObjectValue<string>(m, 'lines', 'lineShape', VisualConstants.defaults.lines.lineShape),
-                                lineStyle: DataViewHelper.getMetadataObjectValue<string>(m, 'lines', 'lineStyle', VisualConstants.defaults.lines.lineStyle)
+                                lineStyle: DataViewHelper.getMetadataObjectValue<string>(m, 'lines', 'lineStyle', VisualConstants.defaults.lines.lineStyle),
+                                showArea: DataViewHelper.getMetadataObjectValue<boolean>(m, 'lines', 'showArea', VisualConstants.defaults.lines.showArea),
+                                backgroundTransparency: DataViewHelper.getMetadataObjectValue<number>(m, 'lines', 'backgroundTransparency', VisualConstants.defaults.lines.backgroundTransparency)
                             });
 
                     });
@@ -857,28 +859,12 @@
                     +   (       this.settings.smallMultiple.border
                                 ?   this.settings.smallMultiple.borderStrokeWidth
                                 :   0
-                        )
-                    +   (
-                                this.settings.heading.show
-                            &&  this.settings.heading.labelPosition === 'top'
-                                ?   0
-                                :   this.settings.yAxis.showLabels && this.settings.yAxis && this.viewModel.yAxis.ticks > 1
-                                    ?   (this.viewModel.yAxis.tickLabels.textHeight / 2)
-                                    :   0
                         );
                 this.viewModel.layout.smallMultipleMargin.bottom = VisualConstants.defaults.smallMultiple.margin.bottom
                     +   (       this.settings.smallMultiple.border
                             ?   this.settings.smallMultiple.borderStrokeWidth
                             :   0
-                        )
-                    +   (
-                                this.settings.heading.show
-                            &&  this.settings.heading.labelPosition === 'bottom'
-                                ?   0
-                                :   this.settings.yAxis.showLabels && this.settings.yAxis && this.viewModel.yAxis.ticks > 1
-                                    ?   (this.viewModel.yAxis.tickLabels.textHeight / 2)
-                                    :   0
-                    );
+                        );
             }
 
         /** Adjusts the top and bottom margins based on category label settings */

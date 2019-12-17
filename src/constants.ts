@@ -62,6 +62,8 @@
                 strokeWidth: 2,
                 lineShape: 'curveLinear',
                 lineStyle: 'solid',
+                showArea: false,
+                backgroundTransparency: 50,
                 byMeasure: false
             },
             legend: {
@@ -125,7 +127,7 @@
                 max: 10
             },
             shapeStrokeWidth: {
-                min: strokeWidthMin,
+                min: 0,
                 max: strokeWidthMax
             },
             multipleSize: {

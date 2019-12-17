@@ -462,6 +462,24 @@
                         "integer": true
                     }
                 },
+                "showArea": {
+                    "displayNameKey": "Objects_Lines_ShowArea",
+                    "descriptionKey": "Objects_Lines_ShowArea",
+                    "displayName": "A",
+                    "description": "AD",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "backgroundTransparency": {
+                    "displayNameKey": "Objects_Lines_Transparency",
+                    "descriptionKey": "Objects_Lines_Transparency_Description",
+                    "displayName": "AT",
+                    "description": "ATD",
+                    "type": {
+                        "integer": true
+                    }
+                },
                 "lineShape": {
                     "displayNameKey": "Objects_Lines_LineShape",
                     "descriptionKey": "Objects_Lines_LineShape_Description",
