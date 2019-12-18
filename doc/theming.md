@@ -189,7 +189,7 @@ Theme Property Name: `smallMultiple`
 Theme Property Name: `lineStyle`
 
 | Field | Theme Property Name | Remarks |
-|-|-|-|
+| On/Off | `show` | Valid values are either `true` or `false`. |
 
 ### X-Axis
 

@@ -95,7 +95,8 @@ You can also apply an alternating background by setting the **Alternate Backgrou
 The **Line Styling** menu allows you to tailor the appearence of the line produced for each measure in  your visual, consitently across each small multiple.
 
 * **Color** - allows you to specify the color for each measure.
-* **Stroke Width** - allows you to specify a particular width for your measure.
+* **Stroke Width** - allows you to specify a particular width for your measure. You can set this to **0** to hide the line if you just wish to use **Show Area** for your measure.
+* **Show Area** - allows you to render a measure as an area chart. A **Transparency** option is also exposed if this property is enabled.
 * **Shape** - allows you to specify how the line is drawn. Values are as follows:
     * **Linear** (default) - data points are connected by a straight line.
     * **Stepped** - changes between each data point are drawn using vertical lines before drawing a horizontal line for the value.
