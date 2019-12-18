@@ -937,7 +937,7 @@
             private resolveXAxisScaleAndPlacement() {
                 this.viewModel.xAxis.scale.range([
                         this.viewModel.layout.smallMultipleMargin.left,
-                        this.viewModel.layout.smallMultipleChartDimensions.width
+                        this.viewModel.layout.smallMultipleChartDimensions.width - this.viewModel.layout.smallMultipleMargin.right
                     ]);
 
                 if (this.viewModel.xAxis.scaleType === EAxisScaleType.Point) {
