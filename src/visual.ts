@@ -386,7 +386,7 @@
                                                 }
                                             }
                                         }
-                                    }
+                                    };
                                     if (!measure.showArea) {
                                         delete inst.properties.backgroundTransparency;
                                     }

@@ -2,7 +2,7 @@
     "visual": {
         "name": "smallMultipleLineChart",
         "displayName": "Small Multiple Line Chart",
-        "guid": "smallMultipleLineChart6FA6C19AAE3840AFB9CD11A23CA7D7C7DEV",
+        "guid": "smallMultipleLineChart6FA6C19AAE3840AFB9CD11A23CA7D7C7",
         "visualClassName": "Visual",
         "version": "2.0.0.118",
         "description": "Provides the ability to plot a line chart with small multiples.",
