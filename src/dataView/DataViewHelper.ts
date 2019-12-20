@@ -118,15 +118,17 @@
                         }
                     });
 
-                /** In v2 we introduce a 'flow' layout mode, but before this we relied on maximumMultiplesPerRow to manage this, so we need to manually
+                /** In v2 we introduce a 'width' layout mode, but before this we relied on maximumMultiplesPerRow to manage this, so we need to manually
                  *  override if maximumMultiplesPerRow is still set, so as not to confuse the end-user. We've also moved the measure-based colouring into
                  *  the newer Line Styling menu, which consolidates shapes and colours in a single place.
                  */
                     if (targetVersion === 2) {
                         changes.replace.map((c) => {
                             if (c.properties.numberOfColumns) {
-                                Debugger.log('Hard setting layout mode to \'column\'...');
-                                c.properties.mode = 'column';
+                                Debugger.log('Hard setting horizontal grid mode to \'column\'...');
+                                c.properties.horizontalGrid = 'column';
+                                Debugger.log('Hard setting vertical grid mode to \'fit\'...');
+                                c.properties.verticalGrid = 'fit';
                             }
                         });
 

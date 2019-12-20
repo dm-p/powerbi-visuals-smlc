@@ -3,9 +3,9 @@
     let defaults = VisualConstants.defaults;
 
 /**
- *
+ * Handles all aspects of small multiples styling configuration, as prescribed by the visual capabilities.
  */
-    export default class SmallMultipleSettings {
+    export default class SmallMultiplesStylingSettings {
         /** Background colour */
             public backgroundColor: string = defaults.smallMultiple.backgroundColour;
         /** Background transparency */

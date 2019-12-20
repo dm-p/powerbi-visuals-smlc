@@ -239,14 +239,14 @@
             /** Y-axis */
                 if (this.settings.yAxis.show) {
                     Debugger.log('Rendering Y-axis...');
-                    for (let r = 0; r < this.viewModel.layout.grid.rows; r++) {
+                    for (let r = 0; r < this.viewModel.layout.smallMultiples.grid.rows.count; r++) {
                         Debugger.log('Rendering Y-axis ticks...');
                         this.renderAxis(
                             group,
                             this.viewModel.yAxis.tickLabels.textWidth,
-                            (r * this.viewModel.layout.rowDimensions.height)
-                                + this.viewModel.layout.smallMultipleMargin.top
-                                + this.viewModel.layout.smallMultipleBorderOffset,
+                            (r * this.viewModel.layout.smallMultiples.grid.rows.height)
+                                + this.viewModel.layout.smallMultiples.multiple.margin.top
+                                + this.viewModel.layout.smallMultiples.multiple.borderOffset,
                             this.viewModel.yAxis,
                             this.settings.yAxis,
                             true
@@ -257,17 +257,17 @@
             /** X-axis */
                 if (this.settings.xAxis.show) {
                     Debugger.log('Rendering X-axis...');
-                    for (let c = 0; c < this.viewModel.layout.grid.columns; c++) {
+                    for (let c = 0; c < this.viewModel.layout.smallMultiples.grid.columns.count; c++) {
                         Debugger.log('Rendering X-axis ticks...');
                         this.renderAxis(
                             group,
                             this.viewModel.yAxis.tickLabels.textWidth
-                                + (c * this.viewModel.layout.smallMultipleXConstant)
-                                + this.viewModel.layout.smallMultipleMargin.left
-                                + this.viewModel.layout.smallMultipleBorderOffset,
+                                + (c * this.viewModel.layout.smallMultiples.multiple.xOffset)
+                                + this.viewModel.layout.smallMultiples.multiple.margin.left
+                                + this.viewModel.layout.smallMultiples.multiple.borderOffset,
                             this.viewModel.layout.chartViewport.height
                                 - this.viewModel.xAxis.tickLabels.textHeight
-                                + this.viewModel.layout.smallMultipleBorderOffset,
+                                + this.viewModel.layout.smallMultiples.multiple.borderOffset,
                             this.viewModel.xAxis,
                             this.settings.xAxis,
                             true
@@ -283,7 +283,7 @@
                 let viewport = this.renderSmallMultipleChartViewport();
 
             /** Add rows to group */
-                for (let r = 0; r < this.viewModel.layout.grid.rows; r++) {
+                for (let r = 0; r < this.viewModel.layout.smallMultiples.grid.rows.count; r++) {
                     Debugger.log(`Rendering row #${r}...`);
 
                     /** Row (of multiples) element */
@@ -310,7 +310,7 @@
                             this.renderAxis(
                                 multiples,
                                 0,
-                                this.viewModel.layout.smallMultipleMargin.top,
+                                this.viewModel.layout.smallMultiples.multiple.margin.top,
                                 this.viewModel.yAxis,
                                 this.settings.yAxis,
                                 false
@@ -322,8 +322,8 @@
                             Debugger.log('Rendering X-axis...');
                             this.renderAxis(
                                 multiples,
-                                this.viewModel.layout.smallMultipleMargin.left,
-                                this.viewModel.layout.smallMultipleChartDimensions.height + this.viewModel.layout.smallMultipleMargin.top,
+                                this.viewModel.layout.smallMultiples.multiple.margin.left,
+                                this.viewModel.layout.smallMultiples.multiple.inner.height + this.viewModel.layout.smallMultiples.multiple.margin.top,
                                 this.viewModel.xAxis,
                                 this.settings.xAxis,
                                 false
@@ -450,7 +450,7 @@
             Debugger.log('Getting small multiples for this row...');
             return this.viewModel.multiples
                 .map((m) => m)
-                .slice(row * this.viewModel.layout.grid.columns, (row * this.viewModel.layout.grid.columns) + this.viewModel.layout.grid.columns);
+                .slice(row * this.viewModel.layout.smallMultiples.grid.columns.count, (row * this.viewModel.layout.smallMultiples.grid.columns.count) + this.viewModel.layout.smallMultiples.grid.columns.count);
         }
 
     /** Retrieve tooltip data from specified data points */
@@ -669,7 +669,7 @@
                                                 .text((d: string) => {
                                                     let formattedValue = valueFormatter.format(d, this.viewModel.categoryMetadata.metadata.format);
                                                     let textProperties = axis.tickLabels.properties,
-                                                        availableWidth = this.viewModel.layout.smallMultipleChartDimensions.width * 0.5;
+                                                        availableWidth = this.viewModel.layout.smallMultiples.multiple.inner.width * 0.5;
                                                     textProperties.text = formattedValue;
                                                     let actualWidth = measureSvgTextWidth(textProperties);
                                                     /**
@@ -733,8 +733,8 @@
             element
                 .append('rect')
                     .classed('small-multiple-background', true)
-                    .attr('height', this.viewModel.layout.smallMultipleDimensions.height)
-                    .attr('width', this.viewModel.layout.smallMultipleDimensions.width)
+                    .attr('height', this.viewModel.layout.smallMultiples.multiple.outer.height)
+                    .attr('width', this.viewModel.layout.smallMultiples.multiple.outer.width)
                     .attr('fill', (d) => d.backgroundColour)
                     .attr('fill-opacity', 1 - (this.settings.smallMultiple.backgroundTransparency / 100));
         }
@@ -757,15 +757,15 @@
                 element
                     .append('text')
                         .classed('small-multiple-label', true)
-                        .attr('x', this.viewModel.label.text.x)
-                        .attr('y', this.viewModel.label.text.y)
+                        .attr('x', this.viewModel.layout.smallMultiples.multiple.heading.x)
+                        .attr('y', this.viewModel.layout.smallMultiples.multiple.heading.y)
                         .text((d) => {
                                 /** TODO: should map to view model properly */
-                                this.viewModel.label.text.properties.text = d.name;
-                                return getTailoredTextOrDefault(this.viewModel.label.text.properties, this.viewModel.layout.smallMultipleChartDimensions.width);
+                                this.viewModel.layout.smallMultiples.multiple.heading.textProperties.text = d.name;
+                                return getTailoredTextOrDefault(this.viewModel.layout.smallMultiples.multiple.heading.textProperties, this.viewModel.layout.smallMultiples.multiple.inner.width);
                             })
-                        .style('text-anchor', this.viewModel.label.textAnchor)
-                        .style('dominant-baseline', this.viewModel.label.dominantBaseline)
+                        .style('text-anchor', this.viewModel.layout.smallMultiples.multiple.heading.textAnchor)
+                        .style('dominant-baseline', this.viewModel.layout.smallMultiples.multiple.heading.dominantBaseline)
                         .style('dy', '1em')
                         .style('font-family', this.settings.heading.fontFamily)
                         .style('font-size', `${this.settings.heading.fontSize}pt`)
@@ -829,7 +829,7 @@
                 .append('g')
                     .classed('small-multiple-chart-path', true)
                     .attr('clip-path', 'url(#small-multiple-clip)')
-                    .attr('transform', `translate(${this.viewModel.layout.smallMultipleMargin.left}, ${this.viewModel.layout.smallMultipleMargin.top})`);
+                    .attr('transform', `translate(${this.viewModel.layout.smallMultiples.multiple.margin.left}, ${this.viewModel.layout.smallMultiples.multiple.margin.top})`);
         }
 
     /** Adds a small multiple row group to the chart viewport */
@@ -838,9 +838,9 @@
             return element
                 .append('g')
                     .classed('small-multiple-row-container', true)
-                    .attr('height', this.viewModel.layout.rowDimensions.height)
-                    .attr('width', this.viewModel.layout.rowDimensions.width)
-                    .attr('transform', `translate(${0}, ${row * this.viewModel.layout.rowDimensions.height})`);
+                    .attr('height', this.viewModel.layout.smallMultiples.grid.rows.height)
+                    .attr('width', this.viewModel.layout.smallMultiples.grid.rows.width)
+                    .attr('transform', `translate(${0}, ${row * this.viewModel.layout.smallMultiples.grid.rows.height})`);
         }
 
     /** Adds a clipPath to the specified row group element (used to ensure that the chart clips if the Y-axis has been limited, and doesn't exceed
@@ -854,8 +854,8 @@
                     .attr('id', 'small-multiple-clip')
                     .style('fill', 'none')
                 .append('rect')
-                    .attr('width', this.viewModel.layout.smallMultipleChartDimensions.width)
-                    .attr('height', this.viewModel.layout.smallMultipleChartDimensions.height);
+                    .attr('width', this.viewModel.layout.smallMultiples.multiple.inner.width)
+                    .attr('height', this.viewModel.layout.smallMultiples.multiple.inner.height);
         }
 
     /** Adds all main SVG element containers for each small multipe for the specified row group */
@@ -867,7 +867,7 @@
                     .enter()
                         .append('svg')
                             .classed('small-multiple', true)
-                            .attr('x', (d, i) => i * this.viewModel.layout.smallMultipleXConstant)
+                            .attr('x', (d, i) => i * this.viewModel.layout.smallMultiples.multiple.xOffset)
                         .append('g')
                             .classed('small-multiple-canvas', true);
         }
@@ -890,9 +890,9 @@
                                         ? this.settings.smallMultiple.borderStrokeWidth
                                         : 0
                                     )
-                                .attr('x', (d, i) => i * this.viewModel.layout.smallMultipleXConstant)
-                                .attr('height', this.viewModel.layout.smallMultipleDimensions.height)
-                                .attr('width', this.viewModel.layout.smallMultipleDimensions.width);
+                                .attr('x', (d, i) => i * this.viewModel.layout.smallMultiples.multiple.xOffset)
+                                .attr('height', this.viewModel.layout.smallMultiples.multiple.outer.height)
+                                .attr('width', this.viewModel.layout.smallMultiples.multiple.outer.width);
             }
 
         }
@@ -903,14 +903,14 @@
             let overlay = element
                 .append('g')
                     .classed('small-multiple-tooltip-overlay', true)
-                    .attr('transform', `translate(${this.viewModel.layout.smallMultipleMargin.left}, ${this.viewModel.layout.smallMultipleMargin.top})`)
+                    .attr('transform', `translate(${this.viewModel.layout.smallMultiples.multiple.margin.left}, ${this.viewModel.layout.smallMultiples.multiple.margin.top})`)
                     .style('display', 'none');
             /** Add a (transparent) rectangle, to track mouse movement */
                 overlay
                     .append('rect')
                         .classed('tooltip-canvas', true)
-                        .attr('height', this.viewModel.layout.smallMultipleChartDimensions.height)
-                        .attr('width', this.viewModel.layout.smallMultipleChartDimensions.width)
+                        .attr('height', this.viewModel.layout.smallMultiples.multiple.inner.height)
+                        .attr('width', this.viewModel.layout.smallMultiples.multiple.inner.width)
                         .style('fill', 'none');
             return overlay;
         }
@@ -922,7 +922,7 @@
                 .append('line')
                     .classed('hover-line', true)
                     .attr('y1', 0)
-                    .attr('y2', this.viewModel.layout.smallMultipleChartDimensions.height);
+                    .attr('y2', this.viewModel.layout.smallMultiples.multiple.inner.height);
         }
 
     }

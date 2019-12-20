@@ -3,9 +3,9 @@
     let defaults = VisualConstants.defaults;
 
 /**
-*
-*/
-    export default class HeadingSettings {
+ * Handles all aspects of small multiples heading configuration, as prescribed by the visual capabilities.
+ */
+    export default class SmallMultiplesHeadingSettings {
         /** Show header (formerly under Small Multple menu) */
             public show: boolean = defaults.heading.show;
         /** Font colour (formerly under Small Multple menu) */

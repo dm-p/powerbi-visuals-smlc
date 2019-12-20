@@ -75,7 +75,9 @@
             },
             layout: {
                 multipleDataReductionCap: maxCategories,
-                mode: 'flow',
+                horizontalGrid: 'width',
+                verticalGrid: 'height',
+                fitHeight: false,
                 multipleHeight: 125,
                 multipleWidth: 125,
                 numberOfColumns: null,
@@ -104,7 +106,7 @@
         ranges: {
             spacing: {
                 min: 0,
-                max: 20
+                max: 50
             },
             borderStrokeWidth: {
                 min: strokeWidthMin,

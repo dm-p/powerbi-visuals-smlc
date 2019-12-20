@@ -11,7 +11,6 @@
     import ICategory from './ICategory';
     import ILayoutConfiguration from './ILayoutConfiguration';
     import IAxis from './IAxis';
-    import ISmallMultipleLabel from './ISmallMultipleLabel';
 
 /**
  *
@@ -29,5 +28,4 @@
         legend: ILegendData;
         yAxis: IAxis;
         xAxis: IAxis;
-        label: ISmallMultipleLabel;
     }

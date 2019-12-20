@@ -438,19 +438,25 @@
                             };
 
                         /** Manage flow options */
-                            switch (this.settings.layout.mode) {
+                            switch (this.settings.layout.horizontalGrid) {
                                 case 'column': {
                                     /** Row spacing */
                                         if (!this.settings.layout.numberOfColumns) {
                                             delete instances[0].properties['spacingBetweenRows'];
                                         }
-                                    /** No setting of width or height */
+                                    /** No setting of width */
                                         delete instances[0].properties['multipleWidth'];
-                                        delete instances[0].properties['multipleHeight'];
                                     break;
                                 }
-                                case 'flow': {
+                                case 'width': {
                                     delete instances[0].properties['numberOfColumns'];
+                                    break;
+                                }
+                            }
+                            switch (this.settings.layout.verticalGrid) {
+                                case 'fit': {
+                                    /** No setting of height */
+                                        delete instances[0].properties['multipleHeight'];
                                     break;
                                 }
                             }

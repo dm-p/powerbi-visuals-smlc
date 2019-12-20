@@ -35,22 +35,42 @@
             "displayName": "Layout",
             "description": "Layout description.",
             "properties": {
-                "mode": {
-                    "displayNameKey": "Objects_Layout_Mode",
-                    "descriptionKey": "Objects_Layout_Mode_Description",
-                    "displayName": "Mode",
-                    "description": "Mode description.",
+                "horizontalGrid": {
+                    "displayNameKey": "Objects_Layout_HorizontalGrid",
+                    "descriptionKey": "Objects_Layout_HorizontalGrid_Description",
+                    "displayName": "Horizontal Grid",
+                    "description": "Horizontal Grid description.",
                     "type": {
                         "enumeration": [
                             {
-                                "displayNameKey": "Enum_Layout_Mode_Flow",
-                                "displayName": "Flow",
-                                "value": "flow"
+                                "displayNameKey": "Enum_Layout_HorizontalGrid_Width",
+                                "displayName": "Fixed Width",
+                                "value": "width"
                             },
                             {
-                                "displayNameKey": "Enum_Layout_Mode_Columns",
+                                "displayNameKey": "Enum_Layout_HorizontalGrid_Columns",
                                 "displayName": "Fixed Columns",
                                 "value": "column"
+                            }
+                        ]
+                    }
+                },
+                "verticalGrid": {
+                    "displayNameKey": "Objects_Layout_VerticalGrid",
+                    "descriptionKey": "Objects_Layout_VerticalGrid_Description",
+                    "displayName": "Vertical Grid",
+                    "description": "Vertical Grid description.",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayNameKey": "Enum_Layout_VerticalGrid_Height",
+                                "displayName": "Fixed Height",
+                                "value": "height"
+                            },
+                            {
+                                "displayNameKey": "Enum_Layout_VerticalGrid_Fit",
+                                "displayName": "Divide Evenly",
+                                "value": "fit"
                             }
                         ]
                     }
@@ -64,6 +84,15 @@
                         "numeric": true
                     }
                 },
+                "fitHeight": {
+                    "displayNameKey": "Objects_Layout_FitHeight",
+                    "descriptionKey": "Objects_Layout_FitHeight_Description",
+                    "displayName": "FH",
+                    "description": "FHd",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "multipleHeight": {
                     "displayNameKey": "Objects_Layout_MultipleHeight",
                     "descriptionKey": "Objects_Layout_MultipleHeight_Description",
@@ -71,7 +100,9 @@
                     "description": "Multiple Height description",
                     "type": {
                         "numeric": true
-                    }
+                    },
+                    "placeHolderTextKey": "Placeholder_Fit_Height",
+                    "placeHolderText": "Fit"
                 },
                 "spacingBetweenColumns": {
                     "displayNameKey": "Objects_Layout_ColumnSpacing",

@@ -3,25 +3,24 @@
     import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 
 /** Internal dependencies */
-    import { VisualConstants } from '../constants';
-    import SmallMultipleSettings from './SmallMultipleSettings';
+    import SmallMultiplesStylingSettings from '../smallMultiple/SmallMultiplesStylingSettings';
     import LegendSettings from './LegendSettings';
     import ColorSelectorSettings from './ColorSelectorSettings';
     import LineSettings from './LineSettings';
     import ValueAxisSettings from './ValueAxisSettings';
     import CategoryAxisSettings from './CategoryAxisSettings';
-    import LayoutSettings from './LayoutSettings';
-    import HeadingSettings from './HeadingSettings';
+    import SmallMultiplesLayoutSettings from '../smallMultiple/SmallMultiplesLayoutSettings';
+    import SmallMultiplesHeadingSettings from '../smallMultiple/SmallMultiplesHeadingSettings';
     import FeatureSettings from './FeatureSettings';
 
 /** Holds all visual objects/settings */
     export default class VisualSettings extends DataViewObjectsParser {
-        public layout: LayoutSettings = new LayoutSettings();
-        public heading: HeadingSettings = new HeadingSettings();
-        public smallMultiple: SmallMultipleSettings = new SmallMultipleSettings();
+        public layout: SmallMultiplesLayoutSettings = new SmallMultiplesLayoutSettings();
+        public heading: SmallMultiplesHeadingSettings = new SmallMultiplesHeadingSettings();
+        public smallMultiple: SmallMultiplesStylingSettings = new SmallMultiplesStylingSettings();
         public legend: LegendSettings = new LegendSettings();
         public colorSelector: ColorSelectorSettings = new ColorSelectorSettings();
-        // public lines: LineSettings = new LineSettings();
+        /** public lines: LineSettings = new LineSettings(); */
         public yAxis: ValueAxisSettings = new ValueAxisSettings();
         public xAxis: CategoryAxisSettings = new CategoryAxisSettings();
         public features: FeatureSettings = new FeatureSettings();

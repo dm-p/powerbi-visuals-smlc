@@ -36,7 +36,7 @@
     import DataViewHelper from '../dataView/DataViewHelper';
     import IStatistics from './IStatistics';
     import SmallMultiplesHelper from '../smallMultiple/SmallMultiplesHelper';
-    import { LayoutMode } from '../smallMultiple/enums';
+    import { HorizontalGridMode, VerticalGridMode } from '../smallMultiple/enums';
 
 /**
  *
@@ -90,43 +90,15 @@
                         min: null,
                         max: null
                     },
-                    label: {
-                        text: null,
-                        dominantBaseline: '',
-                        textAnchor: ''
-                    },
                     layout: {
                         visualViewport: null,
                         chartViewport: null,
-                        grid: {
-                            rows: 1,
-                            columns: VisualConstants.defaults.layout.multipleDataReductionCap
-                        },
+                        smallMultiples: SmallMultiplesHelper.initialState(),
                         x: 0,
                         y: 0,
                         minimumViewport: {
                             height: VisualConstants.ranges.multipleSize.min,
                             width: VisualConstants.ranges.multipleSize.min
-                        },
-                        smallMultipleXConstant: 0,
-                        smallMultipleBorderOffset: 0,
-                        smallMultipleDimensions: {
-                            height: 0,
-                            width: 0
-                        },
-                        rowDimensions: {
-                            height: 0,
-                            width: 0
-                        },
-                        smallMultipleMargin: {
-                            top: VisualConstants.defaults.smallMultiple.margin.top,
-                            bottom: VisualConstants.defaults.smallMultiple.margin.bottom,
-                            left: VisualConstants.defaults.smallMultiple.margin.left,
-                            right: VisualConstants.defaults.smallMultiple.margin.right
-                        },
-                        smallMultipleChartDimensions: {
-                            height: 0,
-                            width: 0
                         }
                     },
                     legend: {
@@ -373,13 +345,12 @@
 
                     });
 
-                    this.smallMultiplesHelper = new SmallMultiplesHelper(this.viewModel.multiples.length, {
-                        mode: LayoutMode[this.settings.layout.mode],
-                        columnCap: this.settings.layout.numberOfColumns || VisualConstants.defaults.layout.multipleDataReductionCap,
-                        columnSpacing: this.settings.layout.spacingBetweenColumns,
-                        smallMultipleWidth: this.settings.layout.multipleWidth
-                    });
-
+                    this.smallMultiplesHelper = new SmallMultiplesHelper(
+                        this.viewModel.multiples.length,
+                        this.settings.layout,
+                        this.settings.heading,
+                        this.settings.smallMultiple
+                    );
             }
 
         /** Populates legend data */
@@ -541,12 +512,12 @@
                 if (useMinimums) {
                     Debugger.log('Adjusting for minimum dimensions...');
                     this.viewModel.layout.chartViewport = {
-                        height: (this.viewModel.layout.rowDimensions.height * this.viewModel.layout.grid.rows)
+                        height: (this.viewModel.layout.smallMultiples.grid.rows.height * this.viewModel.layout.smallMultiples.grid.rows.count)
                             +   this.viewModel.xAxis.tickLabels.textHeight
-                            +   (this.viewModel.layout.smallMultipleBorderOffset * 2),
-                        width:  this.viewModel.layout.rowDimensions.width
+                            +   (this.viewModel.layout.smallMultiples.multiple.borderOffset * 2),
+                        width:  this.viewModel.layout.smallMultiples.grid.rows.width
                             +   this.viewModel.layout.x
-                            +   this.viewModel.layout.smallMultipleBorderOffset
+                            +   this.viewModel.layout.smallMultiples.multiple.borderOffset
                     };
                 } else {
                     Debugger.log('Setting to standard viewport size...');
@@ -565,52 +536,9 @@
 
             private resolveChartContainerPosition() {
                 Debugger.log('Resolving chart container position...');
-                this.viewModel.layout.smallMultipleBorderOffset = this.settings.smallMultiple.border && this.settings.smallMultiple.borderStrokeWidth || 0;
-                this.viewModel.layout.x = this.viewModel.yAxis.tickLabels.textWidth + this.viewModel.layout.smallMultipleBorderOffset;
-                this.viewModel.layout.y = this.viewModel.layout.smallMultipleBorderOffset;
+                this.viewModel.layout.x = this.viewModel.yAxis.tickLabels.textWidth + this.viewModel.layout.smallMultiples.multiple.borderOffset;
+                this.viewModel.layout.y = this.viewModel.layout.smallMultiples.multiple.borderOffset;
                 this.viewModel.layout.chartViewport.height -= this.viewModel.layout.y;
-            }
-
-        /** based on grid configuration and minimum dimensions, calculate space required */
-            private resolveSmallMultipleRowColDimensions() {
-                Debugger.log('Resolving small multiple row and column dimensions...');
-                let vph = this.viewModel.layout.chartViewport.height,
-                    vpw = this.viewModel.layout.chartViewport.width,
-                    r = this.viewModel.layout.grid.rows,
-                    c = this.viewModel.layout.grid.columns,
-                    rh = 0,
-                    cw = 0,
-                    smh = 0,
-                    smw = 0;
-
-                switch (this.settings.layout.mode) {
-                    case 'flow': {
-                        rh = this.settings.layout.multipleHeight + (this.viewModel.layout.grid.rows > 1 ? this.settings.layout.spacingBetweenRows : 0);
-                        smh = this.settings.layout.multipleHeight;
-                        cw = this.settings.layout.multipleWidth + (this.viewModel.layout.grid.columns > 1 ? this.settings.layout.spacingBetweenColumns : 0);
-                        smw = this.settings.layout.multipleWidth;
-                        break;
-                    }
-                    case 'column': {
-                        let reduce = (this.settings.smallMultiple.border ? this.settings.smallMultiple.borderStrokeWidth : 0);
-                        rh = Math.max(
-                            VisualConstants.ranges.multipleSize.min,
-                            (vph / r) - reduce
-                        );
-                        smh = rh
-                            - (this.viewModel.layout.grid.rows > 1 ? this.settings.layout.spacingBetweenRows : 0);
-                        cw = Math.max(
-                            VisualConstants.ranges.multipleSize.min,
-                            (vpw - reduce) / c
-                        );
-                        smw = cw - (this.settings.layout.spacingBetweenColumns || 0);
-                        break;
-                    }
-                }
-                this.viewModel.layout.rowDimensions.height = rh;
-                this.viewModel.layout.smallMultipleDimensions.height = smh;
-                this.viewModel.layout.rowDimensions.width = cw * c;
-                this.viewModel.layout.smallMultipleDimensions.width = smw;
             }
 
         /** We might need a couple of passes if we need to make adjustments, post axis-processing, so this is an abstraction of core calculations
@@ -621,24 +549,17 @@
                     this.resolveXAxisTickLabelHeight();
                     this.resolveChartContainerPosition();
 
-                    this.smallMultiplesHelper.layoutOptions = {
-                        ...this.smallMultiplesHelper.layoutOptions,
-                        ...{
-                            chartWidth: this.viewModel.layout.chartViewport.width,
-                        }
-                    };
-                    this.smallMultiplesHelper.calculateGridDimensions();
-                    this.viewModel.layout.grid = this.smallMultiplesHelper.layout.grid;
-                    this.resolveSmallMultipleGridSpecifics();
-                    this.resolveSmallMultipleRowColDimensions();
+                    this.smallMultiplesHelper.calculateGridSize(this.viewModel.layout.chartViewport.width);
+                    this.resolveSmallMultipleStyling();
+                    this.smallMultiplesHelper.calculateDimensions(
+                        this.viewModel.layout.chartViewport.width,
+                        this.viewModel.layout.chartViewport.height
+                    );
+                    this.viewModel.layout.smallMultiples = this.smallMultiplesHelper.layout;
 
                 /** Adjust viewport based on the calculated small multiple size (as we may need to overflow if we hit minimums) */
                     this.resetChartViewport(true);
 
-                /** Calculate axes and plot areas within small multiples */
-                    this.resolveSmallMultipleVerticalMarginsForTicks();
-                    this.resolveSmallMultipleVerticalMarginsForLabel();
-                    this.calculateSmallMultipleChartHeight();
             }
 
         /** These are the steps required after the core chart dimensions have been calculated and the Y-axis may have been resolved, but before the
@@ -646,7 +567,6 @@
          */
             private resolveChartDimensionsPostYAxis() {
                 this.resolveXAxisTickHeights();
-                this.calculateHorizontalDimensions();
                 this.resolveYAxisTickWidths();
             }
 
@@ -676,9 +596,6 @@
                         this.resolveChartDimensionsCore();
                         this.resolveChartDimensionsPostYAxis();
                     }
-
-                /** Set label alignment */
-                    this.resolveSmallMultipleLabelHorizontalAlignment();
 
             }
 
@@ -710,7 +627,7 @@
                     this.viewModel.xAxis.tickValues.forEach((tv) => {
                         let properties = this.viewModel.xAxis.tickLabels.properties;
                         properties.text = valueFormatter.format(tv, this.viewModel.categoryMetadata.metadata.format, false, this.viewModel.locale);
-                        if (getTailoredTextOrDefault(properties, this.viewModel.layout.smallMultipleChartDimensions.width * 0.5) === '...') {
+                        if (getTailoredTextOrDefault(properties, this.viewModel.layout.smallMultiples.multiple.inner.width * 0.5) === '...') {
                             emptyValues ++;
                         }
                     });
@@ -803,11 +720,11 @@
                 }
             }
 
-        /** Calculates small multiple grid coordinates and applies specific formatting properties */
-            private resolveSmallMultipleGridSpecifics() {
+        /** Applies specific formatting properties based on styling to the view model */
+            private resolveSmallMultipleStyling() {
                 Debugger.log('Resolving small multiple grid dependencies...');
-                let cols = this.viewModel.layout.grid.columns,
-                    rows = this.viewModel.layout.grid.rows,
+                let cols = this.viewModel.layout.smallMultiples.grid.columns.count,
+                    rows = this.viewModel.layout.smallMultiples.grid.rows.count,
                     total = this.viewModel.multiples.length;
                 Debugger.log('Columns', cols, 'Rows', rows, '# Multiples', total);
                 this.viewModel.multiples.map((sm, smi) => {
@@ -852,57 +769,13 @@
                 });
             }
 
-        /** Adjusts the top and bottom margins based on axis tick label settings */
-            private resolveSmallMultipleVerticalMarginsForTicks() {
-                Debugger.log('Resolving small multiple vertical margins for axis tick labels...');
-                this.viewModel.layout.smallMultipleMargin.top = VisualConstants.defaults.smallMultiple.margin.top
-                    +   (       this.settings.smallMultiple.border
-                                ?   this.settings.smallMultiple.borderStrokeWidth
-                                :   0
-                        );
-                this.viewModel.layout.smallMultipleMargin.bottom = VisualConstants.defaults.smallMultiple.margin.bottom
-                    +   (       this.settings.smallMultiple.border
-                            ?   this.settings.smallMultiple.borderStrokeWidth
-                            :   0
-                        );
-            }
-
-        /** Adjusts the top and bottom margins based on category label settings */
-            private resolveSmallMultipleVerticalMarginsForLabel() {
-                Debugger.log('Resolving small multiple vertical margins for displayed category label...');
-                this.viewModel.label.text = this.resolveMultipleTitle();
-                this.viewModel.label.dominantBaseline = 'hanging';
-                switch (true) {
-                    case this.settings.heading.labelPosition === 'top' && this.settings.heading.show: {
-                        Debugger.log('Adjusting for top...');
-                        this.viewModel.label.text.y = this.viewModel.layout.smallMultipleMargin.top;
-                        this.viewModel.layout.smallMultipleMargin.top += this.viewModel.label.text.textHeight;
-                        break;
-                    }
-                    case this.settings.heading.labelPosition === 'bottom' && this.settings.heading.show: {
-                        Debugger.log('Adjusting for bottom...');
-                        this.viewModel.layout.smallMultipleMargin.bottom += this.viewModel.label.text.textHeight;
-                        this.viewModel.label.text.y = this.viewModel.layout.smallMultipleDimensions.height - this.viewModel.layout.smallMultipleMargin.bottom;
-                        break;
-                    }
-                }
-            }
-
-        /** Calculates available height for chart based on multiples and margins */
-            private calculateSmallMultipleChartHeight() {
-                Debugger.log('Calculating chart dimensions: height...');
-                this.viewModel.layout.smallMultipleChartDimensions.height = this.viewModel.layout.smallMultipleDimensions.height
-                    - this.viewModel.layout.smallMultipleMargin.top
-                    - this.viewModel.layout.smallMultipleMargin.bottom;
-            }
-
         /** Resolves the Y-axis master title position, and range */
             private resolveYAxisScaleAndPlacement() {
                 this.viewModel.yAxis.scale
-                    .range([this.viewModel.layout.smallMultipleChartDimensions.height, 0]);
+                    .range([this.viewModel.layout.smallMultiples.multiple.inner.height, 0]);
                 /** Try to work with the recommended number of ticks, but adjust if we're likely to be too squashed */
-                    let yTicks = axis.getRecommendedNumberOfTicksForYAxis(this.viewModel.layout.smallMultipleChartDimensions.height);
-                    while (yTicks * this.viewModel.yAxis.tickLabels.textHeight >= this.viewModel.layout.smallMultipleChartDimensions.height) {
+                    let yTicks = axis.getRecommendedNumberOfTicksForYAxis(this.viewModel.layout.smallMultiples.multiple.inner.height);
+                    while (yTicks * this.viewModel.yAxis.tickLabels.textHeight >= this.viewModel.layout.smallMultiples.multiple.inner.height) {
                         yTicks -= 1;
                         if (yTicks === 0) {
                             break;
@@ -913,31 +786,21 @@
 
         /** Resolves the total height of the X-axis ticks */
             private resolveXAxisTickHeights() {
-                this.viewModel.xAxis.tickHeight = -this.viewModel.layout.smallMultipleChartDimensions.height;
-            }
-
-        /** Resolves all horizontal dimensions based on the remaining space after Y-axis resolution */
-            private calculateHorizontalDimensions() {
-                Debugger.log('Calculating horizontal dimensions...');
-                this.viewModel.layout.smallMultipleChartDimensions.width = this.viewModel.layout.smallMultipleDimensions.width
-                    - this.viewModel.layout.smallMultipleMargin.right
-                    - this.viewModel.layout.smallMultipleMargin.left;
-                this.viewModel.layout.smallMultipleXConstant = this.viewModel.layout.smallMultipleDimensions.width
-                    + this.settings.layout.spacingBetweenColumns || 0;
+                this.viewModel.xAxis.tickHeight = -this.viewModel.layout.smallMultiples.multiple.inner.height;
             }
 
         /** Resolves the total width of the Y-axis ticks and the vertical placement of the master title */
             private resolveYAxisTickWidths() {
-                this.viewModel.yAxis.tickWidth = -this.viewModel.layout.smallMultipleChartDimensions.width
-                    - this.viewModel.layout.smallMultipleMargin.right
-                    - this.viewModel.layout.smallMultipleMargin.left;
+                this.viewModel.yAxis.tickWidth = -this.viewModel.layout.smallMultiples.multiple.inner.width
+                    - this.viewModel.layout.smallMultiples.multiple.margin.right
+                    - this.viewModel.layout.smallMultiples.multiple.margin.left;
             }
 
         /** Resolves the X-axis master title position, and range */
             private resolveXAxisScaleAndPlacement() {
                 this.viewModel.xAxis.scale.range([
-                        this.viewModel.layout.smallMultipleMargin.left,
-                        this.viewModel.layout.smallMultipleChartDimensions.width - this.viewModel.layout.smallMultipleMargin.right
+                        this.viewModel.layout.smallMultiples.multiple.margin.left,
+                        this.viewModel.layout.smallMultiples.multiple.inner.width - this.viewModel.layout.smallMultiples.multiple.margin.right
                     ]);
 
                 if (this.viewModel.xAxis.scaleType === EAxisScaleType.Point) {
@@ -947,27 +810,6 @@
                 this.viewModel.xAxis.tickValues = this.viewModel.categoryMetadata.extents;
                 /** We cap this to ensure that we always get the extremes. It's not great... */
                 this.viewModel.xAxis.ticks = VisualConstants.defaults.categoryAxis.fixedTicks;
-            }
-
-        /** Assigns the correct SVG styling based on small multiple label alignment preferences */
-            private resolveSmallMultipleLabelHorizontalAlignment() {
-                switch (this.settings.heading.labelAlignment) {
-                    case 'left': {
-                        this.viewModel.label.text.x = this.viewModel.layout.smallMultipleMargin.left;
-                        this.viewModel.label.textAnchor = 'start';
-                        break;
-                    }
-                    case 'center': {
-                        this.viewModel.label.text.x = this.viewModel.layout.smallMultipleChartDimensions.width / 2;
-                        this.viewModel.label.textAnchor = 'middle';
-                        break;
-                    }
-                    case 'right': {
-                        this.viewModel.label.text.x = this.viewModel.layout.smallMultipleChartDimensions.width;
-                        this.viewModel.label.textAnchor = 'end';
-                        break;
-                    }
-                }
             }
 
             private getCategoryExtents(): [any, any] {
@@ -982,23 +824,6 @@
                 Debugger.log(`Testing new viewport for dh ${dh}px and dw ${dw}px...`);
                 return this.viewModel.layout.visualViewport.width - dw >= this.viewModel.layout.minimumViewport.width
                     && this.viewModel.layout.visualViewport.height - dh >= this.viewModel.layout.minimumViewport.height;
-            }
-
-        /** Resolve the small multiple label properties */
-            private resolveMultipleTitle(): IText {
-                let textProperties: TextProperties = {
-                    fontFamily: this.settings.heading.fontFamily,
-                    fontSize: `${this.settings.heading.fontSize}pt`,
-                    text: ''
-                };
-                return {
-                    properties: textProperties,
-                    textHeight: this.settings.heading.show
-                        ?   measureSvgTextHeight(textProperties, 'A')
-                        :   0,
-                    textWidth: 0,
-                    tailoredValue: ''
-                };
             }
 
         /** Works out axis label object for the specified axis and settings */
