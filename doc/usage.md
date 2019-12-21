@@ -40,31 +40,36 @@ There are three property menus that govern the behaviour of small multiples in t
 
 ### SM Layout
 
-The **SM Layout** menu allows you to configure the layout of the 'grid' of small multiples. This is driven from the **Mode** property, and there are two modes available:
+The **SM Layout** menu allows you to configure the layout of the 'grid' of small multiples. The behavior of the grid is specified by using **Column Sizing** and **Row Sizing**, and their associated properties.
 
-#### Flow
-Small multiples have a fixed size and a row is filled, they will flow onto the next one.
+**Column Sizing** has two settings:
 
-> ℹ This is the default mode for any new report visuals created after installing the custom visual.
+* **Fixed Width** (default) - specify a width for each small multiple, in pixels.
+* **Fixed # Columns** - specify a number of columns to fit in each row.
 
-* This guarantees the sizing of your small multiples if you are unsure as to how many may be displayed in the visual at one time (for example, if your report contains interactions and users may be doing their own filtering).
-* **Multiple Height** & **Multiple Width** have a minimum value of **40** and a maximum value of **500** pixels.
-* If the height x number of rows exceeds the chart area, the visual will provide scrollbars to allow users to scroll vertically.
+**Row Sizing** has 2 settings:
 
-The example below has the **Multiple Height** and **Multiple Width** properties set to **75** pixels each, so the visual will fit as many as possible before moving onto the next row (visual border included to help illustrate).
+* **Fixed Height** (default) - specify a height for each small multiple, in pixels.
+* **Divide Evenly** - divide the row height evenly, over the height of the visual.
+
+Specifying a **Multiple Height** or **Multiple Width** allows you to guarantee the sizing of the particular dimension of your small multiples, if you are unsure as to how many will be displayed in the visual at one time (for example, if your report contains interactions and users may be doing their own filtering).
+
+* The **Multiple Height** and **Multiple Width** fields have a minimum value of **40** and a maximum value of **500** pixels.
+* Small multiples will wrap onto the next row once the number of small multiples that fit into row width ÷ small multiple width have been reached.
+* If specifying **Fixed Height** and the number of small multiples is sufficient to exceed the height of the visual, it will add a vertical scrollbar to accommodate.
+* Specifying **Fixed # Columns** will automatically fit the specified number of columns acros the width of your visual, unless the minimum calculated size is less than **40** pixels, and the visual will scroll horizontally.
+* Specifying **Divide Evenly** will cause the visual container to scroll if the calculated row height is lower than **40** pixels.
+
+The following example illustrates specifying width and height - the visual will fit as many as possible before moving onto the next row (visual border included to help illustrate). Properties are as follows:
+
+* Column Sizing: **Fixed Width**
+* Row Sizing: **Fixed Height**
+* Multiple Width: **75** pixels
+* Multiple Height: **75** pixels
 
 &nbsp;&nbsp;&nbsp;&nbsp;![Simple example of Flow layout](./assets/png/sm_layout_flow.png)
 
-#### Fixed Columns
-
-Small multiples will automatically fit the prescribed number of columns into each row before moving onto the next.
-
-> ℹ For any existing report visuals (i.e. created using version 1), this will be automatically selected in order to provide continuity for your existing design. If you wish to override to **Flow**, you will need to edit the visual and update properties accordingly.
-
-* The width and height of each small multiple is automatically calculated based on the available chart area.
-* The visual will not allow the calculated height or width to resolve to less than **40** pixels. If this occurs, then the visual will provide horizontal or vertical scroll bars as appropriate. 
-
-The example below has the same data as the previous **Flow** example, but has been set to fit **3** columns per row. The visual will spread them evenly across the visual width and height.
+The example below uses the same data, but fits **3** columns per row and uses **Divide Evenly** for row sizing:
 
 &nbsp;&nbsp;&nbsp;&nbsp;![Simple example of Flow layout](./assets/png/sm_layout_fixed_columns.png)
 
@@ -111,6 +116,10 @@ The **Line Styling** menu allows you to tailor the appearence of the line produc
 The example below uses line styling to place a less subtle measure that shows the mean temperature for all cities within each small multiple, allowing it to be compared visually.
 
 &nbsp;&nbsp;&nbsp;&nbsp;![Simple example of Line Styling](./assets/png/sm_line_styling.png)
+
+Here's the same example using the **Area** option for the second measure, and a **Stroke Width** of **0**:
+
+&nbsp;&nbsp;&nbsp;&nbsp;![Simple example of Line Styling](./assets/png/sm_line_styling_area.png)
 
 ## Additional Features
 

@@ -47,8 +47,6 @@
             this.stylingSettings = stylingSettings;
             this.layout = SmallMultiplesHelper.initialState();
             this.layout.count = count;
-            /** Resolve number of columns for null (Auto) */
-                this.layoutSettings.numberOfColumns = layoutSettings.numberOfColumns || VisualConstants.defaults.layout.multipleDataReductionCap;
             /** Resolve heading properties */
                 this.layout.multiple.heading = this.resolveHeadingProperties();
             /** Resolve border offset */
@@ -118,14 +116,14 @@
                     break;
                 }
                 case HorizontalGridMode.column: {
-                    if (this.layoutSettings.numberOfColumns) {
-                        Debugger.log('Calculating columns for Column mode...');
-                        this.layout.grid.columns.count = (
-                            this.layout.count < this.layoutSettings.numberOfColumns
-                                ?   this.layout.count
-                                :   this.layoutSettings.numberOfColumns
-                        );
-                    }
+                    Debugger.log('Calculating columns for Column mode...');
+                    /** Resolve number of columns for null (Auto) */
+                        let columnCap = this.layoutSettings.numberOfColumns || VisualConstants.defaults.layout.multipleDataReductionCap;
+                    this.layout.grid.columns.count = (
+                        this.layout.count < columnCap
+                            ?   this.layout.count
+                            :   columnCap
+                    );
                     break;
                 }
             }

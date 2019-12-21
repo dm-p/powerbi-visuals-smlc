@@ -52,6 +52,7 @@
             static migrateObjectProperties(dataView: DataView, host: IVisualHost, migrationList: IMigrationObject[], targetVersion: number) {
 
                 Debugger.log('Performing property migration');
+                Debugger.log('Target version', targetVersion);
 
                 /** We'll use this to accumulate changes to make to the object instances */
                     let changes: powerbi.VisualObjectInstancesToPersist = {
@@ -132,6 +133,7 @@
                             }
                         });
 
+                        Debugger.log('Migrating data colours...');
                         dataView.metadata.columns.filter((c) =>
                             c.roles.values && c.objects && c.objects.colorSelector && c.objects.colorSelector.fill
                         ).map((m) => {
