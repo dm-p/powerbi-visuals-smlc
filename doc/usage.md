@@ -57,7 +57,7 @@ Specifying a **Multiple Height** or **Multiple Width** allows you to guarantee t
 * The **Multiple Height** and **Multiple Width** fields have a minimum value of **40** and a maximum value of **500** pixels.
 * Small multiples will wrap onto the next row once the number of small multiples that fit into row width ÷ small multiple width have been reached.
 * If specifying **Fixed Height** and the number of small multiples is sufficient to exceed the height of the visual, it will add a vertical scrollbar to accommodate.
-* Specifying **Fixed # Columns** will automatically fit the specified number of columns acros the width of your visual, unless the minimum calculated size is less than **40** pixels, and the visual will scroll horizontally.
+* Specifying **Fixed # Columns** will automatically fit the specified number of columns across the width of your visual, unless the minimum calculated size is less than **40** pixels, and the visual will scroll horizontally.
 * Specifying **Divide Evenly** will cause the visual container to scroll if the calculated row height is lower than **40** pixels.
 
 The following example illustrates specifying width and height - the visual will fit as many as possible before moving onto the next row (visual border included to help illustrate). Properties are as follows:

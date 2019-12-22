@@ -14,18 +14,18 @@
     * Stroke Width
     * Line Shape - **Linear**, Stepped, Curve (Cardinal), Curve (Natural)
     * Line Style - Dashed, **Solid**, Dotted, Dot-Dash
-* The **Small Multiples** menu contained too many properties, spanning too many features. These have been split up into more-specific menus to better manage properties and make future enhancements easier:
+* The **Small Multiples** menu contained too many properties, spanning too many features for one location. These have been split up into more-specific menus to better manage properties and make future enhancements easier:
     * [**SM Layout**](./usage.md#SM-Layout) - configuration of the small multiple 'grid', including mode (refer below)
     * [**SM Heading**](./usage.md#SM-Heading) - configuration of the small multiple heading (formerly known as *Label*).
     * [**SM Styling**](./usage.md#SM-Styling) - configuration of the small multiple background and border styling.
-* Added [**Mode** property, which resides in the **SM Layout** menu](./usage.md#SM-Layout) and provides the following options:
-    * **Flow** (default) - allows you to set desired fixed width and height of small multiples. 
-        * The visual will fit as many per row as possible, based on the prescribed width, and 'flow' the remainer on to the next row.
-        * This makes it easier to ensure that small mutliples appear consistently when interacting with other visuals and slicers in your report.
-        * The visual will display scrollbars if more vertical room is needed, based on the supplied dimensions.
-    * **Fixed Columns** - allows you to specify a number of columns per row and the visual will auto-fit based on this.
-        * This is how the visual managed the small mutiple grid for previous versions, so if you've been using the visual beforehand, this is how you will be used to working with it.
-        * If you're already using v1 of the visual in your report, this mode will be retained, to ensure continuity. You can set this to **Flow** by editing the report and setting this accordingly.
+* Added [additional properties that reside in the **SM Layout** menu](./usage.md#SM-Layout) and provides the following options:
+    * **Column Sizing** allows you to specify the behavior of how columns widths are calculated for small multiples:
+        * **Fixed Width** (default) - small multiples have a specified width and will flow across rows if width does not accomodate.
+        * **Fixed # Columns** - fit widths according to specificed number of columns.
+    * **Row Sizing** allows you to specify the behavior of how row heights are calculated for small multiples:
+        * **Fixed Height** (default) - small multiples have a specified height and the visual will scroll to accomodate them if this excees the visual viewport.
+        * **Divide Evenly** - small multiple height will be divided evenly by the number of rows across the height of the visual.
+    * If wanting to work with the original v1 layout, the use **Fixed # Columns** for **Column Sizing** and **Divide Evenly** for **Row Sizing**.
 * Core Tooltip support has been added, which includes:
     * Standard tooltip configuration options, such as background, font, colors and transparency
     * Canvas (Report Page) tooltips
