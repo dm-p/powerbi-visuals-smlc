@@ -32,7 +32,7 @@ Each small multiple uses the same X and Y scale to allow for consistent visual c
 
 The latest version of the visual is **2.0.0.x**.
 
-The visual is [available in AppSource](https://appsource.microsoft.com/en-us/product/power-bi-visuals/WA104381711?src=website&mktcmpid=repo_main_page) or through the Power BI marketplace. You can also download from this repository's [Releases section](https://github.com/dm-p/powerbi-visuals-smlc/releases).
+The visual is [available in AppSource](https://appsource.microsoft.com/en-us/product/power-bi-visuals/WA104381711?src=website&mktcmpid=repo_main_page) (Power BI Marketplace). You can also download from this repository's [Releases section](https://github.com/dm-p/powerbi-visuals-smlc/releases).
 
 Please read the below or review the [Current Status](#Current-Status) table prior to attempting to load a version other then the one in the Marketplace.
 

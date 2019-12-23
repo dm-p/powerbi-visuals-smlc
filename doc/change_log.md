@@ -12,14 +12,15 @@
 * A [**Line Styling**](./usage.md#Line-Styling) menu has been added, which allows you to configure the following properties per measure:
     * Color
     * Stroke Width
+    * Show Area and Transparency
     * Line Shape - **Linear**, Stepped, Curve (Cardinal), Curve (Natural)
     * Line Style - Dashed, **Solid**, Dotted, Dot-Dash
 * The **Small Multiples** menu contained too many properties, spanning too many features for one location. These have been split up into more-specific menus to better manage properties and make future enhancements easier:
     * [**SM Layout**](./usage.md#SM-Layout) - configuration of the small multiple 'grid', including mode (refer below)
     * [**SM Heading**](./usage.md#SM-Heading) - configuration of the small multiple heading (formerly known as *Label*).
     * [**SM Styling**](./usage.md#SM-Styling) - configuration of the small multiple background and border styling.
-* Added [additional properties that reside in the **SM Layout** menu](./usage.md#SM-Layout) and provides the following options:
-    * **Column Sizing** allows you to specify the behavior of how columns widths are calculated for small multiples:
+* Added [additional properties that reside in the **SM Layout** menu](./usage.md#SM-Layout) that provide the following options:
+    * **Column Sizing** allows you to specify the behavior of how column widths are calculated for small multiples:
         * **Fixed Width** (default) - small multiples have a specified width and will flow across rows if width does not accomodate.
         * **Fixed # Columns** - fit widths according to specificed number of columns.
     * **Row Sizing** allows you to specify the behavior of how row heights are calculated for small multiples:
@@ -37,10 +38,11 @@
 * X-axis now supports ordinal categories and date/time fields.
 * The **Small Mutliple** field supports drill-down/expand and drill up (also via the context menu).
 * Standard sorting options have been enabled and can be supplied in the visual header - the visual used to previously sort implicitly by Small Multiple value.
-* Measures respect Power BI language and display culture.
+* Mouse tracking for data points and tooltips has been made more responsive and should feel more natural.
+* Measures are coded to respect Power BI language and display culture. **There is an issue with the Power BI API for this** however (refer to [Known Issues](#Known-Issues) below).
 * "Zebra-Stripe" has been renamed to **Alternate Background Color**.
-* Alternate Background Color can now be applied by:
-    * Column (v1)
+* **Alternate Background Color** can now be applied by:
+    * Column (v1 behavior)
     * Row
     * Small Multiple.
 * If the visual is too small to draw components such the axis and legend, it will remove them to preserve as much space as possible for the small multiples.
@@ -61,6 +63,7 @@
 ### Known Issues
 
 * If your measure contains a specific number format, the visual will not render this with respect to the user's locale. This appears to be an issue with one of the APIs, as the visual is coded to support locale. I've raised an issue for this with the custom visuals team and will advise as soon as possible.
+* Measures in the **Line Styling** menu are separated with hyphens (`----------`). This is because containers (where measures are selectable via dropdown) are not yet fully supported for non-Microsoft visuals. This is expected to be available in 2020 and as soon as it's available, it's definitely going into this one.
 
 ## 1.0.1.0 (2018-11-29)
 
