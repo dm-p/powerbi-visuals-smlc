@@ -1,7 +1,7 @@
 # Usage
 
 ---
-[Home](../readme.md) | **Usage** | [Theming](./theming.md) | Examples | [Change Log](./change_log.md) | [Privacy Policy](./privacy_policy.md) | Support
+[Home](../readme.md) | **Usage** | [Theming](./theming.md) | Examples | [Change Log](./change_log.md) | [Privacy Policy](./privacy_policy.md) | [Support](./support.md)
 
 ---
 
