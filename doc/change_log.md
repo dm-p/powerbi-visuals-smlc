@@ -4,7 +4,7 @@
 
 ---
 
-## 2.0.0.x (TBC)
+## 2.0.0.121 (Submitted)
 
 ### Major Changes
 
@@ -19,7 +19,7 @@
     * [**SM Layout**](./usage.md#SM-Layout) - configuration of the small multiple 'grid', including mode (refer below)
     * [**SM Heading**](./usage.md#SM-Heading) - configuration of the small multiple heading (formerly known as *Label*).
     * [**SM Styling**](./usage.md#SM-Styling) - configuration of the small multiple background and border styling.
-* Added [additional properties that reside in the **SM Layout** menu](./usage.md#SM-Layout) that provide the following options:
+* [Additional properties that reside in the **SM Layout** menu](./usage.md#SM-Layout) that provide the following options:
     * **Column Sizing** allows you to specify the behavior of how column widths are calculated for small multiples:
         * **Fixed Width** (default) - small multiples have a specified width and will flow across rows if width does not accomodate.
         * **Fixed # Columns** - fit widths according to specificed number of columns.
@@ -36,7 +36,7 @@
 ### Minor Enhancements
 
 * X-axis now supports ordinal categories and date/time fields.
-* The **Small Mutliple** field supports drill-down/expand and drill up (also via the context menu).
+* The **Small Multiple** field supports drill-down/expand and drill up (also via the context menu).
 * Standard sorting options have been enabled and can be supplied in the visual header - the visual used to previously sort implicitly by Small Multiple value.
 * Mouse tracking for data points and tooltips has been made more responsive and should feel more natural.
 * Measures are coded to respect Power BI language and display culture. **There is an issue with the Power BI API for this** however (refer to [Known Issues](#Known-Issues) below).

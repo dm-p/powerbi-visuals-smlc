@@ -6,7 +6,7 @@
         "visualClassName": "Visual",
         "version": "2.0.0.121",
         "description": "Provides the ability to plot a line chart with small multiples.",
-        "supportUrl": "www.coacervo.co",
+        "supportUrl": "http://bit.ly/powerbi-smlc",
         "gitHubUrl": "http://bit.ly/powerbi-smlc"
     },
     "apiVersion": "2.6.0",
