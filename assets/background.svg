@@ -1,0 +1,73 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="320"
+    height="320">
+    <g class="small-multiple-master-axis-container"></g>
+    <g class="small-multiple-container" transform="translate(0, 0)" width="427.2049689440994"
+        height="384.27329192546586">
+        <g class="small-multiple-row-container" height="160" width="320" transform="translate(0, 0)">
+            <defs>
+                <clipPath id="small-multiple-clip" style="fill: none;">
+                    <rect width="146" height="146"></rect>
+                </clipPath>
+            </defs><svg class="small-multiple" x="0">
+                <g class="small-multiple-canvas">
+                    <rect class="small-multiple-background" height="150" width="150" fill="#e6e6e6" fill-opacity="0.25">
+                    </rect>
+                    <g class="small-multiple-chart-path" clip-path="url(#small-multiple-clip)"
+                        transform="translate(2, 2)">
+                        <path class="small-multiple-measure solid"
+                            d="M2,82.78269128787876L11,93.6229839015147L20,87.41141666666674L29,101.09850189393929L38,86.10889204545445L47,93.9274962121215L56,82.42612500000024L65,80.77436174242446L74,75.85114772727245L83,78.45813257575736L92,91.76535511363582L101,87.37858049242423L110,95.50086742424212L119,93.6336297348485L128,86.03637594696946L137,99.53930208333321L146,73.42223863636384"
+                            transform="translate(0, 0)"
+                            style="stroke: rgb(255, 255, 255); stroke-linecap: round; fill: none; stroke-width: 5;">
+                        </path>
+                    </g>
+                </g>
+            </svg><svg class="small-multiple" x="160">
+                <g class="small-multiple-canvas">
+                    <rect class="small-multiple-background" height="150" width="150" fill="#e6e6e6" fill-opacity="0.25">
+                    </rect>
+                    <g class="small-multiple-chart-path" clip-path="url(#small-multiple-clip)"
+                        transform="translate(2, 2)">
+                        <path class="small-multiple-measure solid"
+                            d="M2,92.2257034632035L11,96.58563636363628L20,97.12934415584411L29,102.1151493506493L38,98.37792857142857L47,105.18999783549782L56,96.21320995671014L65,95.98804761904779L74,93.66152813852813L83,100.71930086580089L92,98.22687229437228L101,94.46879437229428L110,78.88408441558434L119,94.71639393939395L128,88.29397402597407L137,95.28048484848492L146,91.36376623376624"
+                            transform="translate(0, 0)"
+                            style="stroke: rgb(255, 255, 255); stroke-linecap: round; fill: none; stroke-width: 5;">
+                        </path>
+                    </g>
+                </g>
+            </svg>
+        </g>
+        <g class="small-multiple-row-container" height="160" width="320" transform="translate(0, 160)">
+            <defs>
+                <clipPath id="small-multiple-clip" style="fill: none;">
+                    <rect width="146" height="146"></rect>
+                </clipPath>
+            </defs><svg class="small-multiple" x="0">
+                <g class="small-multiple-canvas">
+                    <rect class="small-multiple-background" height="150" width="150" fill="#e6e6e6" fill-opacity="0.25">
+                    </rect>
+                    <g class="small-multiple-chart-path" clip-path="url(#small-multiple-clip)"
+                        transform="translate(2, 2)">
+                        <path class="small-multiple-measure solid"
+                            d="M2,39.189202020202L11,10.365508417508295L20,14.57566666666662L29,47.818195286195206L38,31.70682491582491L47,16.133983164983107L56,52.89255555555535L65,29.067764309764314L74,21.558104377104357L83,26.96649494949513L92,38.40414478114461L101,41.3064478114477L110,35.475787878787926L119,36.96823232323224L128,37.237127946128L137,39.88774074074071L146,31.24227946127941"
+                            transform="translate(0, 0)"
+                            style="stroke: rgb(255, 255, 255); stroke-linecap: round; fill: none; stroke-width: 5;">
+                        </path>
+                    </g>
+                </g>
+            </svg><svg class="small-multiple" x="160">
+                <g class="small-multiple-canvas">
+                    <rect class="small-multiple-background" height="150" width="150" fill="#e6e6e6" fill-opacity="0.25">
+                    </rect>
+                    <g class="small-multiple-chart-path" clip-path="url(#small-multiple-clip)"
+                        transform="translate(2, 2)">
+                        <path class="small-multiple-measure solid"
+                            d="M2,58.57741212121206L11,73.57603636363625L20,80.1314363636362L29,75.11832727272714L38,84.6129727272726L47,80.02459090909097L56,87.0540484848485L65,81.28262424242429L74,85.79734242424239L83,77.32779393939389L92,101.71775757575755L101,110.81134545454542L110,87.87673636363623L119,94.18260909090911L128,91.21040303030313L137,95.80962424242405L146,86.22074242424249"
+                            transform="translate(0, 0)"
+                            style="stroke: rgb(255, 255, 255); stroke-linecap: round; fill: none; stroke-width: 5;">
+                        </path>
+                    </g>
+                </g>
+            </svg>
+        </g>
+    </g>
+</svg>
