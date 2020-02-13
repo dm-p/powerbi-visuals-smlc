@@ -13,8 +13,7 @@ By Daniel Marsh-Patrick
 
 | | Development | Submitted | Approved | Available |
 |-|:--:|:-:|:-:|:-:|
-| [1.0.1.0](./doc/change_log.md#1010-2018-11-29)| | | | ✔ |
-| [2.0.0.121](./doc/change_log.md#200121-tbc) | | | ✔ | |
+| [2.0.0.121](./doc/change_log.md#200121-tbc) | | | | ✔ |
 
 > **If a version is in any status other than *Available* this cannot be imported via file or via the Marketplace, even if the listing is showing the new version**. [More on this below](#More-About-Current-Status).
 
