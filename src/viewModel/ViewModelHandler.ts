@@ -162,7 +162,7 @@
                         || !dataViews[0].metadata
                         || !dataViews[0].categorical.values.length
                         || !dataViews[0].categorical.values[0].source
-                        || !dataViews[0].categorical.values[0].source.groupName
+                        || (!dataViews[0].categorical.values[0].source.groupName && dataViews[0].categorical.values[0].source.groupName !== 0)
                     ) {
                         Debugger.log('Test 1 FAILED. Not all objects are present.');
                         this.viewModel.dataViewIsValid = false;
