@@ -1,9 +1,9 @@
 /**
- *
+ * Denotes the type of axis in the visual, where used.
  */
-    enum EAxisType {
-        Value = 0,
-        Category = 1
-    }
+enum EAxisType {
+  Value = 0,
+  Category = 1
+}
 
-    export default EAxisType;
+export default EAxisType;
