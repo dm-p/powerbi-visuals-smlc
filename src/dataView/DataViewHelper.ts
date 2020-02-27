@@ -1,12 +1,12 @@
-/** Power BI API references */
-    import powerbi from 'powerbi-visuals-api';
-    import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
-    import VisualObjectInstance = powerbi.VisualObjectInstance;
-    import IVisualHost = powerbi.extensibility.visual.IVisualHost;
-    import DataView = powerbi.DataView;
-    import Fill = powerbi.Fill;
+// Power BI API references
+    import powerbiVisualsApi from 'powerbi-visuals-api';
+    import DataViewMetadataColumn = powerbiVisualsApi.DataViewMetadataColumn;
+    import VisualObjectInstance = powerbiVisualsApi.VisualObjectInstance;
+    import IVisualHost = powerbiVisualsApi.extensibility.visual.IVisualHost;
+    import DataView = powerbiVisualsApi.DataView;
+    import Fill = powerbiVisualsApi.Fill;
 
-/** Internal dependencies */
+// Internal dependencies
     import VisualSettings from '../settings/VisualSettings';
     import Debugger from '../debug/Debugger';
     import {
@@ -15,9 +15,9 @@
     } from '../propertyMigration';
 
 /**
- *
+ * Provides means to assist with the Power BI `dataView`.
  */
-    export default class DataVieWHelper {
+    export default class DataViewHelper {
 
         /**
          * Gets property value for a particular metadata column.
@@ -27,7 +27,7 @@
          * @param propertyName  Name of desired property.
          * @param defaultValue  Default value of desired property.
          */
-            static getMetadataObjectValue<T>(column: DataViewMetadataColumn, objectName: string, propertyName: string, defaultValue: T ): T {
+            static GET_METADATA_OBJECT_VALUE<T>(column: DataViewMetadataColumn, objectName: string, propertyName: string, defaultValue: T ): T {
                 let objects = column.objects;
                 if (objects) {
                     let object = objects[objectName];
@@ -49,20 +49,20 @@
          * @param migrationList     Source/desintation mappings
          * @param targetVersion     Version number to apply to metadata to confirm migration has been applied
          */
-            static migrateObjectProperties(dataView: DataView, host: IVisualHost, migrationList: IMigrationObject[], targetVersion: number) {
+            static MIGRATE_OBJECT_PROPERTIES(dataView: DataView, host: IVisualHost, migrationList: IMigrationObject[], targetVersion: number) {
 
-                Debugger.log('Performing property migration');
-                Debugger.log('Target version', targetVersion);
+                Debugger.LOG('Performing property migration');
+                Debugger.LOG('Target version', targetVersion);
 
-                /** We'll use this to accumulate changes to make to the object instances */
-                    let changes: powerbi.VisualObjectInstancesToPersist = {
+                // We'll use this to accumulate changes to make to the object instances
+                    let changes: powerbiVisualsApi.VisualObjectInstancesToPersist = {
                         replace: [],
                         remove: []
                     };
 
-                /** Step over our objects/properties, test and add changes accordingly */
+                // Step over our objects/properties, test and add changes accordingly
                     migrationList.map((m, mi) => {
-                        Debugger.log(`Checking if migration needed for legacy object: ${m.source.object}.${m.source.property}...`);
+                        Debugger.LOG(`Checking if migration needed for legacy object: ${m.source.object}.${m.source.property}...`);
                         if (    dataView.metadata
                             &&  dataView.metadata.objects
                             &&  dataView.metadata.objects.hasOwnProperty(`${m.source.object}`)
@@ -70,9 +70,9 @@
                             &&  dataView.metadata.objects[m.source.object][m.source.property] !== VisualSettings.getDefault()[m.source.object][m.source.property]
                         ) {
 
-                            Debugger.log(`Adding migration ${m.source.object}.${m.source.property} to ${m.destination.object}.${m.destination.property} to changes...`);
+                            Debugger.LOG(`Adding migration ${m.source.object}.${m.source.property} to ${m.destination.object}.${m.destination.property} to changes...`);
 
-                            /** Placeholder objects and results if already created four source/detination */
+                            // Placeholder objects and results if already created four source/detination
                                 let replace: VisualObjectInstance = {
                                         objectName: m.destination.object,
                                         selector: null,
@@ -86,7 +86,8 @@
                                     },
                                     remi = changes.remove.filter((c) => c.objectName === m.source.object);
 
-                            /** Add/update appropriate object for destination. Note that colours behave differently to the standard enumeration push
+                            /**
+                             *  Add/update appropriate object for destination. Note that colours behave differently to the standard enumeration push
                              *  (where we would supply the entire `Fill` object). For these cases, we extract the hex code and supply just that, otherwise
                              *  the properties pane generates an error.
                              */
@@ -106,7 +107,7 @@
                                     repi[0].properties[m.destination.property] = dataView.metadata.objects[m.source.object][m.source.property];
                                 }
 
-                            /** Add/update appropriate object for source */
+                            // Add/update appropriate object for source
                                 if (!remi.length) {
                                     remove.properties[m.source.property] = null;
                                     changes.remove.push(remove);
@@ -115,25 +116,26 @@
                                 }
 
                         } else {
-                            Debugger.log(`Property doesn't need to be migrated. Skipping...`);
+                            Debugger.LOG(`Property doesn't need to be migrated. Skipping...`);
                         }
                     });
 
-                /** In v2 we introduce a 'width' layout mode, but before this we relied on maximumMultiplesPerRow to manage this, so we need to manually
+                /**
+                 *  In v2 we introduce a 'width' layout mode, but before this we relied on maximumMultiplesPerRow to manage this, so we need to manually
                  *  override if maximumMultiplesPerRow is still set, so as not to confuse the end-user. We've also moved the measure-based colouring into
                  *  the newer Line Styling menu, which consolidates shapes and colours in a single place.
                  */
                     if (targetVersion === 2) {
                         changes.replace.map((c) => {
                             if (c.properties.numberOfColumns) {
-                                Debugger.log('Hard setting horizontal grid mode to \'column\'...');
+                                Debugger.LOG('Hard setting horizontal grid mode to \'column\'...');
                                 c.properties.horizontalGrid = 'column';
-                                Debugger.log('Hard setting vertical grid mode to \'fit\'...');
+                                Debugger.LOG('Hard setting vertical grid mode to \'fit\'...');
                                 c.properties.verticalGrid = 'fit';
                             }
                         });
 
-                        Debugger.log('Migrating data colours...');
+                        Debugger.LOG('Migrating data colours...');
                         dataView.metadata.columns.filter((c) =>
                             c.roles.values && c.objects && c.objects.colorSelector && c.objects.colorSelector.fill
                         ).map((m) => {
@@ -158,7 +160,7 @@
                         });
                     }
 
-                /** Add in target version */
+                // Add in target version
                     changes.replace.push({
                         objectName: 'features',
                         selector: null,
@@ -168,10 +170,10 @@
                     });
 
                     if (changes.remove.length || changes.replace.length) {
-                        Debugger.log('Changes to make', changes);
+                        Debugger.LOG('Changes to make', changes);
                         host.persistProperties(changes);
                     } else {
-                        Debugger.log('No migrations to apply!');
+                        Debugger.LOG('No migrations to apply!');
                     }
             }
 

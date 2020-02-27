@@ -1,14 +1,14 @@
-/** Power BI API dependencies */
+// Power BI API dependencies
     import { valueFormatter } from 'powerbi-visuals-utils-formattingutils';
     import  IValueFormatter = valueFormatter.IValueFormatter;
 
-/** Internal dependencies */
+// Internal dependencies
     import IText from './IText';
     import EAxisType from './EAxisType';
     import EAxisScaleType from './EAxisScaleType';
 
 /**
- *
+ * Manages display of an axis within the visual.
  */
     export default interface IAxis {
         axisType: EAxisType;

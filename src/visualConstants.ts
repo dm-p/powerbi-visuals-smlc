@@ -1,13 +1,15 @@
-/** Constants used throughout visual */
+/**
+ * Constants used throughout visual
+ */
     const
-        maxCategories = 100, /** Manually copied from capabilities */
+        maxCategories = 100, // Manually copied from capabilities
         strokeWidthMin = 1,
         strokeWidthMax = 5;
 
-    export const VisualConstants = {
+    export const visualConstants = {
         debug: false,
         about: {
-            version: '2.0.0',
+            version: '2.1.0',
             usageUrl: 'https://bit.ly/powerbi-smlc'
         },
         visual: {

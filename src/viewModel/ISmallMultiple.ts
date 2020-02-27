@@ -1,13 +1,13 @@
-/** Power BI API references */
-    import powerbi from 'powerbi-visuals-api';
-    import ISelectionId = powerbi.visuals.ISelectionId;
+// Power BI API references
+    import powerbiVisualsApi from 'powerbi-visuals-api';
+    import ISelectionId = powerbiVisualsApi.visuals.ISelectionId;
 
-/** Internal dependencies */
+// Internal dependencies
     import ISmallMultipleMeasure from './ISmallMultipleMeasure';
     import IElementSideDimension from './IElementSideDimension';
 
 /**
- *
+ * Used to manage the aspects of displaying an individual small multiple within our visual.
  */
     export default interface ISmallMultiple {
         name: string;

@@ -1,10 +1,10 @@
-/** Power BI API Dependencies */
-    import powerbi from 'powerbi-visuals-api';
-    import IViewport = powerbi.IViewport;
+// Power BI API Dependencies
+    import powerbiVisualsApi from 'powerbi-visuals-api';
+    import IViewport = powerbiVisualsApi.IViewport;
     import { legendInterfaces } from 'powerbi-visuals-utils-chartutils';
-    import ILegendData = legendInterfaces.LegendData;
+    import LegendData = legendInterfaces.LegendData;
 
-/** Internal dependencies */
+// Internal dependencies
     import ISmallMultiple from './ISmallMultiple';
     import IStatistics from './IStatistics';
     import IMeasure from './IMeasure';
@@ -13,7 +13,7 @@
     import IAxis from './IAxis';
 
 /**
- *
+ * Used to manage how our visual is rendered.
  */
     export default interface IViewModel {
         locale: string;
@@ -25,7 +25,7 @@
         multiples: ISmallMultiple[];
         statistics: IStatistics;
         layout: ILayoutConfiguration;
-        legend: ILegendData;
+        legend: LegendData;
         yAxis: IAxis;
         xAxis: IAxis;
     }

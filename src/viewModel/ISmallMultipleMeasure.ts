@@ -1,11 +1,9 @@
-/** Internal dependencies */
-    import ISmallMultipleMeasureValue from "./ISmallMutlipleMeasureValue";
-    import IStatistics from "./IStatistics";
-    import { TextProperties } from "powerbi-visuals-utils-formattingutils/lib/src/textMeasurementService";
-    import { IValueFormatter } from "powerbi-visuals-utils-formattingutils/lib/src/valueFormatter";
+// Internal dependencies
+    import ISmallMultipleMeasureValue from './ISmallMultipleMeasureValue';
+    import IStatistics from './IStatistics';
 
 /**
- *
+ * Used to manage the display of a measure within our visual.
  */
     export default interface ISmallMultipleMeasure {
         values: ISmallMultipleMeasureValue[];

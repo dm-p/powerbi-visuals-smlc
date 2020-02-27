@@ -1,23 +1,23 @@
-/** Internal dependencies */
-   import { VisualConstants } from '../constants';
-   let defaults = VisualConstants.defaults;
+// Internal dependencies
+   import { visualConstants } from '../visualConstants';
+   let defaults = visualConstants.defaults;
 
 /**
- *
+ * Manages properties to display the legend in the visual.
  */
     export default class LegendSettings {
-      /** Show legend */
+      // Show legend.
          public show: boolean = true;
-      /** Position */
+      // Position of the legend within the visual container.
          public position: string = defaults.legend.position;
-      /** Show title */
+      // Show the legend title before the series.
          public showTitle: boolean = defaults.legend.showTitle;
-      /** Title text */
+      // Manual title text to overload, if required.
          public titleText: string = defaults.legend.titleText;
-      /** Include X-ranges */
+      // Include X-ranges.
          public includeRanges: boolean = defaults.legend.includeRanges;
-      /** Font colour */
+      // Font colour.
          public fontColor: string = defaults.font.colour;
-      /** Text size */
+      // Text size.
          public fontSize: number = defaults.legend.fontSize;
     }
