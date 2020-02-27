@@ -520,18 +520,18 @@ export default class ViewModelHandler {
 
         }
 
-    /** Resolves the initial viewport size, and what the minimum accepted viewport would be, based on minimum sizes and grid */
-        calculateInitialViewport() {
-            Debugger.log("Calculating initial viewport...");
-            this.viewModel.layout.minimumViewport = {
-                height: VisualConstants.visual.minPx,
-                width: VisualConstants.visual.minPx
-            };
-            this.viewModel.layout.visualViewport = {
-                height: this.viewModel.viewport.height,
-                width: this.viewModel.viewport.width
-            };
-        }
+  /** Resolves the initial viewport size, and what the minimum accepted viewport would be, based on minimum sizes and grid */
+  calculateInitialViewport() {
+    Debugger.log("Calculating initial viewport...");
+    this.viewModel.layout.minimumViewport = {
+      height: VisualConstants.visual.minPx,
+      width: VisualConstants.visual.minPx
+    };
+    this.viewModel.layout.visualViewport = {
+      height: this.viewModel.viewport.height,
+      width: this.viewModel.viewport.width
+    };
+  }
 
   /** Calculate all visual dimensions required to render */
   resolveAxisTitles() {
