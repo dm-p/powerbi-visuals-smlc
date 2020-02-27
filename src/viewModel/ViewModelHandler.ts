@@ -177,7 +177,9 @@
                     this.viewModel.locale = this.host.locale;
             }
 
-        // Maps everything we need from the data view to the view model
+        /**
+         * Maps everything we need from the data view to the view model
+         */
             mapDataView() {
 
                 Debugger.LOG('Mapping Data View to View Model');
@@ -186,12 +188,7 @@
                     Debugger.LOG('Mapping measures...');
                     this.categorical.values.grouped()[0].values.map((v) => v.source).map((m, mi) => {
 
-                        // Initialise new values
-                            let defaultColour: Fill = {
-                                    solid: {
-                                        color: this.host.colorPalette.getColor(`${m.displayName}`).value
-                                    }
-                                };
+                        let defaultColour: Fill = this.getDefaultFillColour(m);
 
                         /** 
                          *  We seem to be unable to increment the colour index when looping in this particular case. Not sure why. Might be
@@ -224,20 +221,7 @@
                 // Get all category values
                     this.viewModel.categoryMetadata = {
                         metadata: this.categoryColumn,
-                        values: [...new Set(this.categorical.values.map((v) => {
-                                    switch (true) {
-                                        case this.categoryColumn.type.dateTime: {
-                                            return new Date(<string>v.source.groupName);
-                                        }
-                                        case this.categoryColumn.type.numeric: {
-                                            return <number>v.source.groupName;
-                                        }
-                                        case this.categoryColumn.type.text: {
-                                            return <string>v.source.groupName;
-                                        }
-                                    }
-                                })
-                            )],
+                        values: this.getCategoryNames(),
                         extents: null
                     };
                     this.viewModel.categoryMetadata.extents = this.getCategoryExtents();
@@ -247,103 +231,8 @@
                     this.smallMultipleColumn.values.map((c: string, ci) => {
                         let name = c || this.localisationManager.getDisplayName('Visual_Blank_Descriptor');
                         Debugger.LOG(`Processing ${name}...`);
-                        let measures: ISmallMultipleMeasure[] = [];
-
-                        // Add measures to multiple
-                            this.viewModel.measureMetadata.map((m, mi) => {
-                                Debugger.LOG(`Measure: ${m.metadata.displayName}`);
-                                let values: ISmallMultipleMeasureValue[] = [];
-
-                                // Filter values by measure and add to array element
-                                    this.categorical.values.filter((v) => v.source.queryName === m.metadata.queryName)
-                                        .map((v, vi) => {
-                                            let value = <number>v.values[ci],
-                                                category = this.categoryColumn.type.dateTime
-                                                    ?   new Date(<string>v.source.groupName)
-                                                    :   this.categoryColumn.type.numeric
-                                                        ?   <number>v.source.groupName
-                                                        :   <string>v.source.groupName;
-                                            this.viewModel.statistics.min = {
-                                                value: d3.min([value, this.viewModel.statistics.min && this.viewModel.statistics.min.value]),
-                                                category: null,
-                                                index: null
-                                            };
-                                            this.viewModel.statistics.max = {
-                                                value: d3.max([value, this.viewModel.statistics.max && this.viewModel.statistics.max.value]),
-                                                category: null,
-                                                index: null
-                                            };
-                                            values.push({
-                                                index: vi,
-                                                category: category,
-                                                value: value,
-                                                selectionId: this.host.createSelectionIdBuilder()
-                                                    .withCategory(this.categorical.categories[0], ci)
-                                                    .withMeasure(m.metadata.queryName)
-                                                    .withSeries(this.categorical.values, this.categorical.values[vi])
-                                                    .createSelectionId(),
-                                                tooltip: value
-                                                    ?   {
-                                                            header: `${name} - ${valueFormatter.format(category, this.categoryColumn.format, false, this.viewModel.locale)}`,
-                                                            displayName: m.metadata.displayName,
-                                                            value: m.formatter.format(value),
-                                                            color: m.stroke
-                                                        }
-                                                    :   null
-                                            });
-                                        });
-
-                                    /** 
-                                     *  We don't yet have the typings for latest d3-array changes (e.g. least, greatest) so we'll fudge
-                                     *  something that pretty much gives us the same thing. Maybe we can replace later on.
-                                     */
-                                        let statistics: IStatistics = {
-                                            min: values
-                                                    .filter((v) => v.value !== null)
-                                                    .sort((a, b) => d3.ascending(a.value, b.value))[0] || null,
-                                            max: values
-                                                    .filter((v) => v.value !== null)
-                                                    .sort((a, b) => d3.descending(a.value, b.value))[0] || null,
-                                            first: values
-                                                    .filter((v) => v.value !== null)
-                                                    .slice(0, 1)
-                                                    .sort((a, b) => d3.ascending(a.category, b.category))[0] || null,
-                                            last: values
-                                                    .filter((v) => v.value !== null)
-                                                    .slice(-1)[0] || null
-                                        };
-
-                                    measures.push({
-                                        values: values,
-                                        statistics: statistics
-                                    });
-                            });
-
-                            Debugger.LOG('Adding to multiples array...');
-                            this.viewModel.multiples.push({
-                                name: name,
-                                measures: measures,
-                                margin: {
-                                    top: visualConstants.defaults.smallMultiple.margin.top,
-                                    bottom: visualConstants.defaults.smallMultiple.margin.bottom,
-                                    left: visualConstants.defaults.smallMultiple.margin.left,
-                                    right: visualConstants.defaults.smallMultiple.margin.right
-                                },
-                                spacing: {
-                                    top: (this.settings.layout.spacingBetweenRows) / 2 || 0,
-                                    bottom: (this.settings.layout.spacingBetweenRows) / 2 || 0,
-                                    left: (this.settings.layout.spacingBetweenColumns) / 2 || 0,
-                                    right: (this.settings.layout.spacingBetweenRows) / 2 || 0
-                                },
-                                selectionId: this.host.createSelectionIdBuilder()
-                                    .withCategory(this.categorical.categories[0], ci)
-                                    .createSelectionId(),
-                                column: 0,
-                                row: 0,
-                                backgroundColour: null,
-                                titleColour: null
-                            });
-
+                        let measures = this.addMeasuresToSmallMultiple(ci, name);
+                        this.addSmallMultipleToViewModel(name, measures, ci);
                     });
 
                     this.smallMultiplesHelper = new SmallMultiplesHelper(
@@ -352,6 +241,163 @@
                         this.settings.heading,
                         this.settings.smallMultiple
                     );
+            }
+
+        /**
+         * Traverses the `dataView` measures and creates an array of them for adding to the view model.
+         * @param categoryIndex     - category index (for `selectionId`)
+         * @param categoryName      - the name of the small multiple.
+         */
+            private addMeasuresToSmallMultiple(
+                categoryIndex: number,
+                categoryName: string
+            ): ISmallMultipleMeasure[] {
+                let measures: ISmallMultipleMeasure[] = [];
+                this.viewModel.measureMetadata.map((m, mi) => {
+                    Debugger.LOG(`Measure: ${m.metadata.displayName}`);
+                    let values: ISmallMultipleMeasureValue[] = [];
+                    // Filter values by measure and add to array element
+                    this.categorical.values.filter((v) => v.source.queryName === m.metadata.queryName)
+                        .map((v, vi) => {
+                            let value = <number>v.values[categoryIndex], category = this.categoryColumn.type.dateTime
+                                ? new Date(<string>v.source.groupName)
+                                : this.categoryColumn.type.numeric
+                                    ? <number>v.source.groupName
+                                    : <string>v.source.groupName;
+                            this.viewModel.statistics.min = {
+                                value: d3.min([value, this.viewModel.statistics.min && this.viewModel.statistics.min.value]),
+                                category: null,
+                                index: null
+                            };
+                            this.viewModel.statistics.max = {
+                                value: d3.max([value, this.viewModel.statistics.max && this.viewModel.statistics.max.value]),
+                                category: null,
+                                index: null
+                            };
+                            values.push({
+                                index: vi,
+                                category: category,
+                                value: value,
+                                selectionId: this.host.createSelectionIdBuilder()
+                                    .withCategory(this.categorical.categories[0], categoryIndex)
+                                    .withMeasure(m.metadata.queryName)
+                                    .withSeries(this.categorical.values, this.categorical.values[vi])
+                                    .createSelectionId(),
+                                tooltip: value
+                                    ? {
+                                        header: `${categoryName} - ${valueFormatter.format(category, this.categoryColumn.format, false, this.viewModel.locale)}`,
+                                        displayName: m.metadata.displayName,
+                                        value: m.formatter.format(value),
+                                        color: m.stroke
+                                    }
+                                    : null
+                            });
+                        });
+
+                    /**
+                     *  We don't yet have the typings for latest d3-array changes (e.g. least, greatest) so we'll fudge
+                     *  something that pretty much gives us the same thing. Maybe we can replace later on.
+                     */
+                        let statistics: IStatistics = this.getStatisticsForMeasure(values);
+                        measures.push({
+                            values: values,
+                            statistics: statistics
+                        });
+                });
+
+                return measures;
+            }
+
+        /**
+         * 
+         * @param categoryName  - the name of the small multiple.
+         * @param measures      - measures to add to the small multiple.
+         * @param categoryIndex - category index (for `selectionId`)
+         */
+            private addSmallMultipleToViewModel(
+                categoryName: string,
+                measures: ISmallMultipleMeasure[],
+                categoryIndex: number
+            ) {
+                Debugger.LOG('Adding to multiples array...');
+                this.viewModel.multiples.push({
+                    name: categoryName,
+                    measures: measures,
+                    margin: {
+                        top: visualConstants.defaults.smallMultiple.margin.top,
+                        bottom: visualConstants.defaults.smallMultiple.margin.bottom,
+                        left: visualConstants.defaults.smallMultiple.margin.left,
+                        right: visualConstants.defaults.smallMultiple.margin.right
+                    },
+                    spacing: {
+                        top: (this.settings.layout.spacingBetweenRows) / 2 || 0,
+                        bottom: (this.settings.layout.spacingBetweenRows) / 2 || 0,
+                        left: (this.settings.layout.spacingBetweenColumns) / 2 || 0,
+                        right: (this.settings.layout.spacingBetweenRows) / 2 || 0
+                    },
+                    selectionId: this.host.createSelectionIdBuilder()
+                        .withCategory(this.categorical.categories[0], categoryIndex)
+                        .createSelectionId(),
+                    column: 0,
+                    row: 0,
+                    backgroundColour: null,
+                    titleColour: null
+                });
+            }
+
+        /**
+         * Calculates desired statistics for a supplied measure.
+         * @param values    - all values for the supplied measure.
+         */
+            private getStatisticsForMeasure(values: ISmallMultipleMeasureValue[]): IStatistics {
+                return {
+                    min: values
+                        .filter((v) => v.value !== null)
+                        .sort((a, b) => d3.ascending(a.value, b.value))[0] || null,
+                    max: values
+                        .filter((v) => v.value !== null)
+                        .sort((a, b) => d3.descending(a.value, b.value))[0] || null,
+                    first: values
+                        .filter((v) => v.value !== null)
+                        .slice(0, 1)
+                        .sort((a, b) => d3.ascending(a.category, b.category))[0] || null,
+                    last: values
+                        .filter((v) => v.value !== null)
+                        .slice(-1)[0] || null
+                };
+            }
+
+        /**
+         * Using the categorical data view, return an array of unique names for all values.
+         */
+            private getCategoryNames(): any[] {
+                return [...new Set(this.categorical.values.map((v) => {
+                    switch (true) {
+                        case this.categoryColumn.type.dateTime: {
+                            return new Date(<string>v.source.groupName);
+                        }
+                        case this.categoryColumn.type.numeric: {
+                            return <number>v.source.groupName;
+                        }
+                        case this.categoryColumn.type.text: {
+                            return <string>v.source.groupName;
+                        }
+                    }
+                }))];
+            }
+
+        /**
+         * Get the default colour for this measure from the workbook's theme.
+         * @param measure   - measure to retrieve colour value for.
+         */
+            private getDefaultFillColour(
+                measure: powerbiVisualsApi.DataViewMetadataColumn
+            ): powerbiVisualsApi.Fill {
+                return {
+                    solid: {
+                        color: this.host.colorPalette.getColor(`${measure.displayName}`).value
+                    }
+                };
             }
 
         // Populates legend data
