@@ -649,6 +649,15 @@
                 .defined((d) => d.value !== null);
         }
 
+    /**
+     * Handles the rendering of an axis within the visual
+     * @param container     - element to render the axis against.
+     * @param dx            - amount to adjust x-placement by.
+     * @param dy            - amount to adjust y-placement by.
+     * @param axis          - axis to work with.
+     * @param axisSettings  - properties for the specified axis.
+     * @param isMasterAxis  - specifies whether the axis is on the outside of the row or inside the small multiple.
+     */
         private renderAxis(
             container: d3.Selection<any, any, any, any>,
             dx: number,
@@ -671,15 +680,7 @@
             switch (axis.axisType) {
                 case EAxisType.Value: {
                     Debugger.LOG('Setting up ticks for Y-axis...');
-                    ticks
-                        .call(d3.axisLeft(<d3.ScaleLinear<number, number>>axis.scale)
-                                .ticks(axis.ticks)
-                                .tickFormat((d) => axis.numberFormat.format(d))
-                                .tickSize(isMasterAxis
-                                        ?   -axis.tickLabels.textWidth
-                                        :   axis.tickWidth
-                                    )
-                            );
+                    ticks.call(this.getD3LinearAxis(axis, isMasterAxis));
                     break;
                 }
                 case EAxisType.Category: {
@@ -714,79 +715,132 @@
 
             // Manipulate the plotted axis accordingly
                 ticks
-
-                    // Apply gridline settings
-                        .call((g) => {
-                                Debugger.LOG('Applying gridline settings...');
-                                if (axisSettings.gridlines && !isMasterAxis) {
-                                    g.selectAll('.tick line')
-                                        .classed(axisSettings.gridlineStrokeLineStyle, true)
-                                        .style('stroke', axisSettings.gridlineColor)
-                                        .style('stroke-width', axisSettings.gridlines
-                                                ? axisSettings.gridlineStrokeWidth
-                                                : 0
-                                            );
-                                } else {
-                                    g.selectAll('.tick line').remove();
-                                }
-                            })
-
+                    // Apply gridline settings    
+                    .call((element) => this.applyAxisGridlines(element, isMasterAxis, axisSettings))
                     // Apply tick label settings
-                        .call((g) => {
-                                Debugger.LOG('Applying tick label settings...');
-                                if (axisSettings.showLabels && isMasterAxis) {
-                                    // Font configuration & tooltip value
-                                        g.selectAll('.tick text')
-                                            .style('font-family', axisSettings.fontFamily)
-                                            .style('font-size', axisSettings.fontSize)
-                                            .style('fill', axisSettings.fontColor);
-
-                                    /**
-                                     *  Specify different text anchors for X-axis first and last values, so they stay inside the range.
-                                     *  Also, tailor the label, if it's wider than half the small multiple.
-                                     */
-                                        if (axis.axisType === EAxisType.Category) {
-                                            g.selectAll('.tick:not(:first-of-type):not(:last-of-type) text')
-                                                .remove();
-                                            g.select('.tick:first-of-type text')
-                                                .style('text-anchor', 'start');
-                                            g.select('.tick:last-of-type text')
-                                                .style('text-anchor', 'end');
-                                            g.selectAll('.tick text')
-                                                .text((d: string) => {
-                                                    let formattedValue = valueFormatter.format(d, this.viewModel.categoryMetadata.metadata.format);
-                                                    let textProperties = axis.tickLabels.properties,
-                                                        availableWidth = this.viewModel.layout.smallMultiples.multiple.inner.width * 0.5;
-                                                    textProperties.text = formattedValue;
-                                                    let actualWidth = measureSvgTextWidth(textProperties);
-                                                    // This is a bit... unforgiving. We'll need to suss it out
-                                                    return getTailoredTextOrDefault(textProperties, availableWidth);
-                                                })
-                                                .append('title')
-                                                    .text((d) => valueFormatter.format(d, this.viewModel.categoryMetadata.metadata.format));
-                                        }
-                                    // Nudge down the labels if we want the domain line
-                                        if (axis.axisType === EAxisType.Category && isMasterAxis && this.settings.xAxis.showAxisLine) {
-                                            g.selectAll('.tick text')
-                                                .attr('transform', `translate(0, ${visualConstants.ranges.axisLineStrokeWidth.max})`);
-                                        }
-                                } else {
-                                    g.selectAll('.tick text').remove();
-                                }
-                            })
-
+                    .call((element) => this.applyAxisTickLabels(element, axis, isMasterAxis, axisSettings))
                     // Remove the domain line for everything but the master X-axis (if we still want it)
-                        .call((g) => {
-                                Debugger.LOG('Applying domain line settings...');
-                                if (!(axis.axisType === EAxisType.Category && isMasterAxis && this.settings.xAxis.showAxisLine) || axis.ticksAreCollapsed) {
-                                    g.select('.domain').remove();
-                                }
-                                if (axis.axisType === EAxisType.Category && isMasterAxis && this.settings.xAxis.showAxisLine) {
-                                    g.select('.domain')
-                                        .style('stroke', this.settings.xAxis.axisLineColor)
-                                        .style('stroke-width', this.settings.xAxis.axisLineStrokeWidth);
-                                }
-                            });
+                    .call((element) => this.applyAxisDomainLine(element, axis, isMasterAxis));
+        }
+
+    /**
+     * For the supplied linear axis, create the d3 axis object.
+     * @param axis          - linear axis to work with.
+     * @param isMasterAxis  - specifies whether the axis is on the outside of the row or inside the small multiple.
+     */
+        private getD3LinearAxis(
+            axis: IAxis,
+            isMasterAxis: boolean
+        ) {
+            return d3.axisLeft(<d3.ScaleLinear<number, number>>axis.scale)
+                .ticks(axis.ticks)
+                .tickFormat((d) => axis.numberFormat.format(d))
+                .tickSize(isMasterAxis
+                    ?   -axis.tickLabels.textWidth
+                    :   axis.tickWidth
+                );
+        }
+
+    /**
+     * Applies gridline settings for a specified axis to an element.
+     * @param element       - DOM element to apply gridlines to.
+     * @param isMasterAxis  - specifies whether the axis is on the outside of the row or inside the small multiple.
+     * @param axisSettings  - properties for the specified axis.
+     */
+        private applyAxisGridlines(
+            element: d3.Selection<SVGGElement, any, any, any>,
+            isMasterAxis: boolean,
+            axisSettings: AxisSettings
+        ) {
+            Debugger.LOG('Applying gridline settings...');
+            if (axisSettings.gridlines && !isMasterAxis) {
+                element.selectAll('.tick line')
+                    .classed(axisSettings.gridlineStrokeLineStyle, true)
+                    .style('stroke', axisSettings.gridlineColor)
+                    .style('stroke-width', axisSettings.gridlines
+                            ? axisSettings.gridlineStrokeWidth
+                            : 0
+                        );
+            } else {
+                element.selectAll('.tick line').remove();
+            }
+        }
+
+    /**
+     * Manages the behaviour of tick labels for an axis.
+     * @param element       - DOM element to apply tick labels to.
+     * @param axis          - axis to work with.
+     * @param isMasterAxis  - specifies whether the axis is on the outside of the row or inside the small multiple.
+     * @param axisSettings  - properties for the specified axis.
+     */
+        private applyAxisTickLabels(
+            element: d3.Selection<SVGGElement, any, any, any>,
+            axis: IAxis,
+            isMasterAxis: boolean,
+            axisSettings: AxisSettings
+        ) {
+            Debugger.LOG('Applying tick label settings...');
+            if (axisSettings.showLabels && isMasterAxis) {
+                // Font configuration & tooltip value
+                    element.selectAll('.tick text')
+                        .style('font-family', axisSettings.fontFamily)
+                        .style('font-size', axisSettings.fontSize)
+                        .style('fill', axisSettings.fontColor);
+
+                /**
+                 *  Specify different text anchors for X-axis first and last values, so they stay inside the range.
+                 *  Also, tailor the label, if it's wider than half the small multiple.
+                 */
+                    if (axis.axisType === EAxisType.Category) {
+                        element.selectAll('.tick:not(:first-of-type):not(:last-of-type) text')
+                            .remove();
+                        element.select('.tick:first-of-type text')
+                            .style('text-anchor', 'start');
+                        element.select('.tick:last-of-type text')
+                            .style('text-anchor', 'end');
+                        element.selectAll('.tick text')
+                            .text((d: string) => {
+                                let formattedValue = valueFormatter.format(d, this.viewModel.categoryMetadata.metadata.format);
+                                let textProperties = axis.tickLabels.properties,
+                                    availableWidth = this.viewModel.layout.smallMultiples.multiple.inner.width * 0.5;
+                                textProperties.text = formattedValue;
+                                let actualWidth = measureSvgTextWidth(textProperties);
+                                // This is a bit... unforgiving. We'll need to suss it out
+                                return getTailoredTextOrDefault(textProperties, availableWidth);
+                            })
+                            .append('title')
+                                .text((d) => valueFormatter.format(d, this.viewModel.categoryMetadata.metadata.format));
+                    }
+                // Nudge down the labels if we want the domain line
+                    if (axis.axisType === EAxisType.Category && isMasterAxis && this.settings.xAxis.showAxisLine) {
+                        element.selectAll('.tick text')
+                            .attr('transform', `translate(0, ${visualConstants.ranges.axisLineStrokeWidth.max})`);
+                    }
+            } else {
+                element.selectAll('.tick text').remove();
+            }
+        }
+
+    /**
+     * 
+     * @param element       - DOM element to apply domain line to.
+     * @param axis          - axis to work with.
+     * @param isMasterAxis  - specifies whether the axis is on the outside of the row or inside the small multiple.
+     */
+        private applyAxisDomainLine(
+            element: d3.Selection<SVGGElement, any, any, any>,
+            axis: IAxis,
+            isMasterAxis: boolean
+        ) {
+            Debugger.LOG('Applying domain line settings...');
+            if (!(axis.axisType === EAxisType.Category && isMasterAxis && this.settings.xAxis.showAxisLine) || axis.ticksAreCollapsed) {
+                element.select('.domain').remove();
+            }
+            if (axis.axisType === EAxisType.Category && isMasterAxis && this.settings.xAxis.showAxisLine) {
+                element.select('.domain')
+                    .style('stroke', this.settings.xAxis.axisLineColor)
+                    .style('stroke-width', this.settings.xAxis.axisLineStrokeWidth);
+            }
         }
 
     /**
