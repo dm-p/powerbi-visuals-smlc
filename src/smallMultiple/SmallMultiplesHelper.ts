@@ -130,8 +130,15 @@
             this.layout.grid.rows.count = this.layout.grid.columns.count && Math.ceil(this.layout.count / this.layout.grid.columns.count);
         }
 
-    // Calculate dimensions of small multiples and grid, accommodating for spacing and other factors.
-        calculateDimensions(chartWidth: number, chartHeight: number) {
+    /**
+     * Calculate dimensions of small multiples and grid, accommodating for spacing and other factors.
+     * @param chartWidth 
+     * @param chartHeight 
+     */
+        calculateDimensions(
+            chartWidth: number,
+            chartHeight: number
+        ) {
             Debugger.HEADING('Resolving small multiple row and column dimensions...');
             Debugger.LOG('Chart width', chartWidth, 'Chart height', chartHeight);
             let vph = chartHeight,
@@ -142,119 +149,163 @@
                     ?   this.stylingSettings.borderStrokeWidth
                     :   0;
 
-            // Resolve heights
-                Debugger.LOG('Resolving heights...');
-                switch (this.layoutSettings.verticalGrid) {
-                    case 'height': {
-                        this.layout.grid.rows.height = this.layoutSettings.multipleHeight + (rc > 1 ? this.layoutSettings.spacingBetweenRows : 0);
-                        this.layout.multiple.outer.height = this.layoutSettings.multipleHeight;
-                        break;
-                    }
-                    case 'fit': {
-                        this.layout.grid.rows.height = Math.max(
-                            visualConstants.ranges.multipleSize.min,
-                            (vph / rc) - br
-                        );
-                        this.layout.multiple.outer.height = this.layout.grid.rows.height - (rc > 1 ? this.layoutSettings.spacingBetweenRows : 0);
-                        break;
-                    }
-                }
-                // Adjust margins for border
-                    this.layout.multiple.margin.top =
-                            visualConstants.defaults.smallMultiple.margin.top
-                        +   (   this.stylingSettings.border
-                                    ?   this.stylingSettings.borderStrokeWidth
-                                    :   0
-                            );
-                    this.layout.multiple.margin.bottom =
-                            visualConstants.defaults.smallMultiple.margin.bottom
-                        +   (   this.stylingSettings.border
-                                    ?   this.stylingSettings.borderStrokeWidth
-                                    :   0
-                            );
-                // Adjust margins for label
-                    switch (true) {
-                        case this.headingSettings.labelPosition === 'top' && this.headingSettings.show: {
-                            Debugger.LOG('Adjusting for top...');
-                            this.layout.multiple.heading.y = this.layout.multiple.margin.top;
-                            this.layout.multiple.margin.top += this.layout.multiple.heading.textHeight;
-                            break;
-                        }
-                        case this.headingSettings.labelPosition === 'bottom' && this.headingSettings.show: {
-                            Debugger.LOG('Adjusting for bottom...');
-                            this.layout.multiple.margin.bottom += this.layout.multiple.heading.textHeight;
-                            this.layout.multiple.heading.y = this.layout.multiple.outer.height - this.layout.multiple.margin.bottom;
-                            break;
-                        }
-                    }
+            this.resolveSmallMultipleHeight(rc, vph, br);
 
-                // Adjust inner canvas for margin
-                    this.layout.multiple.inner.height = this.layout.multiple.outer.height
-                        - this.layout.multiple.margin.top
-                        - this.layout.multiple.margin.bottom;
-                Debugger.LOG(
-                    'Resolved heights: Row height',
-                    this.layout.grid.rows.height,
-                    'SM height (outer)',
-                    this.layout.multiple.outer.height,
-                    'SM height (inner)',
-                    this.layout.multiple.inner.height
-                );
+            // Adjust margins for border
+                this.layout.multiple.margin.top = this.getMarginAdjustedForBorder(visualConstants.defaults.smallMultiple.margin.top);
+                this.layout.multiple.margin.bottom = this.getMarginAdjustedForBorder(visualConstants.defaults.smallMultiple.margin.bottom);
+
+            this.adjustMarginsForHeading();
+
+            // Adjust inner canvas for margin
+                this.layout.multiple.inner.height = this.layout.multiple.outer.height
+                    - this.layout.multiple.margin.top
+                    - this.layout.multiple.margin.bottom;
+
+            Debugger.LOG(
+                'Resolved heights: Row height',
+                this.layout.grid.rows.height,
+                'SM height (outer)',
+                this.layout.multiple.outer.height,
+                'SM height (inner)',
+                this.layout.multiple.inner.height
+            );
 
             // Resolve widths
-                switch (this.layoutSettings.horizontalGrid) {
-                    case 'width': {
-                        this.layout.grid.columns.width = this.layoutSettings.multipleWidth + (cc > 1 ? this.layoutSettings.spacingBetweenColumns : 0);
-                        this.layout.multiple.outer.width = this.layoutSettings.multipleWidth;
-                        break;
-                    }
-                    case 'column': {
-                        this.layout.grid.columns.width = Math.max(
-                            visualConstants.ranges.multipleSize.min,
-                            (vpw - br) / cc
-                        );
-                        this.layout.multiple.outer.width = this.layout.grid.columns.width - (this.layoutSettings.spacingBetweenColumns || 0);
-                        break;
-                    }
-                }
+                this.resolveSmallMultipleWidth(cc, vpw, br);
                 this.layout.grid.rows.width = this.layout.grid.columns.width * this.layout.grid.columns.count;
                 this.layout.multiple.xOffset = this.layout.multiple.outer.width + this.layoutSettings.spacingBetweenColumns || 0;
                 this.layout.multiple.inner.width = this.layout.multiple.outer.width
                     - this.layout.multiple.margin.right
                     - this.layout.multiple.margin.left;
-                // Set heading x-position and text anchor based on settings
-                    switch (this.headingSettings.labelAlignment) {
-                        case 'left': {
-                            this.layout.multiple.heading.x = this.layout.multiple.margin.left;
-                            this.layout.multiple.heading.textAnchor = 'start';
-                            break;
-                        }
-                        case 'center': {
-                            this.layout.multiple.heading.x = this.layout.multiple.inner.width / 2;
-                            this.layout.multiple.heading.textAnchor = 'middle';
-                            break;
-                        }
-                        case 'right': {
-                            this.layout.multiple.heading.x = this.layout.multiple.inner.width;
-                            this.layout.multiple.heading.textAnchor = 'end';
-                            break;
-                        }
-                    }
-                Debugger.LOG(
-                    'Resolved widths: Column width',
-                    this.layout.grid.columns.width,
-                    'Row width',
-                    this.layout.grid.rows.width,
-                    'SM width (outer)',
-                    this.layout.multiple.outer.width,
-                    'SM width (inner)',
-                    this.layout.multiple.inner.width,
-                    'SM x-offset',
-                    this.layout.multiple.xOffset
+
+            this.setHeadingPosition();
+
+            Debugger.LOG(
+                'Resolved widths: Column width',
+                this.layout.grid.columns.width,
+                'Row width',
+                this.layout.grid.rows.width,
+                'SM width (outer)',
+                this.layout.multiple.outer.width,
+                'SM width (inner)',
+                this.layout.multiple.inner.width,
+                'SM x-offset',
+                this.layout.multiple.xOffset
+            );
+        }
+
+    /**
+     * Sets heading x-position and text anchor based on settings.
+     */
+        private setHeadingPosition() {
+            switch (this.headingSettings.labelAlignment) {
+                case 'left': {
+                    this.layout.multiple.heading.x = this.layout.multiple.margin.left;
+                    this.layout.multiple.heading.textAnchor = 'start';
+                    break;
+                }
+                case 'center': {
+                    this.layout.multiple.heading.x = this.layout.multiple.inner.width / 2;
+                    this.layout.multiple.heading.textAnchor = 'middle';
+                    break;
+                }
+                case 'right': {
+                    this.layout.multiple.heading.x = this.layout.multiple.inner.width;
+                    this.layout.multiple.heading.textAnchor = 'end';
+                    break;
+                }
+            }
+        }
+
+    /**
+     * Adjust the margin for the chart within the small multiple to compensate for label configuration.
+     */
+        private adjustMarginsForHeading() {
+            switch (true) {
+                case this.headingSettings.labelPosition === 'top' && this.headingSettings.show: {
+                    Debugger.LOG('Adjusting for top...');
+                    this.layout.multiple.heading.y = this.layout.multiple.margin.top;
+                    this.layout.multiple.margin.top += this.layout.multiple.heading.textHeight;
+                    break;
+                }
+                case this.headingSettings.labelPosition === 'bottom' && this.headingSettings.show: {
+                    Debugger.LOG('Adjusting for bottom...');
+                    this.layout.multiple.margin.bottom += this.layout.multiple.heading.textHeight;
+                    this.layout.multiple.heading.y = this.layout.multiple.outer.height - this.layout.multiple.margin.bottom;
+                    break;
+                }
+            }
+        }
+
+    /**
+     * Calculates the width of each small multiple, based on sizing and settings.
+     * @param columnCount   - number of columns
+     * @param totalWidth    - width of area to work with
+     * @param borderWidth   - border width to adjust for
+     */
+        private resolveSmallMultipleWidth(
+            columnCount: number,
+            totalWidth: number,
+            borderWidth: number
+        ) {
+            switch (this.layoutSettings.horizontalGrid) {
+                case 'width': {
+                    this.layout.grid.columns.width = this.layoutSettings.multipleWidth + (columnCount > 1 ? this.layoutSettings.spacingBetweenColumns : 0);
+                    this.layout.multiple.outer.width = this.layoutSettings.multipleWidth;
+                    break;
+                }
+                case 'column': {
+                    this.layout.grid.columns.width = Math.max(visualConstants.ranges.multipleSize.min, (totalWidth - borderWidth) / columnCount);
+                    this.layout.multiple.outer.width = this.layout.grid.columns.width - (this.layoutSettings.spacingBetweenColumns || 0);
+                    break;
+                }
+            }
+        }
+
+    /**
+     * Calculates the height of each small multiple, based on sizing and settings.
+     * @param rowCount      - number of rows
+     * @param totalHeight   - height of area to work with
+     * @param borderWidth   - border width to adjust for
+     */
+        private resolveSmallMultipleHeight(
+            rowCount: number,
+            totalHeight: number,
+            borderWidth: number
+        ) {
+            Debugger.LOG('Resolving heights...');
+            switch (this.layoutSettings.verticalGrid) {
+                case 'height': {
+                    this.layout.grid.rows.height = this.layoutSettings.multipleHeight + (rowCount > 1 ? this.layoutSettings.spacingBetweenRows : 0);
+                    this.layout.multiple.outer.height = this.layoutSettings.multipleHeight;
+                    break;
+                }
+                case 'fit': {
+                    this.layout.grid.rows.height = Math.max(visualConstants.ranges.multipleSize.min, (totalHeight / rowCount) - borderWidth);
+                    this.layout.multiple.outer.height = this.layout.grid.rows.height - (rowCount > 1 ? this.layoutSettings.spacingBetweenRows : 0);
+                    break;
+                }
+            }
+        }
+
+    /**
+     * Adjusts the margin to compensate for border width (if enabled).
+     * @param initialMargin  -initial potision of margin
+     */
+        private getMarginAdjustedForBorder(
+            initialMargin: number
+        ) {
+            return initialMargin +
+                (   this.stylingSettings.border
+                        ?   this.stylingSettings.borderStrokeWidth
+                        :   0
                 );
         }
 
-    // Resolve the small multiple label properties so we can work out how much space is required for the label.
+    /**
+     * Resolve the small multiple label properties so we can work out how much space is required for the label.
+     */
         private resolveHeadingProperties(): ISmallMultiplesHeading {
             let textProperties: TextProperties = {
                 fontFamily: this.headingSettings.fontFamily,
