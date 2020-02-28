@@ -1,11 +1,17 @@
+// Power BI API Dependencies
+    import powerbiVisualsApi from 'powerbi-visuals-api';
+    import VisualObjectInstanceEnumerationObject = powerbiVisualsApi.VisualObjectInstanceEnumerationObject;
+
 // Internal dependencies
+    import SettingsBase from '../settings/SettingsBase';
+    import Debugger from '../debug/Debugger';
     import { visualConstants } from '../visualConstants';
     let defaults = visualConstants.defaults;
 
 /**
  * Handles all aspects of small multiples styling configuration, as prescribed by the visual capabilities.
  */
-    export default class SmallMultiplesStylingSettings {
+    export default class SmallMultiplesStylingSettings extends SettingsBase {
         // Background colour
             public backgroundColor: string = defaults.smallMultiple.backgroundColour;
         // Background transparency
@@ -44,4 +50,60 @@
             public spacingBetweenRows: number = defaults.layout.rowSpacing;
         // [DEPRECATED: now in LayoutSettings] Alternate font colour
             public fontColorAlternate: string = defaults.font.colour;
+
+            constructor() {
+                super();
+                // Valid values for object enumeration
+                    this.validValues = {
+                        borderStrokeWidth: {
+                            numberRange: {
+                                min: visualConstants.ranges.borderStrokeWidth.min,
+                                max: visualConstants.ranges.borderStrokeWidth.max
+                            }
+                        }
+                    };
+            }
+
+        /**
+         * Business logic for the properties within this menu.
+         * @param enumerationObject - `VisualObjectInstanceEnumerationObject` to process.
+         * @param options           - any specific options we wish to pass from elsewhere in the visual that our settings may depend upon.
+         */
+            public processEnumerationObject(
+                enumerationObject: VisualObjectInstanceEnumerationObject,
+                options: {
+                    [propertyName: string]: any
+                } = {}
+            ): VisualObjectInstanceEnumerationObject {
+                Debugger.LOG('Processing enumeration...');
+                enumerationObject.instances.map((i) => {
+                    // Range validation
+                        Debugger.LOG('Range validation...');
+                        i.validValues = this.validValues;
+                    // Conceal previously shown properties that have since been moved
+                        Debugger.LOG('Hiding legacy properties...');
+                        delete i.properties['showMultipleLabel'];
+                        delete i.properties['spacingBetweenColumns'];
+                        delete i.properties['maximumMultiplesPerRow'];
+                        delete i.properties['spacingBetweenRows'];
+                        delete i.properties['labelPosition'];
+                        delete i.properties['labelAlignment'];
+                        delete i.properties['fontSize'];
+                        delete i.properties['fontFamily'];
+                        delete i.properties['fontColor'];
+                        delete i.properties['fontColorAlternate'];
+                    // Banded multiples toggle
+                        if (!this.zebraStripe) {
+                            delete i.properties['zebraStripeApply'];
+                            delete i.properties['backgroundColorAlternate'];
+                        }
+                    // Border toggle
+                        if (!this.border) {
+                            delete i.properties['borderColor'];
+                            delete i.properties['borderStrokeWidth'];
+                            delete i.properties['borderStyle'];
+                        }
+                });
+                return enumerationObject;
+            }
     }

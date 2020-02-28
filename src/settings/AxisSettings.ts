@@ -1,11 +1,17 @@
+// Power BI API Dependencies
+    import powerbiVisualsApi from 'powerbi-visuals-api';
+    import VisualObjectInstance = powerbiVisualsApi.VisualObjectInstance;
+
 // Internal dependencies
+    import SettingsBase from '../settings/SettingsBase';
+    import Debugger from '../debug/Debugger';
     import { visualConstants } from '../visualConstants';
     let defaults = visualConstants.defaults;
 
 /**
  * Manages properties generic to all axis types in the visual.
  */
-    export default class AxisSettings {
+    export default class AxisSettings extends SettingsBase {
         // Show whole axis
             public show: boolean = defaults.axis.show;
         // Labels
@@ -42,4 +48,59 @@
             public gridlineStrokeWidth: number = defaults.axis.gridlineStrokeWidth;
         // Line styling to apply to gridlines
             public gridlineStrokeLineStyle: string = defaults.axis.gridlineStrokeStyle;
+
+            protected handleGridlineToggle(
+                instance: VisualObjectInstance
+            ) {
+                Debugger.LOG('Managing gridline toggle...');
+                if (!this.gridlines) {
+                    delete instance.properties['gridlineColor'];
+                    delete instance.properties['gridlineStrokeWidth'];
+                    delete instance.properties['gridlineStrokeLineStyle'];
+                }
+                return instance;
+            }
+
+            protected handleLabelToggle(
+                instance: VisualObjectInstance
+            ) {
+                Debugger.LOG('Managing label toggle...')
+                if (!this.showLabels) {
+                    delete instance.properties['labelPlacement'];
+                    delete instance.properties['fontColor'];
+                    delete instance.properties['fontSize'];
+                    delete instance.properties['fontFamily'];
+                    delete instance.properties['labelDisplayUnits'];
+                    delete instance.properties['precision'];
+                }
+                return instance;
+            }
+
+            protected handleTitleToggle(
+                instance: VisualObjectInstance
+            ) {
+                Debugger.LOG('Managing title toggle...')
+                if (!this.showTitle) {
+                    delete instance.properties['titleStyle'];
+                    delete instance.properties['titleColor'];
+                    delete instance.properties['titleText'];
+                    delete instance.properties['titleFontSize'];
+                    delete instance.properties['titleFontFamily'];
+                }
+                return instance;
+            }
+
+            protected handleAxisLabelPlacement(
+                instance: VisualObjectInstance,
+                options: {[propertyName: string]: any} = {}
+            ) {
+                Debugger.LOG('Managing axis placement...');
+                if (
+                    options &&
+                    !options.axisLabelPlacement
+                ) {
+                    delete instance.properties['labelPlacement'];
+                }
+                return instance;
+            }
     }

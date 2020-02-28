@@ -197,337 +197,72 @@
             public enumerateObjectInstances(
                 options: EnumerateVisualObjectInstancesOptions
             ): VisualObjectInstanceEnumeration {
-
                 let instances = (
                         <VisualObjectInstanceEnumerationObject>VisualSettings.enumerateObjectInstances(
                             this.settings || VisualSettings.getDefault(),
                             options
                         )
                     ).instances,
-                    objectName = options.objectName;
+                    objectName = options.objectName,
+                    enumerationObject: VisualObjectInstanceEnumerationObject = {
+                        containers: [],
+                        instances: instances,
+                    };
+                Debugger.FOOTER();
+                Debugger.LOG(`Object Enumeration: ${objectName}`);
 
-                const enumerationObject: VisualObjectInstanceEnumerationObject = {
-                    containers: [],
-                    instances: [],
-                };
-
-                switch (objectName) {
-
-                    case 'yAxis': {
-
-                        // Range validation
-                            instances[0].validValues = instances[0].validValues || {};
-                            instances[0].validValues.precision = {
-                                numberRange: {
-                                    min: visualConstants.ranges.precision.min,
-                                    max: visualConstants.ranges.precision.max
-                                },
-                            };
-                            instances[0].validValues.gridlineStrokeWidth = {
-                                numberRange: {
-                                    min: visualConstants.ranges.gridlineStrokeWidth.min,
-                                    max: visualConstants.ranges.gridlineStrokeWidth.max
-                                },
-                            };
-
-                        // Label toggle
-                            if (!this.settings.yAxis.showLabels) {
-                                delete instances[0].properties['labelPlacement'];
-                                delete instances[0].properties['fontColor'];
-                                delete instances[0].properties['fontSize'];
-                                delete instances[0].properties['fontFamily'];
-                                delete instances[0].properties['labelDisplayUnits'];
-                                delete instances[0].properties['precision'];
-                            }
-
-                        // Gridline toggle
-                            if (!this.settings.yAxis.gridlines) {
-                                delete instances[0].properties['gridlineColor'];
-                                delete instances[0].properties['gridlineStrokeWidth'];
-                                delete instances[0].properties['gridlineStrokeLineStyle'];
-                            }
-
-                        // Title toggle
-                            if (!this.settings.yAxis.showTitle) {
-                                delete instances[0].properties['titleStyle'];
-                                delete instances[0].properties['titleColor'];
-                                delete instances[0].properties['titleText'];
-                                delete instances[0].properties['titleFontSize'];
-                                delete instances[0].properties['titleFontFamily'];
-                            }
-
-                        // Title style toggle if units are none
-                            if (this.settings.yAxis.labelDisplayUnits === 1 || !this.viewModelHandler.viewModel.yAxis.numberFormat.displayUnit) {
-                                instances[0].properties['titleStyle'] = 'title';
-                                instances[0].validValues.titleStyle = [
-                                    'title'
-                                ];
-                            }
-
-                        // Axis placement
-                            if (!this.settings.features.axisLabelPlacement) {
-                                delete instances[0].properties['labelPlacement'];
-                            }
-
-                        break;
-                    }
-
-                    case 'xAxis': {
-
-                        // Range validation
-                            instances[0].validValues = instances[0].validValues || {};
-                            instances[0].validValues.gridlineStrokeWidth = {
-                                numberRange: {
-                                    min: visualConstants.ranges.gridlineStrokeWidth.min,
-                                    max: visualConstants.ranges.gridlineStrokeWidth.max
-                                },
-                            };
-                            instances[0].validValues.axisLineStrokeWidth = {
-                                numberRange: {
-                                    min: visualConstants.ranges.axisLineStrokeWidth.min,
-                                    max: visualConstants.ranges.axisLineStrokeWidth.max
-                                },
-                            };
-
-                        // Label toggle
-                            if (!this.settings.xAxis.showLabels) {
-                                delete instances[0].properties['labelPlacement'];
-                                delete instances[0].properties['fontColor'];
-                                delete instances[0].properties['fontSize'];
-                                delete instances[0].properties['fontFamily'];
-                            }
-
-                        // Gridline toggle
-                            if (!this.settings.xAxis.gridlines) {
-                                delete instances[0].properties['gridlineColor'];
-                                delete instances[0].properties['gridlineStrokeWidth'];
-                                delete instances[0].properties['gridlineStrokeLineStyle'];
-                            }
-
-                        // Title toggle
-                            if (!this.settings.xAxis.showTitle) {
-                                delete instances[0].properties['titleColor'];
-                                delete instances[0].properties['titleText'];
-                                delete instances[0].properties['titleFontSize'];
-                                delete instances[0].properties['titleFontFamily'];
-                            }
-
-                        // Axis line toggle
-                            if (!this.settings.xAxis.showAxisLine) {
-                                delete instances[0].properties['axisLineColor'];
-                                delete instances[0].properties['axisLineStrokeWidth'];
-                            }
-
-                        // Axis placement
-                            if (!this.settings.features.axisLabelPlacement) {
-                                delete instances[0].properties['labelPlacement'];
-                            }
-
-                        break;
-                    }
-
-                    case 'colorSelector': {
-
-                        // No longer needed, as all properties have been migrated
-                            instances = [];
-
-                        break;
-
-                    }
-
-                    case 'lines': {
-
-                        // Remove default instance, and replace with measure-based properties
-                            instances = [];
-                            for (let measure of this.viewModelHandler.viewModel.measureMetadata) {
-                                let displayName = measure.metadata.displayName,
-                                    containerIdx = enumerationObject.containers.push({displayName: displayName}) - 1;
-                                /** containerIdx doesn't work properly in the SDK yet, and there's no ETA on when it will. Until then,
-                                 *  we'll use a hack by pushing an integer field without validation to create a 'heading' */
-                                    if (containerIdx > 0) {
-                                        instances.push({
-                                            objectName: objectName,
-                                            displayName: '－－－－－－－－－－',
-                                            properties: {
-                                                measureName: null
-                                            },
-                                            selector: {
-                                                metadata: measure.metadata.queryName
-                                            }
-                                        });
-                                    }
-                                    instances.push({
-                                        objectName: objectName,
-                                        displayName: measure.metadata.displayName,
-                                        properties: {
-                                            measureName: null
-                                        },
-                                        selector: {
-                                            metadata: measure.metadata.queryName
-                                        }
-                                    });
-                                // The main body of our measure configuration
-                                    let inst: VisualObjectInstance = {
-                                        objectName: objectName,
-                                        properties: {
-                                            stroke: {
-                                                solid: {
-                                                    color: measure.stroke
-                                                }
-                                            },
-                                            strokeWidth: measure.strokeWidth,
-                                            showArea: measure.showArea,
-                                            backgroundTransparency: measure.backgroundTransparency,
-                                            lineShape: measure.lineShape,
-                                            lineStyle: measure.lineStyle
-                                        },
-                                        selector: {
-                                            metadata: measure.metadata.queryName
-                                        },
-                                        // containerIdx: containerIdx,
-                                        validValues: {
-                                            strokeWidth: {
-                                                numberRange: {
-                                                    min: visualConstants.ranges.shapeStrokeWidth.min,
-                                                    max: visualConstants.ranges.shapeStrokeWidth.max
-                                                }
-                                            }
-                                        }
-                                    };
-                                    if (!measure.showArea) {
-                                        delete inst.properties.backgroundTransparency;
-                                    }
-                                    instances.push(inst);
-                            }
-
-                        break;
-                    }
-
-                    case 'legend': {
-
-                        // Title toggle
-                            if (!this.settings.legend.showTitle) {
-                                delete instances[0].properties['titleText'];
-                                delete instances[0].properties['includeRanges'];
-                            }
-
-                        break;
-                    }
-
-                    case 'layout': {
-
-                        // Range validation
-                            instances[0].validValues = instances[0].validValues || {};
-                            instances[0].validValues.spacingBetweenColumns = {
-                                numberRange: {
-                                    min: visualConstants.ranges.spacing.min,
-                                    max: visualConstants.ranges.spacing.max
-                                },
-                            };
-                            instances[0].validValues.spacingBetweenRows = {
-                                numberRange: {
-                                    min: visualConstants.ranges.spacing.min,
-                                    max: visualConstants.ranges.spacing.max
+                // We try where possible to use the standard method signature to process the instance, but there are some exceptions...
+                    switch (objectName) {
+                        case 'yAxis': {
+                            enumerationObject = this.settings.yAxis.processEnumerationObject(
+                                enumerationObject,
+                                {
+                                    numberFormat: this.viewModelHandler.viewModel.yAxis.numberFormat,
+                                    axisLabelPlacement: this.settings.features.axisLabelPlacement
                                 }
-                            };
-                            instances[0].validValues.numberOfColumns = {
-                                numberRange: {
-                                    min: visualConstants.ranges.numberOfColumns.min,
-                                    max: visualConstants.ranges.numberOfColumns.max
-                                }
-                            };
-                            instances[0].validValues.multipleHeight =
-                            instances[0].validValues.multipleWidth = {
-                                numberRange: {
-                                    min: visualConstants.ranges.multipleSize.min,
-                                    max: visualConstants.ranges.multipleSize.max
-                                }
-                            };
-
-                        // Manage flow options
-                            switch (this.settings.layout.horizontalGrid) {
-                                case 'column': {
-                                    // Row spacing
-                                        if (!this.settings.layout.numberOfColumns) {
-                                            delete instances[0].properties['spacingBetweenRows'];
-                                        }
-                                    // No setting of width
-                                        delete instances[0].properties['multipleWidth'];
-                                    break;
-                                }
-                                case 'width': {
-                                    delete instances[0].properties['numberOfColumns'];
-                                    break;
-                                }
-                            }
-                            switch (this.settings.layout.verticalGrid) {
-                                case 'fit': {
-                                    // No setting of height
-                                        delete instances[0].properties['multipleHeight'];
-                                    break;
-                                }
-                            }
-                        break;
-
-                    }
-
-                    case 'heading': {
-                        // Banded multiples toggle
-                            if (!this.settings.smallMultiple.zebraStripe) {
-                                delete instances[0].properties['fontColourAlternate'];
-                            }
-                        break;
-                    }
-
-                    case 'smallMultiple': {
-
-                        // Conceal previously shown properties that have since been moved
-                            delete instances[0].properties['showMultipleLabel'];
-                            delete instances[0].properties['spacingBetweenColumns'];
-                            delete instances[0].properties['maximumMultiplesPerRow'];
-                            delete instances[0].properties['spacingBetweenRows'];
-                            delete instances[0].properties['labelPosition'];
-                            delete instances[0].properties['labelAlignment'];
-                            delete instances[0].properties['fontSize'];
-                            delete instances[0].properties['fontFamily'];
-                            delete instances[0].properties['fontColor'];
-                            delete instances[0].properties['fontColorAlternate'];
-
-                        // Range validation
-                            instances[0].validValues = instances[0].validValues || {};
-                            instances[0].validValues.borderStrokeWidth = {
-                                numberRange: {
-                                    min: visualConstants.ranges.borderStrokeWidth.min,
-                                    max: visualConstants.ranges.borderStrokeWidth.max
-                                }
-                            };
-
-                        // Banded multiples toggle
-                            if (!this.settings.smallMultiple.zebraStripe) {
-                                delete instances[0].properties['zebraStripeApply'];
-                                delete instances[0].properties['backgroundColorAlternate'];
-                            }
-
-                        // Border toggle
-                            if (!this.settings.smallMultiple.border) {
-                                delete instances[0].properties['borderColor'];
-                                delete instances[0].properties['borderStrokeWidth'];
-                                delete instances[0].properties['borderStyle'];
-                            }
-
-                        break;
-                    }
-
-                    case 'features': {
-                        if (!visualConstants.debug) {
-                            instances = [];
+                            );
+                            break;
                         }
-                        break;
+                        case 'xAxis': {
+                            enumerationObject = this.settings.xAxis.processEnumerationObject(
+                                enumerationObject,
+                                {
+                                    axisLabelPlacement: this.settings.features.axisLabelPlacement
+                                }
+                            );
+                            break;
+                        }
+                        case 'heading': {
+                            enumerationObject = this.settings.heading.processEnumerationObject(
+                                enumerationObject,
+                                {
+                                    zebraStripe: this.settings.smallMultiple.zebraStripe
+                                }
+                            )
+                            break;
+                        }
+                        case 'lines': {
+                            enumerationObject = this.settings.lines.processEnumerationObject(
+                                enumerationObject,
+                                {
+                                    measures: this.viewModelHandler.viewModel.measureMetadata
+                                }
+                            )
+                            break;
+                        }
+                        default: {
+                            // Check to see if the class has our method for processing business logic and run it if so
+                                if (typeof this.settings[`${objectName}`].processEnumerationObject === 'function') {
+                                    Debugger.LOG('processEnumerationObject found. Executing...');
+                                    enumerationObject = this.settings[`${objectName}`].processEnumerationObject(enumerationObject);
+                                } else {
+                                    Debugger.LOG('Couldn\'t find class processEnumerationObject function.');
+                                }
+                            break;
+                        }
                     }
 
-                }
-
-                enumerationObject.instances.push(...instances);
+                Debugger.LOG('Enumeration Object', enumerationObject);
                 return enumerationObject;
 
             }

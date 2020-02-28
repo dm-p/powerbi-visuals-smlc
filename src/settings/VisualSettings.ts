@@ -18,6 +18,7 @@
         public layout: SmallMultiplesLayoutSettings = new SmallMultiplesLayoutSettings();
         public heading: SmallMultiplesHeadingSettings = new SmallMultiplesHeadingSettings();
         public smallMultiple: SmallMultiplesStylingSettings = new SmallMultiplesStylingSettings();
+        public lines: LineSettings = new LineSettings();
         public legend: LegendSettings = new LegendSettings();
         public colorSelector: ColorSelectorSettings = new ColorSelectorSettings();
         public yAxis: ValueAxisSettings = new ValueAxisSettings();
