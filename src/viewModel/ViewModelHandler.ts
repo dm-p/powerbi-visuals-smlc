@@ -10,11 +10,11 @@
     import Fill = powerbiVisualsApi.Fill;
     import { legendInterfaces, axis } from 'powerbi-visuals-utils-chartutils';
     import MarkerShape = legendInterfaces.MarkerShape;
-    import { textMeasurementService, valueFormatter } from 'powerbi-visuals-utils-formattingutils';
-    import TextProperties = textMeasurementService.TextProperties;
-    import getTailoredTextOrDefault = textMeasurementService.textMeasurementService.getTailoredTextOrDefault;
-    import measureSvgTextWidth = textMeasurementService.textMeasurementService.measureSvgTextWidth;
-    import measureSvgTextHeight = textMeasurementService.textMeasurementService.measureSvgTextHeight;
+    import { textMeasurementService, valueFormatter, interfaces } from 'powerbi-visuals-utils-formattingutils';
+    import TextProperties = interfaces.TextProperties;
+    import getTailoredTextOrDefault = textMeasurementService.getTailoredTextOrDefault;
+    import measureSvgTextWidth = textMeasurementService.measureSvgTextWidth;
+    import measureSvgTextHeight = textMeasurementService.measureSvgTextHeight;
     import ILocalizationManager = powerbiVisualsApi.extensibility.ILocalizationManager;
 
 // External dependencies

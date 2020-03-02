@@ -8,8 +8,8 @@
     import VisualTooltipDataItem = powerbiVisualsApi.extensibility.VisualTooltipDataItem;
     import IVisualHost = powerbiVisualsApi.extensibility.visual.IVisualHost;
     import { textMeasurementService, valueFormatter } from 'powerbi-visuals-utils-formattingutils';
-    import getTailoredTextOrDefault = textMeasurementService.textMeasurementService.getTailoredTextOrDefault;
-    import measureSvgTextWidth = textMeasurementService.textMeasurementService.measureSvgTextWidth;
+    import getTailoredTextOrDefault = textMeasurementService.getTailoredTextOrDefault;
+    import measureSvgTextWidth = textMeasurementService.measureSvgTextWidth;
     import ISelectionManager = powerbiVisualsApi.extensibility.ISelectionManager;
     import {
         TooltipEventArgs,

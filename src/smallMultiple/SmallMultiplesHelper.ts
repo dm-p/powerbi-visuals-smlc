@@ -1,9 +1,10 @@
 // Power BI API references
     import {
         textMeasurementService,
+        interfaces
     } from 'powerbi-visuals-utils-formattingutils';
-    import TextProperties = textMeasurementService.TextProperties;
-    import measureSvgTextHeight = textMeasurementService.textMeasurementService.measureSvgTextHeight;
+    import TextProperties = interfaces.TextProperties;
+    import measureSvgTextHeight = textMeasurementService.measureSvgTextHeight;
 
 // Internal dependencies
     import Debugger from '../debug/Debugger';
