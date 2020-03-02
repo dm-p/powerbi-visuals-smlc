@@ -63,27 +63,19 @@
                 // Step over our objects/properties, test and add changes accordingly
                     migrationList.map((m, mi) => {
                         Debugger.LOG(`Checking if migration needed for legacy object: ${m.source.object}.${m.source.property}...`);
-                        if (    dataView.metadata
-                            &&  dataView.metadata.objects
-                            &&  dataView.metadata.objects.hasOwnProperty(`${m.source.object}`)
-                            &&  dataView.metadata.objects[m.source.object].hasOwnProperty(`${m.source.property}`)
-                            &&  dataView.metadata.objects[m.source.object][m.source.property] !== VisualSettings.getDefault()[m.source.object][m.source.property]
+                        if (
+                            dataView.metadata &&
+                            dataView.metadata.objects &&
+                            dataView.metadata.objects.hasOwnProperty(`${m.source.object}`) &&
+                            dataView.metadata.objects[m.source.object].hasOwnProperty(`${m.source.property}`) &&
+                            dataView.metadata.objects[m.source.object][m.source.property] !== VisualSettings.getDefault()[m.source.object][m.source.property]
                         ) {
-
                             Debugger.LOG(`Adding migration ${m.source.object}.${m.source.property} to ${m.destination.object}.${m.destination.property} to changes...`);
 
-                            // Placeholder objects and results if already created four source/detination
-                                let replace: VisualObjectInstance = {
-                                        objectName: m.destination.object,
-                                        selector: null,
-                                        properties: {}
-                                    },
+                            // Placeholder objects and results if already created for our source/destination
+                                let replace = DataViewHelper.newVisualObjectInstance(m.destination.object),
                                     repi = changes.replace.filter((c) => c.objectName === m.destination.object),
-                                    remove: VisualObjectInstance = {
-                                        objectName: m.source.object,
-                                        selector: null,
-                                        properties: {}
-                                    },
+                                    remove = DataViewHelper.newVisualObjectInstance(m.source.object),
                                     remi = changes.remove.filter((c) => c.objectName === m.source.object);
 
                             /**
@@ -134,30 +126,7 @@
                                 c.properties.verticalGrid = 'fit';
                             }
                         });
-
-                        Debugger.LOG('Migrating data colours...');
-                        dataView.metadata.columns.filter((c) =>
-                            c.roles.values && c.objects && c.objects.colorSelector && c.objects.colorSelector.fill
-                        ).map((m) => {
-                            changes.replace.push({
-                                objectName: 'lines',
-                                selector: {
-                                    metadata: m.queryName
-                                },
-                                properties: {
-                                    stroke: (<Fill>m.objects.colorSelector.fill).solid.color
-                                }
-                            });
-                            changes.remove.push({
-                                objectName: 'colorSelector',
-                                selector: {
-                                    metadata: m.queryName
-                                },
-                                properties: {
-                                    fill: null
-                                }
-                            });
-                        });
+                        changes = DataViewHelper.migrateColourValues(dataView, changes);
                     }
 
                 // Add in target version
@@ -175,6 +144,48 @@
                     } else {
                         Debugger.LOG('No migrations to apply!');
                     }
+            }
+
+        /**
+         * Migrates colour properties from the legacy property menu to the new measure-based one.
+         * @param dataView  - the `DataView` to process
+         * @param changes   
+         */
+            private static migrateColourValues(dataView: powerbiVisualsApi.DataView, changes: powerbiVisualsApi.VisualObjectInstancesToPersist) {
+                Debugger.LOG('Migrating data colours...');
+                dataView.metadata.columns.filter((c) => c.roles.values && c.objects && c.objects.colorSelector && c.objects.colorSelector.fill).map((m) => {
+                    changes.replace.push({
+                        objectName: 'lines',
+                        selector: {
+                            metadata: m.queryName
+                        },
+                        properties: {
+                            stroke: (<Fill>m.objects.colorSelector.fill).solid.color
+                        }
+                    });
+                    changes.remove.push({
+                        objectName: 'colorSelector',
+                        selector: {
+                            metadata: m.queryName
+                        },
+                        properties: {
+                            fill: null
+                        }
+                    });
+                });
+                return changes;
+            }
+
+        /**
+         * Creates a new template `VisualObjectInstance` for the specified `IMigrationObject`
+         * @param objectName - name of the object to template
+         */
+            private static newVisualObjectInstance(objectName: string): powerbiVisualsApi.VisualObjectInstance {
+                return {
+                    objectName: objectName,
+                    selector: null,
+                    properties: {}
+                };
             }
 
     }

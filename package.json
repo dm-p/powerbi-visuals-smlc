@@ -5,7 +5,8 @@
         "start": "pbiviz start",
         "package": "pbiviz package",
         "lint": "tslint -r \"node_modules/tslint-microsoft-contrib\"  \"+(src|test)/**/*.ts\"",
-        "test": "pbiviz package --resources --no-minify --no-pbiviz"
+        "test": "pbiviz package --resources --no-minify --no-pbiviz",
+        "unit": "karma start"
     },
     "devDependencies": {
         "@babel/polyfill": "^7.2.5",
