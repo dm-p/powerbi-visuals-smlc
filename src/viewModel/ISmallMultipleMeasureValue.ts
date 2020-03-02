@@ -1,7 +1,8 @@
 // Power BI API references
     import powerbiVisualsApi from 'powerbi-visuals-api';
-    import VisualTooltipDataItem = powerbiVisualsApi.extensibility.VisualTooltipDataItem;
-    import ISelectionId = powerbiVisualsApi.visuals.ISelectionId;
+    import powerbi = powerbiVisualsApi;
+    import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
+    import ISelectionId = powerbi.visuals.ISelectionId;
 
 /**
  * Handles the display or an individual measure value within our visual.

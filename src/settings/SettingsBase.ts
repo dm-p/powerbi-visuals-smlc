@@ -1,7 +1,8 @@
 // Power BI API Dependencies
     import powerbiVisualsApi from 'powerbi-visuals-api';
-    import ValidationOptions = powerbiVisualsApi.ValidationOptions;
-    import VisualObjectInstanceEnumerationObject = powerbiVisualsApi.VisualObjectInstanceEnumerationObject;
+    import powerbi = powerbiVisualsApi;
+    import ValidationOptions = powerbi.ValidationOptions;
+    import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 
 // Internal dependencies
     import Debugger from '../debug/Debugger';

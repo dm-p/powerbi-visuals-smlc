@@ -1,7 +1,8 @@
 // Power BI API Dependencies
     import powerbiVisualsApi from 'powerbi-visuals-api';
-    import VisualObjectInstance = powerbiVisualsApi.VisualObjectInstance;
-    import VisualObjectInstanceEnumerationObject = powerbiVisualsApi.VisualObjectInstanceEnumerationObject;
+    import powerbi = powerbiVisualsApi;
+    import VisualObjectInstance = powerbi.VisualObjectInstance;
+    import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 
 // Internal dependencies
     import SettingsBase from '../settings/SettingsBase';

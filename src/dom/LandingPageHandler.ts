@@ -1,8 +1,9 @@
 // Power BI API references
     import powerbiVisualsApi from 'powerbi-visuals-api';
-    import VisualUpdateOptions = powerbiVisualsApi.extensibility.visual.VisualUpdateOptions;
-    import IVisualHost = powerbiVisualsApi.extensibility.visual.IVisualHost;
-    import ILocalizationManager = powerbiVisualsApi.extensibility.ILocalizationManager;
+    import powerbi = powerbiVisualsApi;
+    import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
+    import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+    import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
 // External dependencies
     import * as d3 from 'd3';

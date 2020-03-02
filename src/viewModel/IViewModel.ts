@@ -1,6 +1,7 @@
 // Power BI API Dependencies
     import powerbiVisualsApi from 'powerbi-visuals-api';
-    import IViewport = powerbiVisualsApi.IViewport;
+    import powerbi = powerbiVisualsApi;
+    import IViewport = powerbi.IViewport;
     import { legendInterfaces } from 'powerbi-visuals-utils-chartutils';
     import LegendData = legendInterfaces.LegendData;
 

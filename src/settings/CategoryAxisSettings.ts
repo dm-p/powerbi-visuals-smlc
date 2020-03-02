@@ -1,7 +1,7 @@
 // Power BI API Dependencies
     import powerbiVisualsApi from 'powerbi-visuals-api';
-    import VisualObjectInstanceEnumerationObject = powerbiVisualsApi.VisualObjectInstanceEnumerationObject;
-    import { valueFormatter } from 'powerbi-visuals-utils-formattingutils';
+    import powerbi = powerbiVisualsApi;
+    import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 
 // Internal dependencies
     import { visualConstants } from '../visualConstants';

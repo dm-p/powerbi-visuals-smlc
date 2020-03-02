@@ -2,18 +2,19 @@
     import 'core-js/stable';
     import './../style/visual.less';
     import powerbiVisualsApi from 'powerbi-visuals-api';
-    import VisualConstructorOptions = powerbiVisualsApi.extensibility.visual.VisualConstructorOptions;
-    import VisualUpdateOptions = powerbiVisualsApi.extensibility.visual.VisualUpdateOptions;
-    import IVisual = powerbiVisualsApi.extensibility.visual.IVisual;
-    import EnumerateVisualObjectInstancesOptions = powerbiVisualsApi.EnumerateVisualObjectInstancesOptions;
-    import VisualObjectInstance = powerbiVisualsApi.VisualObjectInstance;
-    import DataView = powerbiVisualsApi.DataView;
-    import VisualObjectInstanceEnumerationObject = powerbiVisualsApi.VisualObjectInstanceEnumerationObject;
-    import VisualObjectInstanceEnumeration = powerbiVisualsApi.VisualObjectInstanceEnumeration;
-    import IVisualHost = powerbiVisualsApi.extensibility.visual.IVisualHost;
-    import IVisualEventService = powerbiVisualsApi.extensibility.IVisualEventService;
-    import ILocalizationManager = powerbiVisualsApi.extensibility.ILocalizationManager;
-    import VisualUpdateType = powerbiVisualsApi.VisualUpdateType;
+    import powerbi = powerbiVisualsApi;
+    import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
+    import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
+    import IVisual = powerbi.extensibility.visual.IVisual;
+    import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
+    import VisualObjectInstance = powerbi.VisualObjectInstance;
+    import DataView = powerbi.DataView;
+    import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
+    import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
+    import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+    import IVisualEventService = powerbi.extensibility.IVisualEventService;
+    import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
+    import VisualUpdateType = powerbi.VisualUpdateType;
     import { createTooltipServiceWrapper } from 'powerbi-visuals-utils-tooltiputils';
 
 // Internal Dependencies

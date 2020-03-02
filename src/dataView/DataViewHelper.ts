@@ -1,10 +1,11 @@
 // Power BI API references
     import powerbiVisualsApi from 'powerbi-visuals-api';
-    import DataViewMetadataColumn = powerbiVisualsApi.DataViewMetadataColumn;
-    import VisualObjectInstance = powerbiVisualsApi.VisualObjectInstance;
-    import IVisualHost = powerbiVisualsApi.extensibility.visual.IVisualHost;
-    import DataView = powerbiVisualsApi.DataView;
-    import Fill = powerbiVisualsApi.Fill;
+    import powerbi = powerbiVisualsApi;
+    import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+    import VisualObjectInstance = powerbi.VisualObjectInstance;
+    import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+    import DataView = powerbi.DataView;
+    import Fill = powerbi.Fill;
 
 // Internal dependencies
     import VisualSettings from '../settings/VisualSettings';
@@ -55,7 +56,7 @@
                 Debugger.LOG('Target version', targetVersion);
 
                 // We'll use this to accumulate changes to make to the object instances
-                    let changes: powerbiVisualsApi.VisualObjectInstancesToPersist = {
+                    let changes: powerbi.VisualObjectInstancesToPersist = {
                         replace: [],
                         remove: []
                     };
@@ -151,7 +152,7 @@
          * @param dataView  - the `DataView` to process
          * @param changes   
          */
-            private static migrateColourValues(dataView: powerbiVisualsApi.DataView, changes: powerbiVisualsApi.VisualObjectInstancesToPersist) {
+            private static migrateColourValues(dataView: powerbi.DataView, changes: powerbi.VisualObjectInstancesToPersist) {
                 Debugger.LOG('Migrating data colours...');
                 dataView.metadata.columns.filter((c) => c.roles.values && c.objects && c.objects.colorSelector && c.objects.colorSelector.fill).map((m) => {
                     changes.replace.push({
@@ -180,7 +181,7 @@
          * Creates a new template `VisualObjectInstance` for the specified `IMigrationObject`
          * @param objectName - name of the object to template
          */
-            private static newVisualObjectInstance(objectName: string): powerbiVisualsApi.VisualObjectInstance {
+            private static newVisualObjectInstance(objectName: string): powerbi.VisualObjectInstance {
                 return {
                     objectName: objectName,
                     selector: null,

@@ -1,21 +1,22 @@
 // Power BI API Dependencies
     import powerbiVisualsApi from 'powerbi-visuals-api';
+    import powerbi = powerbiVisualsApi;
     import { legend, legendInterfaces } from 'powerbi-visuals-utils-chartutils';
     import ILegend = legendInterfaces.ILegend;
     import LegendPosition = legendInterfaces.LegendPosition;
     import positionChartArea = legend.positionChartArea;
     import createLegend = legend.createLegend;
-    import VisualTooltipDataItem = powerbiVisualsApi.extensibility.VisualTooltipDataItem;
-    import IVisualHost = powerbiVisualsApi.extensibility.visual.IVisualHost;
+    import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
+    import IVisualHost = powerbi.extensibility.visual.IVisualHost;
     import { textMeasurementService, valueFormatter } from 'powerbi-visuals-utils-formattingutils';
     import getTailoredTextOrDefault = textMeasurementService.getTailoredTextOrDefault;
     import measureSvgTextWidth = textMeasurementService.measureSvgTextWidth;
-    import ISelectionManager = powerbiVisualsApi.extensibility.ISelectionManager;
+    import ISelectionManager = powerbi.extensibility.ISelectionManager;
     import {
         TooltipEventArgs,
         ITooltipServiceWrapper
     } from 'powerbi-visuals-utils-tooltiputils';
-    import ISelectionId = powerbiVisualsApi.visuals.ISelectionId;
+    import ISelectionId = powerbi.visuals.ISelectionId;
 
 // External dependencies
     import * as d3 from 'd3';

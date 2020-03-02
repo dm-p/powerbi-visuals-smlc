@@ -1,13 +1,14 @@
 // Power BI API references
     import powerbiVisualsApi from 'powerbi-visuals-api';
-    import IVisualHost = powerbiVisualsApi.extensibility.visual.IVisualHost;
-    import VisualUpdateOptions = powerbiVisualsApi.extensibility.visual.VisualUpdateOptions;
-    import DataViewMetadata = powerbiVisualsApi.DataViewMetadata;
-    import DataViewMetadataColumn = powerbiVisualsApi.DataViewMetadataColumn;
-    import DataViewCategoryColumn = powerbiVisualsApi.DataViewCategoryColumn;
-    import DataViewObject = powerbiVisualsApi.DataViewObject;
-    import DataViewCategorical = powerbiVisualsApi.DataViewCategorical;
-    import Fill = powerbiVisualsApi.Fill;
+    import powerbi = powerbiVisualsApi;
+    import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+    import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
+    import DataViewMetadata = powerbi.DataViewMetadata;
+    import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+    import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+    import DataViewObject = powerbi.DataViewObject;
+    import DataViewCategorical = powerbi.DataViewCategorical;
+    import Fill = powerbi.Fill;
     import { legendInterfaces, axis } from 'powerbi-visuals-utils-chartutils';
     import MarkerShape = legendInterfaces.MarkerShape;
     import { textMeasurementService, valueFormatter, interfaces } from 'powerbi-visuals-utils-formattingutils';
@@ -15,7 +16,7 @@
     import getTailoredTextOrDefault = textMeasurementService.getTailoredTextOrDefault;
     import measureSvgTextWidth = textMeasurementService.measureSvgTextWidth;
     import measureSvgTextHeight = textMeasurementService.measureSvgTextHeight;
-    import ILocalizationManager = powerbiVisualsApi.extensibility.ILocalizationManager;
+    import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
 // External dependencies
     import * as d3 from 'd3';
@@ -391,8 +392,8 @@
          * @param measure   - measure to retrieve colour value for.
          */
             private getDefaultFillColour(
-                measure: powerbiVisualsApi.DataViewMetadataColumn
-            ): powerbiVisualsApi.Fill {
+                measure: powerbi.DataViewMetadataColumn
+            ): powerbi.Fill {
                 return {
                     solid: {
                         color: this.host.colorPalette.getColor(`${measure.displayName}`).value

@@ -1,6 +1,7 @@
 // Power BI API references
     import powerbiVisualsApi from 'powerbi-visuals-api';
-    import ISelectionId = powerbiVisualsApi.visuals.ISelectionId;
+    import powerbi = powerbiVisualsApi;
+    import ISelectionId = powerbi.visuals.ISelectionId;
 
 // Internal dependencies
     import ISmallMultipleMeasure from './ISmallMultipleMeasure';
