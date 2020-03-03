@@ -256,7 +256,8 @@
                 let measures: ISmallMultipleMeasure[] = [];
                 this.viewModel.measureMetadata.map((m, mi) => {
                     Debugger.LOG(`Measure: ${m.metadata.displayName}`);
-                    let values: ISmallMultipleMeasureValue[] = [];
+                    let values: ISmallMultipleMeasureValue[] = [],
+                        highlightValues: number[] = [];
                     // Filter values by measure and add to array element
                     this.categorical.values.filter((v) => v.source.queryName === m.metadata.queryName)
                         .map((v, vi) => {
@@ -274,6 +275,11 @@
                                 value: d3.max([value, this.viewModel.statistics.max && this.viewModel.statistics.max.value]),
                                 category: null,
                                 index: null
+                            };
+                            if (v.highlights) {
+                                highlightValues.push(
+                                    <number>v.highlights[categoryIndex]
+                                );    
                             };
                             values.push({
                                 index: vi,
@@ -302,6 +308,7 @@
                         let statistics: IStatistics = this.getStatisticsForMeasure(values);
                         measures.push({
                             values: values,
+                            highlight: highlightValues.length === 0 || highlightValues.filter((h) => h).length > 0,
                             statistics: statistics
                         });
                 });
@@ -324,6 +331,7 @@
                 this.viewModel.multiples.push({
                     name: categoryName,
                     measures: measures,
+                    highlight: measures.filter((m) => m.highlight).length > 0,
                     margin: {
                         top: visualConstants.defaults.smallMultiple.margin.top,
                         bottom: visualConstants.defaults.smallMultiple.margin.bottom,

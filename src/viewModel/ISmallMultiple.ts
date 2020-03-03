@@ -13,6 +13,7 @@
     export default interface ISmallMultiple {
         name: string;
         measures: ISmallMultipleMeasure[];
+        highlight: boolean;
         margin: IElementSideDimension;
         spacing: IElementSideDimension;
         selectionId: ISelectionId;

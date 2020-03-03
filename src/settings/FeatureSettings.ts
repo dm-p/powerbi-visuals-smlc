@@ -19,6 +19,8 @@
             public axisLabelPlacement: boolean = defaults.features.axisLabelPlacement;
         // Enable context menu
             public contextMenu: boolean = defaults.features.contextMenu;
+        // Enable filter other visuals
+            public filterOtherVisuals: boolean = defaults.features.filterOtherVisuals;
 
         /**
          * Business logic for the properties within this menu.

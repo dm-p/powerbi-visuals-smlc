@@ -34,6 +34,7 @@
     import AxisSettings from '../settings/AxisSettings';
     import EAxisType from '../viewModel/EAxisType';
     import LandingPageHandler from './LandingPageHandler';
+    import { syncSelectionState } from './selectionManager';
 
 /**
  * Manages the rendering/display of the visual
@@ -64,12 +65,20 @@
             public selectionManager: ISelectionManager;
         // Tooltip service
             public tooltipServiceWrapper: ITooltipServiceWrapper;
+        // Selected small multiples
+            private smSelection: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>;
 
         constructor(
-            visualContainer: HTMLElement
+            visualContainer: HTMLElement,
+            visualHost: IVisualHost
         ) {
             Debugger.LOG('Chart helper constructor');
             this.visualContainer = visualContainer;
+            this.host = visualHost;
+            this.selectionManager = this.host.createSelectionManager();
+            this.selectionManager.registerOnSelectCallback(() => {
+                syncSelectionState(this.smSelection, <ISelectionId[]>this.selectionManager.getSelectionIds());
+            });
             this.createLegendContainer();
             this.createChartContainer();
             this.createLandingPageContainer();
@@ -323,6 +332,8 @@
 
                     // Small multiple SVGs
                         let multiples = this.renderSmallMultiplesForRow(row, r);
+                        this.smSelection = this.chartContainer
+                            .selectAll('.small-multiple');
 
                     // Borders
                         this.renderSmallMultipleBorders(row, r);
@@ -373,18 +384,25 @@
                     // Bind tooltip events
                         this.bindTooltipEvents(multiples);
 
-                    // Bind context menu
-                        this.bindContextMenu();
-
-                    // Add overlayscrollbars
-                        OverlayScrollbars(document.querySelector('.visual-canvas'), {
-                            scrollbars: {
-                                clickScrolling: true
-                            }
-                        });
-
                 }
 
+            // Bind selection events
+                syncSelectionState(
+                    this.smSelection,
+                    <ISelectionId[]>this.selectionManager.getSelectionIds()
+                );
+                this.bindSmallMultipleSelection();
+                this.bindClearAllSelections();
+
+            // Bind context menu
+                this.bindContextMenu();
+
+            // Add overlayscrollbars
+                OverlayScrollbars(document.querySelector('.visual-canvas'), {
+                    scrollbars: {
+                        clickScrolling: true
+                    }
+                });
         }
 
     /**
@@ -399,6 +417,7 @@
 
     /**
      * Binds the context menu to the small multiple the mouse is over
+     * TODO: need to clear now we have selection as it can get stuck
      */
         private bindContextMenu() {
             if (this.settings.features.contextMenu && this.host.allowInteractions) {
@@ -421,6 +440,39 @@
                         mouseEvent.preventDefault();
                     });
             }
+        }
+
+        private bindSmallMultipleSelection() {
+            this.smSelection.on('click', (d) => {
+                // Allow selection only if the visual is rendered in a view that supports interactivity (e.g. Report)
+                if (this.host.allowInteractions && this.settings.features.filterOtherVisuals) {
+                    Debugger.LOG('Clicked on SM - filter by category');
+                    const isCtrlPressed: boolean = (<MouseEvent>d3.event).ctrlKey;
+    
+                    this.selectionManager
+                        .select(d.selectionId, isCtrlPressed)
+                        .then((ids: ISelectionId[]) => {
+                            syncSelectionState(this.smSelection, ids);
+                        });
+    
+                    (<Event>d3.event).stopPropagation();
+                }
+            });
+        }        
+
+        private bindClearAllSelections() {
+            this.chartContainer.on('click', (d) => {
+                if (this.host.allowInteractions) {
+                    Debugger.LOG('Clicked on Chart - clear down selection');
+                    this.selectionManager
+                        .clear()
+                        .then(() => {
+                            syncSelectionState(this.smSelection, []);
+                        });
+
+                    (<Event>d3.event).stopPropagation();
+                }
+            });
         }
 
     /**
@@ -1035,7 +1087,7 @@
         }
 
     /**
-     * Adds all main SVG element containers for each small multipe for the specified row group
+     * Adds all main SVG element containers for each small multiple for the specified row group
      */
         private renderSmallMultiplesForRow(
             element: d3.Selection<SVGGElement, any, any, any>,
@@ -1049,8 +1101,16 @@
                         .append('svg')
                             .classed('small-multiple', true)
                             .attr('x', (d, i) => i * this.viewModel.layout.smallMultiples.multiple.xOffset)
+                            .style('fill-opacity', (d) => this.getSmallMultipleOpacity(d))
+                            .style('stroke-opacity', (d) => this.getSmallMultipleOpacity(d))
                         .append('g')
                             .classed('small-multiple-canvas', true);
+        }
+
+        private getSmallMultipleOpacity(sm: ISmallMultiple) {
+            return sm.highlight === true
+                ? visualConstants.defaults.selection.solidOpacity
+                : visualConstants.defaults.selection.transparentOpacity;
         }
 
     /**

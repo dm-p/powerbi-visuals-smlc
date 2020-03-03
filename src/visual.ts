@@ -7,7 +7,6 @@
     import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
     import IVisual = powerbi.extensibility.visual.IVisual;
     import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
-    import VisualObjectInstance = powerbi.VisualObjectInstance;
     import DataView = powerbi.DataView;
     import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
     import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
@@ -54,10 +53,8 @@
 
                     this.viewModelHandler = new ViewModelHandler(this.host);
                     this.localisationManager = this.host.createLocalizationManager();
-                    this.chartHelper = new ChartHelper(this.visualContainer);
+                    this.chartHelper = new ChartHelper(this.visualContainer, options.host);
                     this.landingPageHandler = new LandingPageHandler(this.chartHelper.landingContainer, this.localisationManager);
-                    this.chartHelper.host = this.host;
-                    this.chartHelper.selectionManager = this.host.createSelectionManager();
                     this.chartHelper.tooltipServiceWrapper = createTooltipServiceWrapper(this.host.tooltipService, options.element);
                     this.events = this.host.eventService;
                     Debugger.LOG('Visual constructor ran successfully :)');
@@ -139,6 +136,7 @@
                                 this.chartHelper.addCanvas();
                                 this.chartHelper.renderMasterAxes();
                                 this.chartHelper.renderSmallMultiples();
+
                             } else {
                                 Debugger.LOG('View model is not valid!');
                                 this.chartHelper.renderLegend();
@@ -146,6 +144,7 @@
                             }
 
                         // Signal that we've finished rendering
+                            // this.selfFiltered = false;
                             this.events.renderingFinished(options);
                             Debugger.LOG('Finished rendering');
                             Debugger.LOG('View Model', this.viewModelHandler.viewModel);
@@ -155,6 +154,7 @@
                     } catch (e) {
 
                         // Signal that we've encountered an error
+                            // this.selfFiltered = false;
                             this.events.renderingFailed(options, e);
                             Debugger.HEADING('Rendering failed');
                             Debugger.LOG('View Model', this.viewModelHandler.viewModel);

@@ -7,5 +7,6 @@
  */
     export default interface ISmallMultipleMeasure {
         values: ISmallMultipleMeasureValue[];
+        highlight: boolean;
         statistics: IStatistics;
     }

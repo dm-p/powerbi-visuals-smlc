@@ -7,7 +7,7 @@
         strokeWidthMax = 5;
 
     export const visualConstants = {
-        debug: false,
+        debug: true,
         about: {
             version: '2.1.0',
             usageUrl: 'https://bit.ly/powerbi-smlc'
@@ -16,9 +16,14 @@
             minPx: 75
         },
         defaults: {
+            selection: {
+                solidOpacity: 1,
+                transparentOpacity: 0.4
+            },
             features: {
                 axisLabelPlacement: false,
                 contextMenu: true,
+                filterOtherVisuals: true
             },
             font: {
                 size: 11,

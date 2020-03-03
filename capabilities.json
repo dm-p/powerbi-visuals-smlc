@@ -1191,6 +1191,12 @@
                     "type": {
                         "bool": true
                     }
+                },
+                "filterOtherVisuals": {
+                    "displayName": "Filter Other Visuals",
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         }
@@ -1252,5 +1258,6 @@
             "smallMultiple"
         ]
     },
-    "supportsLandingPage": true
+    "supportsLandingPage": true,
+    "supportsHighlight": true
 }
