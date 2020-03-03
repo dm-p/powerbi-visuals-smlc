@@ -7,7 +7,7 @@
         strokeWidthMax = 5;
 
     export const visualConstants = {
-        debug: true,
+        debug: false,
         about: {
             version: '2.1.0',
             usageUrl: 'https://bit.ly/powerbi-smlc'

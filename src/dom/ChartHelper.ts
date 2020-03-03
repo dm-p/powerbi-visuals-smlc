@@ -417,7 +417,6 @@
 
     /**
      * Binds the context menu to the small multiple the mouse is over
-     * TODO: need to clear now we have selection as it can get stuck
      */
         private bindContextMenu() {
             if (this.settings.features.contextMenu && this.host.allowInteractions) {
@@ -447,6 +446,11 @@
                 // Allow selection only if the visual is rendered in a view that supports interactivity (e.g. Report)
                 if (this.host.allowInteractions && this.settings.features.filterOtherVisuals) {
                     Debugger.LOG('Clicked on SM - filter by category');
+                    /** If we have the context menu open, there's nothing in the API currently that lets us close it.
+                     *  It does close if somewhere else in the UI is clicked, so this is a 'meh' way we can manage this
+                     *  without borking the selection */
+                        this.visualContainer.click();
+
                     const isCtrlPressed: boolean = (<MouseEvent>d3.event).ctrlKey;
     
                     this.selectionManager

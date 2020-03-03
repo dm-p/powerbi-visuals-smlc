@@ -82,6 +82,8 @@
             static INITIAL_STATE(): IViewModel {
                 return {
                     locale: '',
+                    crossHighlight: false,
+                    allHighlight: false,
                     dataViewIsValid: false,
                     measureMetadata: [],
                     multiples: [],
@@ -176,6 +178,7 @@
                     this.categoryColumn = this.metadata.columns.filter((c) => c.roles.category)[0];
                     this.viewModel.dataViewIsValid = true;
                     this.viewModel.locale = this.host.locale;
+                    this.viewModel.crossHighlight = this.categorical.values.filter((v) => v.highlights).length > 0;
             }
 
         /**
@@ -235,6 +238,9 @@
                         let measures = this.addMeasuresToSmallMultiple(ci, name);
                         this.addSmallMultipleToViewModel(name, measures, ci);
                     });
+
+                // Flag that all multiples should be shown so we can cross-check against the cross-highlight and clear accordingly
+                    this.viewModel.allHighlight = this.viewModel.multiples.length === this.viewModel.multiples.filter((m) => m.highlight).length;
 
                     this.smallMultiplesHelper = new SmallMultiplesHelper(
                         this.viewModel.multiples.length,

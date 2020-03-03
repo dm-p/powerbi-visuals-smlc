@@ -18,6 +18,8 @@
  */
     export default interface IViewModel {
         locale: string;
+        crossHighlight: boolean;
+        allHighlight: boolean;
         dataViewIsValid: boolean;
         initialViewport: IViewport;
         viewport: IViewport;
