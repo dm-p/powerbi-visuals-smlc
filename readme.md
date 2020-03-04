@@ -14,6 +14,7 @@ By Daniel Marsh-Patrick
 | | Development | Submitted | Approved | Available |
 |-|:--:|:-:|:-:|:-:|
 | [2.0.0.121](./doc/change_log.md#200121-tbc) | | | | ✔ |
+| [2.1.0](https://github.com/dm-p/powerbi-visuals-smlc/milestone/3) | 🚧 | | | |
 
 > **If a version is in any status other than *Available* this cannot be imported via file or via the Marketplace, even if the listing is showing the new version**. [More on this below](#More-About-Current-Status).
 
