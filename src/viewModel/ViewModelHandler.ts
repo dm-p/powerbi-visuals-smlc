@@ -11,6 +11,7 @@
     import Fill = powerbi.Fill;
     import { legendInterfaces, axis } from 'powerbi-visuals-utils-chartutils';
     import MarkerShape = legendInterfaces.MarkerShape;
+    import LineStyle = legendInterfaces.LineStyle;
     import { textMeasurementService, valueFormatter, interfaces } from 'powerbi-visuals-utils-formattingutils';
     import TextProperties = interfaces.TextProperties;
     import getTailoredTextOrDefault = textMeasurementService.getTailoredTextOrDefault;
@@ -444,7 +445,8 @@
                             color: m.stroke,
                             markerShape: MarkerShape.longDash,
                             selected: false,
-                            identity: m.selectionId
+                            identity: m.selectionId,
+                            lineStyle: LineStyle[m.lineStyle]
                         };
                     })
                 };
