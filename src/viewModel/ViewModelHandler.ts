@@ -6,7 +6,6 @@
     import DataViewMetadata = powerbi.DataViewMetadata;
     import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
     import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
-    import DataViewObject = powerbi.DataViewObject;
     import DataViewCategorical = powerbi.DataViewCategorical;
     import Fill = powerbi.Fill;
     import { legendInterfaces, axis } from 'powerbi-visuals-utils-chartutils';
@@ -247,7 +246,9 @@
                         this.viewModel.multiples.length,
                         this.settings.layout,
                         this.settings.heading,
-                        this.settings.smallMultiple
+                        this.settings.smallMultiple,
+                        this.smallMultipleColumn.source,
+                        this.viewModel.locale
                     );
             }
 

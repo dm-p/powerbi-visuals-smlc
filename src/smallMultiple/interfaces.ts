@@ -1,6 +1,8 @@
 // Power BI API dependencies
     import { interfaces } from 'powerbi-visuals-utils-formattingutils';
     import TextProperties = interfaces.TextProperties;
+    import { valueFormatter } from 'powerbi-visuals-utils-formattingutils';
+    import  IValueFormatter = valueFormatter.IValueFormatter;
 
 /**
  * Describes the properties of a small multiple heading.
@@ -8,6 +10,8 @@
     export interface ISmallMultiplesHeading {
         // Font family and size properties.
             textProperties: TextProperties;
+        // Formatter for heading.
+            formatter: IValueFormatter;
         // Computed height of text, based on `textProperties`.
             textHeight: number;
         // SVG `dominant-baseline` attribute to apply to text.

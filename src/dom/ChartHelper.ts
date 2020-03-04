@@ -970,7 +970,8 @@
                         .attr('y', this.viewModel.layout.smallMultiples.multiple.heading.y)
                         .text((d) => {
                                 // This should map to view model properly
-                                this.viewModel.layout.smallMultiples.multiple.heading.textProperties.text = d.name;
+                                this.viewModel.layout.smallMultiples.multiple.heading.textProperties.text = 
+                                    this.viewModel.layout.smallMultiples.multiple.heading.formatter.format(d.name);
                                 return getTailoredTextOrDefault(this.viewModel.layout.smallMultiples.multiple.heading.textProperties, this.viewModel.layout.smallMultiples.multiple.inner.width);
                             })
                         .style('text-anchor', this.viewModel.layout.smallMultiples.multiple.heading.textAnchor)

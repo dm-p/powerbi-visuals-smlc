@@ -1,10 +1,14 @@
 // Power BI API references
+    import powerbiVisualsApi from 'powerbi-visuals-api';
+    import powerbi = powerbiVisualsApi;
+    import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
     import {
         textMeasurementService,
         interfaces
     } from 'powerbi-visuals-utils-formattingutils';
     import TextProperties = interfaces.TextProperties;
     import measureSvgTextHeight = textMeasurementService.measureSvgTextHeight;
+    import { valueFormatter } from 'powerbi-visuals-utils-formattingutils';
 
 // Internal dependencies
     import Debugger from '../debug/Debugger';
@@ -34,18 +38,33 @@
             private headingSettings: SmallMultiplesHeadingSettings;
         // Styling settings from properties pane.
             private stylingSettings: SmallMultiplesStylingSettings;
+        // Category column metadata from data view.
+            private smallMultipleColumnMetadata: DataViewMetadataColumn;
+        // Locale used by the visual
+            private locale: string;
 
     /**
      * Instantiates a new `SmallMultiplesHelper`.
-     * @param count             - Number of small multiples to work with.
-     * @param layoutSettings    - Layout settings from properties pane.
-     * @param stylingSettings   - Styling settings from properties pane.
+     * @param count                         - Number of small multiples to work with.
+     * @param layoutSettings                - Layout settings from properties pane.
+     * @param stylingSettings               - Styling settings from properties pane.
+     * @param smallMultipleColumnMetadata   - Column metadata from the Power BI `dataView`
+     * @param locale                        - Visual's locale
      */
-        constructor(count: number, layoutSettings: SmallMultiplesLayoutSettings, headingSettings: SmallMultiplesHeadingSettings, stylingSettings: SmallMultiplesStylingSettings) {
+        constructor(
+            count: number,
+            layoutSettings: SmallMultiplesLayoutSettings,
+            headingSettings: SmallMultiplesHeadingSettings,
+            stylingSettings: SmallMultiplesStylingSettings,
+            smallMultipleColumnMetadata: DataViewMetadataColumn,
+            locale: string
+        ) {
             Debugger.LOG('SmallMultiplesHelper initialised :)');
             this.layoutSettings = layoutSettings;
             this.headingSettings = headingSettings;
             this.stylingSettings = stylingSettings;
+            this.smallMultipleColumnMetadata = smallMultipleColumnMetadata;
+            this.locale = locale;
             this.layout = SmallMultiplesHelper.INITIAL_STATE();
             this.layout.count = count;
             // Resolve heading properties
@@ -315,6 +334,10 @@
             };
             return {
                 textProperties: textProperties,
+                formatter: valueFormatter.create({
+                    format: valueFormatter.getFormatStringByColumn(this.smallMultipleColumnMetadata),
+                    cultureSelector: this.locale
+                }),
                 textHeight: this.headingSettings.show
                     ?   measureSvgTextHeight(textProperties, 'A')
                     :   0,
