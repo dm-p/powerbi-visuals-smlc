@@ -4,6 +4,25 @@
 
 ---
 
+## 2.1.0.130 (2020-04-15)
+
+**SUBMITTED TO APPSOURCE; PENDING APPROVAL**
+
+The majority of changes are to underlying code in order to attempt certification of the visual with Microsoft, but some additional functionality has been squeezed in:
+
+### Minor Enhancements
+
+* The legend line styling will correctly mirror the measure if **Dashed**, **Dotted** or **Dot-Dash**.
+* Clicking a small mutiple will now filter other visuals by that category.
+* [Ctrl] + clicking a small multiple will filter other visuals by multiple categories.
+* Number formats for non-US locales will now work as per the data model (due to bug in [powerbi-visuals-utils-formattingutils](https://github.com/microsoft/powerbi-visuals-utils-formattingutils/issues/36) - updated library has been added).
+
+### Bugs Fixed
+
+* [SEVERE] Linear x-axes starting at **0** break the visual (#6)
+* [MINOR] Using a Date Value in the Small Multiple Title Doesn't Respect Formatting (#5)
+
+
 ## 2.0.0.121 (2020-01-15)
 
 ### Major Changes
@@ -62,7 +81,7 @@
 
 ### Known Issues
 
-* If your measure contains a specific number format, the visual will not render this with respect to the user's locale. This appears to be an issue with one of the APIs, as the visual is coded to support locale. I've raised an issue for this with the custom visuals team and will advise as soon as possible.
+* If your measure contains a specific number format, the visual will not render this with respect to the user's locale. This appears to be an issue with one of the APIs, as the visual is coded to support locale. I've raised an issue for this with the custom visuals team and will advise as soon as possible. **Will be resolved in 2.1.0**.
 * Measures in the **Line Styling** menu are separated with hyphens (`----------`). This is because containers (where measures are selectable via dropdown) are not yet fully supported for non-Microsoft visuals. This is expected to be available in 2020 and as soon as it's available, it's definitely going into this one.
 
 ## 1.0.1.0 (2018-11-29)
