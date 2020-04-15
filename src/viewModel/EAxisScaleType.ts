@@ -1,5 +1,5 @@
 /**
- *
+ * Used to specify the type of axis within the visual so that we can code its behaviour correctly downstream.
  */
 enum EAxisScaleType {
     Linear = 0,

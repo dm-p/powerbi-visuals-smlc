@@ -4,7 +4,7 @@ import SmallMultiplesLayoutSettings from '../src/smallMultiple/SmallMultiplesLay
 import SmallMultiplesStylingSettings from '../src/smallMultiple/SmallMultiplesStylingSettings';
 import SmallMultiplesHeadingSettings from '../src/smallMultiple/SmallMultiplesHeadingSettings';
 
-/** Set up a simple helper for fixed width mode testing */
+// Set up a simple helper for fixed width mode testing
     function commonFixedWidth(): SmallMultiplesLayoutSettings {
         let layout = new SmallMultiplesLayoutSettings();
         layout.horizontalGrid = 'width';
@@ -14,7 +14,7 @@ import SmallMultiplesHeadingSettings from '../src/smallMultiple/SmallMultiplesHe
         return layout;
     }
 
-/** Set up a simple helper for fixed column mode testing */
+// Set up a simple helper for fixed column mode testing
     function commonFitColumns(): SmallMultiplesLayoutSettings {
         let layout = new SmallMultiplesLayoutSettings();
         layout.horizontalGrid = 'column';

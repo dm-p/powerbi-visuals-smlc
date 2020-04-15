@@ -13,8 +13,8 @@ By Daniel Marsh-Patrick
 
 | | Development | Submitted | Approved | Available |
 |-|:--:|:-:|:-:|:-:|
-| [2.0.0.121](./doc/change_log.md#200121-tbc) | | | | ✔ |
-| [2.1.0](https://github.com/dm-p/powerbi-visuals-smlc/milestone/3) | 🚧 | | | |
+| [2.0.0.121](./doc/change_log.md#200121-2020-01-15) | | | | ✔ |
+| [2.1.0.130](./doc/change_log.md#210130-2020-04-15) | | 🕰 | | |
 
 > **If a version is in any status other than *Available* this cannot be imported via file or via the Marketplace, even if the listing is showing the new version**. [More on this below](#More-About-Current-Status).
 
@@ -34,7 +34,7 @@ The latest version of the visual is **2.0.0.121**.
 
 The visual is [available in AppSource](https://appsource.microsoft.com/en-us/product/power-bi-visuals/WA104381711?src=website&mktcmpid=repo_main_page) (Power BI Marketplace). You can also download from this repository's [Releases section](https://github.com/dm-p/powerbi-visuals-smlc/releases).
 
-Please read the below or review the [Current Status](#Current-Status) table prior to attempting to load a version other then the one in the Marketplace.
+Please read the below or review the [Current Status](#Current-Status) table prior to attempting to load a version other then the one in the Marketplace, [or refer to this excellent article by OKViz](https://okviz.com/blog/updating-power-bi-custom-visuals/), which explains the process in much more detail.
 
 ## More About Current Status
 

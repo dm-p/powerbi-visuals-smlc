@@ -1,5 +1,5 @@
 /**
- *
+ * Used to manage the display of a data label within the visual.
  */
     export default interface IMeasureDataLabelValue {
         showDataPoint: boolean;

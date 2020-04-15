@@ -1191,6 +1191,12 @@
                     "type": {
                         "bool": true
                     }
+                },
+                "filterOtherVisuals": {
+                    "displayName": "Filter Other Visuals",
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         }

@@ -60,6 +60,9 @@ typings/
 # next.js build output
 .next
 
+# Local VS Code config
+.vscode/
+
 # Power BI Custom Visuals SDK-specific stuff
 .api/
 .tmp/

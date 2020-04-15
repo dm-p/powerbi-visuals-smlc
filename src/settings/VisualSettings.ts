@@ -1,8 +1,8 @@
-/** Power BI API Dependencies */
+// Power BI API Dependencies
     import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
     import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 
-/** Internal dependencies */
+// Internal dependencies
     import SmallMultiplesStylingSettings from '../smallMultiple/SmallMultiplesStylingSettings';
     import LegendSettings from './LegendSettings';
     import ColorSelectorSettings from './ColorSelectorSettings';
@@ -13,14 +13,14 @@
     import SmallMultiplesHeadingSettings from '../smallMultiple/SmallMultiplesHeadingSettings';
     import FeatureSettings from './FeatureSettings';
 
-/** Holds all visual objects/settings */
+// Holds all visual objects/settings
     export default class VisualSettings extends DataViewObjectsParser {
         public layout: SmallMultiplesLayoutSettings = new SmallMultiplesLayoutSettings();
         public heading: SmallMultiplesHeadingSettings = new SmallMultiplesHeadingSettings();
         public smallMultiple: SmallMultiplesStylingSettings = new SmallMultiplesStylingSettings();
+        public lines: LineSettings = new LineSettings();
         public legend: LegendSettings = new LegendSettings();
         public colorSelector: ColorSelectorSettings = new ColorSelectorSettings();
-        /** public lines: LineSettings = new LineSettings(); */
         public yAxis: ValueAxisSettings = new ValueAxisSettings();
         public xAxis: CategoryAxisSettings = new CategoryAxisSettings();
         public features: FeatureSettings = new FeatureSettings();
