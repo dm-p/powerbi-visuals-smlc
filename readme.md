@@ -13,8 +13,7 @@ By Daniel Marsh-Patrick
 
 | | Development | Submitted | Approved | Available |
 |-|:--:|:-:|:-:|:-:|
-| [2.0.0.121](./doc/change_log.md#200121-2020-01-15) | | | | ✔ |
-| [2.1.0.130](./doc/change_log.md#210130-2020-04-15) | | 🕰 | | |
+| [2.1.0.130](./doc/change_log.md#210130-2020-04-15) | | | | ✔ |
 
 > **If a version is in any status other than *Available* this cannot be imported via file or via the Marketplace, even if the listing is showing the new version**. [More on this below](#More-About-Current-Status).
 
@@ -30,7 +29,7 @@ Each small multiple uses the same X and Y scale to allow for consistent visual c
 
 ## Obtaining the Visual
 
-The latest version of the visual is **2.0.0.121**.
+The latest version of the visual is **2.1.0.130**.
 
 The visual is [available in AppSource](https://appsource.microsoft.com/en-us/product/power-bi-visuals/WA104381711?src=website&mktcmpid=repo_main_page) (Power BI Marketplace). You can also download from this repository's [Releases section](https://github.com/dm-p/powerbi-visuals-smlc/releases).
 
