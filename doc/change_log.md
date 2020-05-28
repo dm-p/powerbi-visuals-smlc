@@ -6,8 +6,6 @@
 
 ## 2.1.0.130 (2020-04-15)
 
-**SUBMITTED TO APPSOURCE; PENDING APPROVAL**
-
 The majority of changes are to underlying code in order to attempt certification of the visual with Microsoft, but some additional functionality has been squeezed in:
 
 ### Minor Enhancements
