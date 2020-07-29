@@ -535,7 +535,9 @@
                                 d3.select(e[i]).selectAll('.circle-item')
                                     .attr('transform', (d, di) => `translate(${x}, ${
                                             (<d3.ScaleLinear<number, number>>this.viewModel.yAxis.scale)(<number>dataPoints[this.viewModel.measureMetadata.length - 1 - di].value)
-                                        })`);
+                                        })`)
+                                    // #23: If we got a null value for closest data point then hide it
+                                    .style('display', (d, di) => <number>dataPoints[this.viewModel.measureMetadata.length - 1 - di].value === null ? 'none' : null);
                             });
 
         }
@@ -625,8 +627,7 @@
             measureIndex: number,
             xData: number | Date
         ) {
-            let data = multiple.measures[measureIndex].values
-                .filter((v) => v.value !== null),
+            let data = multiple.measures[measureIndex].values,
             bisectValue = d3.bisector((d: ISmallMultipleMeasureValue) => d.category).left,
             idx = bisectValue(data, xData, 1),
             d0 = data[idx - 1],

@@ -269,11 +269,12 @@
                     // Filter values by measure and add to array element
                     this.categorical.values.filter((v) => v.source.queryName === m.metadata.queryName)
                         .map((v, vi) => {
-                            let value = <number>v.values[categoryIndex], category = this.categoryColumn.type.dateTime
-                                ? new Date(<string>v.source.groupName)
-                                : this.categoryColumn.type.numeric
-                                    ? <number>v.source.groupName
-                                    : <string>v.source.groupName;
+                            let value = <number>v.values[categoryIndex],
+                                category = this.categoryColumn.type.dateTime
+                                    ? new Date(<string>v.source.groupName)
+                                    : this.categoryColumn.type.numeric
+                                        ? <number>v.source.groupName
+                                        : <string>v.source.groupName;
                             this.viewModel.statistics.min = {
                                 value: d3.min([value, this.viewModel.statistics.min && this.viewModel.statistics.min.value]),
                                 category: null,
@@ -289,23 +290,24 @@
                                     <number>v.highlights[categoryIndex]
                                 );    
                             };
+                            // We can only pass one selectionId to the canvas tooltip handler, so we should ensure that
+                            // all measures for this multiple/axis combination are included
+                                let selection = this.host.createSelectionIdBuilder()
+                                    .withCategory(this.categorical.categories[0], categoryIndex);
+                                this.viewModel.measureMetadata.forEach((md) => selection = selection.withMeasure(md.metadata.queryName));
+                                selection = selection
+                                    .withSeries(this.categorical.values, v);
                             values.push({
                                 index: vi,
                                 category: category,
                                 value: value,
-                                selectionId: this.host.createSelectionIdBuilder()
-                                    .withCategory(this.categorical.categories[0], categoryIndex)
-                                    .withMeasure(m.metadata.queryName)
-                                    .withSeries(this.categorical.values, this.categorical.values[vi])
-                                    .createSelectionId(),
-                                tooltip: value
-                                    ? {
-                                        header: `${categoryName} - ${valueFormatter.format(category, this.categoryColumn.format, false, this.viewModel.locale)}`,
-                                        displayName: m.metadata.displayName,
-                                        value: m.formatter.format(value),
-                                        color: m.stroke
-                                    }
-                                    : null
+                                selectionId: selection.createSelectionId(),
+                                tooltip: {
+                                    header: `${categoryName} - ${valueFormatter.format(category, this.categoryColumn.format, false, this.viewModel.locale)}`,
+                                    displayName: m.metadata.displayName,
+                                    value: m.formatter.format(value),
+                                    color: m.stroke
+                                }
                             });
                         });
 
