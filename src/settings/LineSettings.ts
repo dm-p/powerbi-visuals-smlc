@@ -60,7 +60,7 @@
                     Debugger.LOG('Processing individual measures...');
                     // Remove default instance, and replace with measure-based properties
                         enumerationObject.instances = [];
-                        for (let measure of <IMeasure[]>options.measures) {
+                        for (let measure of (<IMeasure[]>options.measures).filter((m) => m.role === 'dataPoint')) {
                             let displayName = measure.metadata.displayName,
                                 containerIdx = enumerationObject.containers.push({displayName: displayName}) - 1;
                             /** containerIdx doesn't work properly in the SDK yet, and there's no ETA on when it will. Until then,

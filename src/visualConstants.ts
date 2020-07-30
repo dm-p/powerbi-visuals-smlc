@@ -9,7 +9,7 @@
     export const visualConstants = {
         debug: false,
         about: {
-            version: '2.1.0',
+            version: '2.2.0',
             usageUrl: 'https://bit.ly/powerbi-smlc'
         },
         visual: {

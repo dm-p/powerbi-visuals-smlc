@@ -37,6 +37,7 @@
     import DataViewHelper from '../dataView/DataViewHelper';
     import IStatistics from './IStatistics';
     import SmallMultiplesHelper from '../smallMultiple/SmallMultiplesHelper';
+    import MeasureRole from './MeasureRole';
 
 /**
  * Manages everything needed to create our view model.
@@ -202,6 +203,9 @@
                          */
                             this.host.colorPalette['colorIndex'] = mi + 1;
 
+                        // #24: Flag the role from metadata so that we can manage values vs. tooltips
+                            let role: MeasureRole = m.roles.values && 'dataPoint' || 'tooltip';
+
                         // Persist out measure metadata and config
                             this.viewModel.measureMetadata.push({
                                 metadata: m,
@@ -209,15 +213,17 @@
                                     format: valueFormatter.getFormatStringByColumn(m),
                                     cultureSelector: this.viewModel.locale
                                 }),
-                                stroke: DataViewHelper.GET_METADATA_OBJECT_VALUE<Fill>(m, 'lines', 'stroke', defaultColour).solid.color,
-                                selectionId: this.host.createSelectionIdBuilder()
-                                    .withMeasure(m.queryName)
-                                    .createSelectionId(),
-                                strokeWidth: DataViewHelper.GET_METADATA_OBJECT_VALUE<number>(m, 'lines', 'strokeWidth', visualConstants.defaults.lines.strokeWidth),
-                                lineShape: DataViewHelper.GET_METADATA_OBJECT_VALUE<string>(m, 'lines', 'lineShape', visualConstants.defaults.lines.lineShape),
-                                lineStyle: DataViewHelper.GET_METADATA_OBJECT_VALUE<string>(m, 'lines', 'lineStyle', visualConstants.defaults.lines.lineStyle),
-                                showArea: DataViewHelper.GET_METADATA_OBJECT_VALUE<boolean>(m, 'lines', 'showArea', visualConstants.defaults.lines.showArea),
-                                backgroundTransparency: DataViewHelper.GET_METADATA_OBJECT_VALUE<number>(m, 'lines', 'backgroundTransparency', visualConstants.defaults.lines.backgroundTransparency)
+                                stroke: role === 'dataPoint' && DataViewHelper.GET_METADATA_OBJECT_VALUE<Fill>(m, 'lines', 'stroke', defaultColour).solid.color || '#ffffff00',
+                                selectionId: role === 'dataPoint' &&
+                                    this.host.createSelectionIdBuilder()
+                                        .withMeasure(m.queryName)
+                                        .createSelectionId() || null,
+                                strokeWidth: role === 'dataPoint' && DataViewHelper.GET_METADATA_OBJECT_VALUE<number>(m, 'lines', 'strokeWidth', visualConstants.defaults.lines.strokeWidth) || null,
+                                lineShape: role === 'dataPoint' && DataViewHelper.GET_METADATA_OBJECT_VALUE<string>(m, 'lines', 'lineShape', visualConstants.defaults.lines.lineShape) || null,
+                                lineStyle: role === 'dataPoint' && DataViewHelper.GET_METADATA_OBJECT_VALUE<string>(m, 'lines', 'lineStyle', visualConstants.defaults.lines.lineStyle) || null,
+                                showArea: role === 'dataPoint' && DataViewHelper.GET_METADATA_OBJECT_VALUE<boolean>(m, 'lines', 'showArea', visualConstants.defaults.lines.showArea) || null,
+                                backgroundTransparency: role === 'dataPoint' && DataViewHelper.GET_METADATA_OBJECT_VALUE<number>(m, 'lines', 'backgroundTransparency', visualConstants.defaults.lines.backgroundTransparency) || null,
+                                role: role
                             });
 
                     });
@@ -275,16 +281,20 @@
                                     : this.categoryColumn.type.numeric
                                         ? <number>v.source.groupName
                                         : <string>v.source.groupName;
-                            this.viewModel.statistics.min = {
-                                value: d3.min([value, this.viewModel.statistics.min && this.viewModel.statistics.min.value]),
-                                category: null,
-                                index: null
-                            };
-                            this.viewModel.statistics.max = {
-                                value: d3.max([value, this.viewModel.statistics.max && this.viewModel.statistics.max.value]),
-                                category: null,
-                                index: null
-                            };
+                            if (m.role === 'dataPoint') {
+                                this.viewModel.statistics.min = {
+                                    value: d3.min([value, this.viewModel.statistics.min && this.viewModel.statistics.min.value]),
+                                    category: null,
+                                    index: null,
+                                    role: null
+                                };
+                                this.viewModel.statistics.max = {
+                                    value: d3.max([value, this.viewModel.statistics.max && this.viewModel.statistics.max.value]),
+                                    category: null,
+                                    index: null,
+                                    role: null
+                                };
+                            }
                             if (v.highlights) {
                                 highlightValues.push(
                                     <number>v.highlights[categoryIndex]
@@ -307,7 +317,8 @@
                                     displayName: m.metadata.displayName,
                                     value: m.formatter.format(value),
                                     color: m.stroke
-                                }
+                                },
+                                role: m.role
                             });
                         });
 
@@ -442,15 +453,17 @@
                     ),
                     fontSize: this.settings.legend.fontSize,
                     labelColor: this.settings.legend.fontColor,
-                    dataPoints: this.viewModel.measureMetadata.map((m, i) => {
-                        return {
-                            label: m.metadata.displayName,
-                            color: m.stroke,
-                            markerShape: MarkerShape.longDash,
-                            selected: false,
-                            identity: m.selectionId,
-                            lineStyle: LineStyle[m.lineStyle]
-                        };
+                    dataPoints: this.viewModel.measureMetadata
+                        .filter((m) => m.role === 'dataPoint')
+                        .map((m, i) => {
+                            return {
+                                label: m.metadata.displayName,
+                                color: m.stroke,
+                                markerShape: MarkerShape.longDash,
+                                selected: false,
+                                identity: m.selectionId,
+                                lineStyle: LineStyle[m.lineStyle]
+                            };
                     })
                 };
             }

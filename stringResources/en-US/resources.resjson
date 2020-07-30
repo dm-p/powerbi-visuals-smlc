@@ -11,6 +11,8 @@
     "Roles_Axis_Description": "Categorical or x-axis value to use for charts.",
     "Roles_Values": "Values",
     "Roles_Values_Description": "Measure or y-axis value(s) to use for charts.",
+    "Roles_Tooltips": "Tooltips",
+    "Roles_Tooltips_Description": "Add additional data fields that people can see in the tooltip when they hover on part of the visualization.",
     "Objects_Layout": "SM Layout",
     "Objects_Layout_Description": "Control layout aspects of the small multiples grid.",
     "Objects_Layout_HorizontalGrid": "Column Sizing",

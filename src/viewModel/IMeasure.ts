@@ -6,6 +6,9 @@
     import { valueFormatter } from 'powerbi-visuals-utils-formattingutils';
     import  IValueFormatter = valueFormatter.IValueFormatter;
 
+// Internal dependencies
+    import MeasureRole from './MeasureRole';
+
 /**
  * Manages the display and properties of a measure line within the visual.
  */
@@ -19,4 +22,5 @@
         lineStyle: string;
         showArea: boolean;
         backgroundTransparency: number;
+        role: MeasureRole;
     }

@@ -26,6 +26,14 @@
             "requiredTypes": [
                 { "numeric": true}
             ]
+        },
+        {
+            "displayNameKey": "Roles_Tooltips",
+            "descriptionKey": "Roles_Tooltips_Description",
+            "displayName": "Tooltips",
+            "description": "Tooltips description",
+            "name": "tooltips",
+            "kind": "Measure"
         }
     ],
     "objects": {
@@ -1210,6 +1218,9 @@
                     },
                     "category" :{
                         "max": 1
+                    },
+                    "tooltips": {
+                        "max": 5
                     }
                 }
             ],
@@ -1232,6 +1243,11 @@
                                 "bind": {
                                     "to": "values"
                                 }
+                            },
+                            {
+                                "bind":{ 
+                                    "to": "tooltips"
+                                }
                             }
                         ],
                         "dataReductionAlgorithm": {
@@ -1251,7 +1267,10 @@
         "supportedTypes": {
             "default": true,
             "canvas": true
-        }
+        },
+        "roles": [
+            "tooltips"
+        ]
     },
     "drilldown": {
         "roles": [
