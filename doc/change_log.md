@@ -4,7 +4,9 @@
 
 ---
 
-## 2.2.0.xxx (TBD)
+## 2.2.0.133 (2020-08-28)
+
+Not yet available in the Power BI Marketplace - [early adopters can download the standalone version here](https://github.com/dm-p/powerbi-visuals-smlc/releases/tag/2.2.0.133). **Please note that the standalone version is uncertified, as it has a different ID to the version in the Marketplace**.
 
 ### Minor Enhancements
 
