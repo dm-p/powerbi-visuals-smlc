@@ -533,9 +533,19 @@
                                     .attr('x2', x);
 
                                 d3.select(e[i]).selectAll('.circle-item')
-                                    .attr('transform', (d, di) => `translate(${x}, ${
-                                            (<d3.ScaleLinear<number, number>>this.viewModel.yAxis.scale)(<number>dataPoints[this.viewModel.measureMetadata.length - 1 - di].value)
-                                        })`);
+                                    .attr('transform', (d, di) => {
+                                            let measureIndex = this.viewModel.measureMetadata.length - 1 - di,
+                                                dataPoint = dataPoints[measureIndex],
+                                                measure = this.viewModel.measureMetadata[measureIndex],
+                                                value = measure.role === 'tooltip'
+                                                        ?   this.viewModel.statistics.min.value
+                                                        :   <number>dataPoint.value;
+                                            return `translate(${x}, ${
+                                                (<d3.ScaleLinear<number, number>>this.viewModel.yAxis.scale)(value)
+                                            })`
+                                        })
+                                    // #23: If we got a null value for closest data point then hide it
+                                    .style('display', (d, di) => <number>dataPoints[this.viewModel.measureMetadata.length - 1 - di].value === null ? 'none' : null);
                             });
 
         }
@@ -625,8 +635,7 @@
             measureIndex: number,
             xData: number | Date
         ) {
-            let data = multiple.measures[measureIndex].values
-                .filter((v) => v.value !== null),
+            let data = multiple.measures[measureIndex].values,
             bisectValue = d3.bisector((d: ISmallMultipleMeasureValue) => d.category).left,
             idx = bisectValue(data, xData, 1),
             d0 = data[idx - 1],
@@ -997,18 +1006,21 @@
                 this.viewModel.measureMetadata.slice(0).reverse().map((m, mi) => {
                     let inverse = this.viewModel.measureMetadata.length - 1 - mi;
                     lineGen.curve(d3[`${m.lineShape}`]);
-                    Debugger.LOG(`Plotting line for measure ${m.metadata.displayName}...`);
-                    element
-                        .append('path')
-                            .classed('small-multiple-measure-line', true)
-                            .classed(m.lineStyle, true)
-                            .attr('d', (d) => lineGen(d.measures[inverse].values.filter(lineGen.defined())))
-                            .style('stroke', m.stroke)
-                            .style('stroke-linecap', 'round')
-                            .style('fill', 'none')
-                            .style('stroke-width', m.strokeWidth);
 
-                    // Tooltip circle marker
+                    // Plot the line if a valid data point
+                        if (m.role === 'dataPoint') {
+                            Debugger.LOG(`Plotting line for measure ${m.metadata.displayName}...`);
+                            element
+                                .append('path')
+                                    .classed('small-multiple-measure-line', true)
+                                    .classed(m.lineStyle, true)
+                                    .attr('d', (d) => lineGen(d.measures[inverse].values.filter(lineGen.defined())))
+                                    .style('stroke', m.stroke)
+                                    .style('stroke-linecap', 'round')
+                                    .style('fill', 'none')
+                                    .style('stroke-width', m.strokeWidth);
+                        }
+                    // Tooltip circle marker. This will be hidden if the measure is a tooltip, but it used to bind the data value for the tooltip.
                         overlay
                             .append('circle')
                                 .classed('circle-item', true)

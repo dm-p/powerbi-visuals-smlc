@@ -4,6 +4,9 @@
     import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
     import ISelectionId = powerbi.visuals.ISelectionId;
 
+// Internal dependencies
+    import MeasureRole from './MeasureRole';
+
 /**
  * Handles the display or an individual measure value within our visual.
  */
@@ -13,4 +16,5 @@
         value: number;
         tooltip?: VisualTooltipDataItem;
         selectionId?: ISelectionId;
+        role: MeasureRole;
     }
