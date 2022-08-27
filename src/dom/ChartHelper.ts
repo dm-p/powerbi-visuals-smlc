@@ -274,10 +274,9 @@ export default class ChartHelper {
         );
         this.chartContainer.style(
             'grid-template-columns',
-            `${this.viewModel.yAxis.masterTitle.textHeight}px ${
-                this.viewModel.viewport.width -
-                this.viewModel.yAxis.masterTitle.textHeight
-            }px`
+            `${this.viewModel.yAxis.masterTitle.textHeight}px ${this.viewModel
+                .viewport.width -
+                this.viewModel.yAxis.masterTitle.textHeight}px`
         );
 
         Debugger.LOG('Adding container for X-axis title...');
@@ -299,10 +298,10 @@ export default class ChartHelper {
         );
         this.chartContainer.style(
             'grid-template-rows',
-            `${
-                this.viewModel.viewport.height -
+            `${this.viewModel.viewport.height -
+                this.viewModel.xAxis.masterTitle.textHeight}px ${
                 this.viewModel.xAxis.masterTitle.textHeight
-            }px ${this.viewModel.xAxis.masterTitle.textHeight}px`
+            }px`
         );
     }
 
@@ -518,7 +517,7 @@ export default class ChartHelper {
     }
 
     private bindSmallMultipleSelection() {
-        this.smSelection.on('click', (d) => {
+        this.smSelection.on('click', d => {
             // Allow selection only if the visual is rendered in a view that supports interactivity (e.g. Report)
             if (
                 this.host.hostCapabilities.allowInteractions &&
@@ -544,7 +543,7 @@ export default class ChartHelper {
     }
 
     private bindClearAllSelections() {
-        this.chartContainer.on('click', (d) => {
+        this.chartContainer.on('click', d => {
             if (this.host.hostCapabilities.allowInteractions) {
                 Debugger.LOG('Clicked on Chart - clear down selection');
                 this.selectionManager.clear().then(() => {
@@ -624,8 +623,9 @@ export default class ChartHelper {
                         let measureIndex =
                                 this.viewModel.measureMetadata.length - 1 - di,
                             dataPoint = dataPoints[measureIndex],
-                            measure =
-                                this.viewModel.measureMetadata[measureIndex],
+                            measure = this.viewModel.measureMetadata[
+                                measureIndex
+                            ],
                             value =
                                 measure.role === 'tooltip'
                                     ? this.viewModel.statistics.min.value
@@ -653,7 +653,7 @@ export default class ChartHelper {
     private getSmallMultiplesForRow(row: number): ISmallMultiple[] {
         Debugger.LOG('Getting small multiples for this row...');
         return this.viewModel.multiples
-            .map((m) => m)
+            .map(m => m)
             .slice(
                 row * this.viewModel.layout.smallMultiples.grid.columns.count,
                 row * this.viewModel.layout.smallMultiples.grid.columns.count +
@@ -676,7 +676,7 @@ export default class ChartHelper {
                 return dataPoints[0].selectionId;
             }
             default: {
-                return dataPoints.map((dp) => dp.tooltip);
+                return dataPoints.map(dp => dp.tooltip);
             }
         }
     }
@@ -726,7 +726,7 @@ export default class ChartHelper {
     private linearPointInvert(
         scale: d3.ScaleLinear<number, number> | d3.ScaleTime<number, number>
     ) {
-        return (value) => scale.invert(value);
+        return value => scale.invert(value);
     }
 
     /**
@@ -757,7 +757,7 @@ export default class ChartHelper {
         let domain = scale.domain(),
             paddingOuter = scale(domain[0]),
             eachBand = scale.step();
-        return (value) => {
+        return value => {
             let index = Math.floor((value - paddingOuter) / eachBand);
             return domain[Math.max(0, Math.min(index, domain.length - 1))];
         };
@@ -772,7 +772,7 @@ export default class ChartHelper {
         xData: string
     ) {
         return multiple.measures[measureIndex].values.filter(
-            (v) => v.category === xData
+            v => v.category === xData
         )[0];
     }
 
@@ -805,9 +805,9 @@ export default class ChartHelper {
         let yAxis = <d3.ScaleLinear<number, number>>this.viewModel.yAxis.scale;
         return d3
             .line<ISmallMultipleMeasureValue>()
-            .x((d) => this.getLineXCoordinate(d))
-            .y((d) => yAxis(d.value))
-            .defined((d) => d.value !== null);
+            .x(d => this.getLineXCoordinate(d))
+            .y(d => yAxis(d.value))
+            .defined(d => d.value !== null);
     }
 
     /**
@@ -818,10 +818,10 @@ export default class ChartHelper {
         let yAxis = <d3.ScaleLinear<number, number>>this.viewModel.yAxis.scale;
         return d3
             .area<ISmallMultipleMeasureValue>()
-            .x((d) => this.getLineXCoordinate(d))
+            .x(d => this.getLineXCoordinate(d))
             .y0(yAxis(yAxis.domain()[0]))
-            .y1((d) => yAxis(d.value))
-            .defined((d) => d.value !== null);
+            .y1(d => yAxis(d.value))
+            .defined(d => d.value !== null);
     }
 
     /**
@@ -901,11 +901,11 @@ export default class ChartHelper {
         // Manipulate the plotted axis accordingly
         ticks
             // Apply gridline settings
-            .call((element) =>
+            .call(element =>
                 this.applyAxisGridlines(element, isMasterAxis, axisSettings)
             )
             // Apply tick label settings
-            .call((element) =>
+            .call(element =>
                 this.applyAxisTickLabels(
                     element,
                     axis,
@@ -914,7 +914,7 @@ export default class ChartHelper {
                 )
             )
             // Remove the domain line for everything but the master X-axis (if we still want it)
-            .call((element) =>
+            .call(element =>
                 this.applyAxisDomainLine(element, axis, isMasterAxis)
             );
     }
@@ -928,7 +928,7 @@ export default class ChartHelper {
         return d3
             .axisLeft(<d3.ScaleLinear<number, number>>axis.scale)
             .ticks(axis.ticks)
-            .tickFormat((d) => axis.numberFormat.format(d))
+            .tickFormat(d => axis.numberFormat.format(d))
             .tickSize(
                 isMasterAxis ? -axis.tickLabels.textWidth : axis.tickWidth
             );
@@ -1020,7 +1020,7 @@ export default class ChartHelper {
                         );
                     })
                     .append('title')
-                    .text((d) =>
+                    .text(d =>
                         valueFormatter.format(
                             d,
                             this.viewModel.categoryMetadata.metadata.format
@@ -1128,7 +1128,7 @@ export default class ChartHelper {
                 'width',
                 this.viewModel.layout.smallMultiples.multiple.outer.width
             )
-            .attr('fill', (d) => d.backgroundColour)
+            .attr('fill', d => d.backgroundColour)
             .attr(
                 'fill-opacity',
                 1 - this.settings.smallMultiple.backgroundTransparency / 100
@@ -1175,12 +1175,11 @@ export default class ChartHelper {
                     'y',
                     this.viewModel.layout.smallMultiples.multiple.heading.y
                 )
-                .text((d) => {
+                .text(d => {
                     // This should map to view model properly
-                    this.viewModel.layout.smallMultiples.multiple.heading.textProperties.text =
-                        this.viewModel.layout.smallMultiples.multiple.heading.formatter.format(
-                            d.name
-                        );
+                    this.viewModel.layout.smallMultiples.multiple.heading.textProperties.text = this.viewModel.layout.smallMultiples.multiple.heading.formatter.format(
+                        d.name
+                    );
                     return getTailoredTextOrDefault(
                         this.viewModel.layout.smallMultiples.multiple.heading
                             .textProperties,
@@ -1201,9 +1200,9 @@ export default class ChartHelper {
                 .style('dy', '1em')
                 .style('font-family', this.settings.heading.fontFamily)
                 .style('font-size', `${this.settings.heading.fontSize}pt`)
-                .style('fill', (d) => d.titleColour)
+                .style('fill', d => d.titleColour)
                 .append('title')
-                .text((d) => d.name);
+                .text(d => d.name);
         }
     }
 
@@ -1232,7 +1231,7 @@ export default class ChartHelper {
                         .append('path')
                         .classed('small-multiple-measure-line', true)
                         .classed(m.lineStyle, true)
-                        .attr('d', (d) =>
+                        .attr('d', d =>
                             lineGen(
                                 d.measures[inverse].values.filter(
                                     lineGen.defined()
@@ -1249,7 +1248,7 @@ export default class ChartHelper {
                     .append('circle')
                     .classed('circle-item', true)
                     .attr('r', 3)
-                    .attr('fill', (d) => m.stroke);
+                    .attr('fill', d => m.stroke);
             });
     }
 
@@ -1276,7 +1275,7 @@ export default class ChartHelper {
                     element
                         .append('path')
                         .classed('small-multiple-measure-area', true)
-                        .attr('d', (d) =>
+                        .attr('d', d =>
                             areaGen(
                                 d.measures[inverse].values.filter(
                                     areaGen.defined()
@@ -1328,9 +1327,8 @@ export default class ChartHelper {
             .attr('width', this.viewModel.layout.smallMultiples.grid.rows.width)
             .attr(
                 'transform',
-                `translate(${0}, ${
-                    row * this.viewModel.layout.smallMultiples.grid.rows.height
-                })`
+                `translate(${0}, ${row *
+                    this.viewModel.layout.smallMultiples.grid.rows.height})`
             );
     }
 
@@ -1378,8 +1376,8 @@ export default class ChartHelper {
                 (d, i) =>
                     i * this.viewModel.layout.smallMultiples.multiple.xOffset
             )
-            .style('fill-opacity', (d) => this.getSmallMultipleOpacity(d))
-            .style('stroke-opacity', (d) => this.getSmallMultipleOpacity(d))
+            .style('fill-opacity', d => this.getSmallMultipleOpacity(d))
+            .style('stroke-opacity', d => this.getSmallMultipleOpacity(d))
             .append('g')
             .classed('small-multiple-canvas', true);
     }

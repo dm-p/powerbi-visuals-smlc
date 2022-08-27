@@ -58,7 +58,7 @@ export default class LineSettings extends SettingsBase {
             // Remove default instance, and replace with measure-based properties
             enumerationObject.instances = [];
             for (let measure of (<IMeasure[]>options.measures).filter(
-                (m) => m.role === 'dataPoint'
+                m => m.role === 'dataPoint'
             )) {
                 let displayName = measure.metadata.displayName,
                     containerIdx =
