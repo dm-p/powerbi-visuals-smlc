@@ -182,12 +182,12 @@ export default class ViewModelHandler {
         this.categorical = dataViews[0].categorical;
         this.smallMultipleColumn = this.categorical.categories[0];
         this.categoryColumn = this.metadata.columns.filter(
-            c => c.roles.category
+            (c) => c.roles.category
         )[0];
         this.viewModel.dataViewIsValid = true;
         this.viewModel.locale = this.host.locale;
         this.viewModel.crossHighlight =
-            this.categorical.values.filter(v => v.highlights).length > 0;
+            this.categorical.values.filter((v) => v.highlights).length > 0;
     }
 
     /**
@@ -200,7 +200,7 @@ export default class ViewModelHandler {
         Debugger.LOG('Mapping measures...');
         this.categorical.values
             .grouped()[0]
-            .values.map(v => v.source)
+            .values.map((v) => v.source)
             .map((m, mi) => {
                 let defaultColour: Fill = this.getDefaultFillColour(m);
 
@@ -313,7 +313,7 @@ export default class ViewModelHandler {
         // Flag that all multiples should be shown so we can cross-check against the cross-highlight and clear accordingly
         this.viewModel.allHighlight =
             this.viewModel.multiples.length ===
-            this.viewModel.multiples.filter(m => m.highlight).length;
+            this.viewModel.multiples.filter((m) => m.highlight).length;
 
         this.smallMultiplesHelper = new SmallMultiplesHelper(
             this.viewModel.multiples.length,
@@ -341,7 +341,7 @@ export default class ViewModelHandler {
                 highlightValues: number[] = [];
             // Filter values by measure and add to array element
             this.categorical.values
-                .filter(v => v.source.queryName === m.metadata.queryName)
+                .filter((v) => v.source.queryName === m.metadata.queryName)
                 .map((v, vi) => {
                     let value = <number>v.values[categoryIndex],
                         category = this.categoryColumn.type.dateTime
@@ -385,7 +385,7 @@ export default class ViewModelHandler {
                             categoryIndex
                         );
                     this.viewModel.measureMetadata.forEach(
-                        md =>
+                        (md) =>
                             (selection = selection.withMeasure(
                                 md.metadata.queryName
                             ))
@@ -423,7 +423,7 @@ export default class ViewModelHandler {
                 values: values,
                 highlight:
                     highlightValues.length === 0 ||
-                    highlightValues.filter(h => h).length > 0,
+                    highlightValues.filter((h) => h).length > 0,
                 statistics: statistics
             });
         });
@@ -446,7 +446,7 @@ export default class ViewModelHandler {
         this.viewModel.multiples.push({
             name: categoryName,
             measures: measures,
-            highlight: measures.filter(m => m.highlight).length > 0,
+            highlight: measures.filter((m) => m.highlight).length > 0,
             margin: {
                 top: visualConstants.defaults.smallMultiple.margin.top,
                 bottom: visualConstants.defaults.smallMultiple.margin.bottom,
@@ -480,19 +480,19 @@ export default class ViewModelHandler {
         return {
             min:
                 values
-                    .filter(v => v.value !== null)
+                    .filter((v) => v.value !== null)
                     .sort((a, b) => d3.ascending(a.value, b.value))[0] || null,
             max:
                 values
-                    .filter(v => v.value !== null)
+                    .filter((v) => v.value !== null)
                     .sort((a, b) => d3.descending(a.value, b.value))[0] || null,
             first:
                 values
-                    .filter(v => v.value !== null)
+                    .filter((v) => v.value !== null)
                     .slice(0, 1)
                     .sort((a, b) => d3.ascending(a.category, b.category))[0] ||
                 null,
-            last: values.filter(v => v.value !== null).slice(-1)[0] || null
+            last: values.filter((v) => v.value !== null).slice(-1)[0] || null
         };
     }
 
@@ -502,7 +502,7 @@ export default class ViewModelHandler {
     private getCategoryNames(): any[] {
         return [
             ...new Set(
-                this.categorical.values.map(v => {
+                this.categorical.values.map((v) => {
                     switch (true) {
                         case this.categoryColumn.type.dateTime: {
                             return new Date(<string>v.source.groupName);
@@ -559,7 +559,7 @@ export default class ViewModelHandler {
             fontSize: this.settings.legend.fontSize,
             labelColor: this.settings.legend.fontColor,
             dataPoints: this.viewModel.measureMetadata
-                .filter(m => m.role === 'dataPoint')
+                .filter((m) => m.role === 'dataPoint')
                 .map((m, i) => {
                     return {
                         label: m.metadata.displayName,
@@ -636,7 +636,7 @@ export default class ViewModelHandler {
                     .domain(
                         d3.extent(
                             this.viewModel.categoryMetadata.values,
-                            c => <number>c
+                            (c) => <number>c
                         )
                     );
                 break;
@@ -649,7 +649,7 @@ export default class ViewModelHandler {
                     .domain(
                         d3.extent(
                             this.viewModel.categoryMetadata.values,
-                            c => new Date(<string>c)
+                            (c) => new Date(<string>c)
                         )
                     );
                 break;
@@ -750,7 +750,8 @@ export default class ViewModelHandler {
             };
         } else {
             Debugger.LOG('Setting to standard viewport size...');
-            this.viewModel.layout.chartViewport = this.viewModel.layout.visualViewport;
+            this.viewModel.layout.chartViewport =
+                this.viewModel.layout.visualViewport;
         }
     }
 
@@ -773,7 +774,8 @@ export default class ViewModelHandler {
         this.viewModel.layout.x =
             this.viewModel.yAxis.tickLabels.textWidth +
             this.viewModel.layout.smallMultiples.multiple.borderOffset;
-        this.viewModel.layout.y = this.viewModel.layout.smallMultiples.multiple.borderOffset;
+        this.viewModel.layout.y =
+            this.viewModel.layout.smallMultiples.multiple.borderOffset;
         this.viewModel.layout.chartViewport.height -= this.viewModel.layout.y;
     }
 
@@ -853,7 +855,8 @@ export default class ViewModelHandler {
             this.viewModel.xAxis.masterTitle.textHeight > 0
         ) {
             Debugger.LOG('[RESPONSIVENESS] Viewport can support X-axis title.');
-            this.viewModel.layout.visualViewport.height -= this.viewModel.xAxis.masterTitle.textHeight;
+            this.viewModel.layout.visualViewport.height -=
+                this.viewModel.xAxis.masterTitle.textHeight;
             this.viewModel.xAxis.titleIsCollapsed = false;
         } else {
             Debugger.LOG(
@@ -870,7 +873,7 @@ export default class ViewModelHandler {
         let totalValues = this.viewModel.xAxis.tickValues.length,
             emptyValues = 0;
         if (this.viewModel.xAxis.tickLabels.properties) {
-            this.viewModel.xAxis.tickValues.forEach(tv => {
+            this.viewModel.xAxis.tickValues.forEach((tv) => {
                 let properties = this.viewModel.xAxis.tickLabels.properties;
                 properties.text = valueFormatter.format(
                     tv,
@@ -908,7 +911,8 @@ export default class ViewModelHandler {
             this.viewModel.yAxis.masterTitle.textHeight
         ) {
             Debugger.LOG('[RESPONSIVENESS] Viewport can support Y-axis title.');
-            this.viewModel.layout.visualViewport.width -= this.viewModel.yAxis.masterTitle.textHeight;
+            this.viewModel.layout.visualViewport.width -=
+                this.viewModel.yAxis.masterTitle.textHeight;
             this.viewModel.yAxis.titleIsCollapsed = false;
         } else {
             Debugger.LOG(
@@ -926,10 +930,11 @@ export default class ViewModelHandler {
             this.settings.yAxis.showTitle &&
             this.viewModel.yAxis.masterTitle.textHeight > 0
         ) {
-            this.viewModel.yAxis.masterTitle.tailoredValue = getTailoredTextOrDefault(
-                this.viewModel.yAxis.masterTitle.properties,
-                this.viewModel.layout.visualViewport.height
-            );
+            this.viewModel.yAxis.masterTitle.tailoredValue =
+                getTailoredTextOrDefault(
+                    this.viewModel.yAxis.masterTitle.properties,
+                    this.viewModel.layout.visualViewport.height
+                );
         }
     }
 
@@ -951,7 +956,8 @@ export default class ViewModelHandler {
             Debugger.LOG(
                 '[RESPONSIVENESS] Viewport can support Y-axis tick labels.'
             );
-            this.viewModel.layout.chartViewport.width -= this.viewModel.yAxis.tickLabels.textWidth;
+            this.viewModel.layout.chartViewport.width -=
+                this.viewModel.yAxis.tickLabels.textWidth;
             this.viewModel.yAxis.ticksAreCollapsed = false;
         } else {
             Debugger.LOG(
@@ -969,10 +975,11 @@ export default class ViewModelHandler {
             this.settings.xAxis.showTitle &&
             this.viewModel.xAxis.masterTitle.textHeight > 0
         ) {
-            this.viewModel.xAxis.masterTitle.tailoredValue = getTailoredTextOrDefault(
-                this.viewModel.xAxis.masterTitle.properties,
-                this.viewModel.layout.visualViewport.width
-            );
+            this.viewModel.xAxis.masterTitle.tailoredValue =
+                getTailoredTextOrDefault(
+                    this.viewModel.xAxis.masterTitle.properties,
+                    this.viewModel.layout.visualViewport.width
+                );
         }
     }
 
@@ -1000,7 +1007,8 @@ export default class ViewModelHandler {
             Debugger.LOG(
                 '[RESPONSIVENESS] Viewport can support X-axis tick labels.'
             );
-            this.viewModel.layout.chartViewport.height -= this.viewModel.xAxis.tickLabels.textHeight;
+            this.viewModel.layout.chartViewport.height -=
+                this.viewModel.xAxis.tickLabels.textHeight;
             this.viewModel.xAxis.ticksAreCollapsed = false;
         } else {
             Debugger.LOG(
@@ -1098,8 +1106,8 @@ export default class ViewModelHandler {
 
     // Resolves the total height of the X-axis ticks
     private resolveXAxisTickHeights() {
-        this.viewModel.xAxis.tickHeight = -this.viewModel.layout.smallMultiples
-            .multiple.inner.height;
+        this.viewModel.xAxis.tickHeight =
+            -this.viewModel.layout.smallMultiples.multiple.inner.height;
     }
 
     // Resolves the total width of the Y-axis ticks and the vertical placement of the master title
@@ -1121,7 +1129,8 @@ export default class ViewModelHandler {
         if (this.viewModel.xAxis.scaleType === EAxisScaleType.Point) {
             (<d3.ScalePoint<String>>this.viewModel.xAxis.scale).round(true);
         }
-        this.viewModel.xAxis.tickValues = this.viewModel.categoryMetadata.extents;
+        this.viewModel.xAxis.tickValues =
+            this.viewModel.categoryMetadata.extents;
         // We cap this to ensure that we always get the extremes. It's not great...
         this.viewModel.xAxis.ticks =
             visualConstants.defaults.categoryAxis.fixedTicks;
@@ -1205,7 +1214,7 @@ export default class ViewModelHandler {
                         axis.axisType === EAxisType.Value
                             ? !this.settings.yAxis.titleText
                                 ? this.viewModel.measureMetadata
-                                      .map(m => m.metadata.displayName)
+                                      .map((m) => m.metadata.displayName)
                                       .join(', ')
                                       .replace(/, ([^,]*)$/, ' and $1')
                                 : this.settings.yAxis.titleText
