@@ -60,10 +60,11 @@ export class Visual implements IVisual {
                 this.chartHelper.landingContainer,
                 this.localisationManager
             );
-            this.chartHelper.tooltipServiceWrapper = createTooltipServiceWrapper(
-                this.host.tooltipService,
-                options.element
-            );
+            this.chartHelper.tooltipServiceWrapper =
+                createTooltipServiceWrapper(
+                    this.host.tooltipService,
+                    options.element
+                );
             this.events = this.host.eventService;
             Debugger.LOG('Visual constructor ran successfully :)');
         } catch (e) {
@@ -88,17 +89,16 @@ export class Visual implements IVisual {
                 options.editMode,
                 options.editMode ? '(Editor On)' : '(Editor Off)'
             );
-
             // Parse the settings for use in the visual
             Debugger.LOG('Parsing settings...');
             this.settings = Visual.parseSettings(
                 options && options.dataViews && options.dataViews[0],
                 this.host
             );
-            this.viewModelHandler.settings = this.chartHelper.settings = this.settings;
+            this.viewModelHandler.settings = this.chartHelper.settings =
+                this.settings;
             Debugger.LOG('Settings', this.settings);
             Debugger.FOOTER();
-
             // Initialise view model and test
             switch (true) {
                 case options.type === VisualUpdateType.All:
@@ -123,7 +123,6 @@ export class Visual implements IVisual {
                 }
             }
             this.chartHelper.viewModel = this.viewModelHandler.viewModel;
-
             // Test viewport
             if (
                 options.viewport.width < visualConstants.visual.minPx ||
@@ -135,14 +134,13 @@ export class Visual implements IVisual {
                 this.events.renderingFinished(options);
                 return;
             }
-
             // If we're good to go, let's plot stuff
             if (this.viewModelHandler.viewModel.dataViewIsValid) {
                 Debugger.FOOTER();
                 Debugger.LOG('Drawing Chart');
                 Debugger.LOG('Passing initial viewport...');
-                this.viewModelHandler.viewModel.initialViewport = this.viewModelHandler.viewModel.viewport =
-                    options.viewport;
+                this.viewModelHandler.viewModel.initialViewport =
+                    this.viewModelHandler.viewModel.viewport = options.viewport;
                 this.chartHelper.renderLegend();
                 this.landingPageHandler.handleLandingPage(options, this.host);
                 this.viewModelHandler.calculateInitialViewport();
@@ -160,7 +158,6 @@ export class Visual implements IVisual {
                 this.chartHelper.renderLegend();
                 this.landingPageHandler.handleLandingPage(options, this.host);
             }
-
             // Signal that we've finished rendering
             // this.selfFiltered = false;
             this.events.renderingFinished(options);
@@ -240,44 +237,49 @@ export class Visual implements IVisual {
         // We try where possible to use the standard method signature to process the instance, but there are some exceptions...
         switch (objectName) {
             case 'yAxis': {
-                enumerationObject = this.settings.yAxis.processEnumerationObject(
-                    enumerationObject,
-                    {
-                        numberFormat: this.viewModelHandler.viewModel.yAxis
-                            .numberFormat,
-                        axisLabelPlacement: this.settings.features
-                            .axisLabelPlacement
-                    }
-                );
+                enumerationObject =
+                    this.settings.yAxis.processEnumerationObject(
+                        enumerationObject,
+                        {
+                            numberFormat:
+                                this.viewModelHandler.viewModel.yAxis
+                                    .numberFormat,
+                            axisLabelPlacement:
+                                this.settings.features.axisLabelPlacement
+                        }
+                    );
                 break;
             }
             case 'xAxis': {
-                enumerationObject = this.settings.xAxis.processEnumerationObject(
-                    enumerationObject,
-                    {
-                        axisLabelPlacement: this.settings.features
-                            .axisLabelPlacement
-                    }
-                );
+                enumerationObject =
+                    this.settings.xAxis.processEnumerationObject(
+                        enumerationObject,
+                        {
+                            axisLabelPlacement:
+                                this.settings.features.axisLabelPlacement
+                        }
+                    );
                 break;
             }
             case 'heading': {
-                enumerationObject = this.settings.heading.processEnumerationObject(
-                    enumerationObject,
-                    {
-                        zebraStripe: this.settings.smallMultiple.zebraStripe
-                    }
-                );
+                enumerationObject =
+                    this.settings.heading.processEnumerationObject(
+                        enumerationObject,
+                        {
+                            zebraStripe: this.settings.smallMultiple.zebraStripe
+                        }
+                    );
                 break;
             }
             case 'lines': {
-                enumerationObject = this.settings.lines.processEnumerationObject(
-                    enumerationObject,
-                    {
-                        measures: this.viewModelHandler.viewModel
-                            .measureMetadata
-                    }
-                );
+                enumerationObject =
+                    this.settings.lines.processEnumerationObject(
+                        enumerationObject,
+                        {
+                            measures:
+                                this.viewModelHandler.viewModel.measureMetadata
+                        }
+                    );
                 break;
             }
             default: {
@@ -289,9 +291,10 @@ export class Visual implements IVisual {
                     Debugger.LOG(
                         'processEnumerationObject found. Executing...'
                     );
-                    enumerationObject = this.settings[
-                        `${objectName}`
-                    ].processEnumerationObject(enumerationObject);
+                    enumerationObject =
+                        this.settings[`${objectName}`].processEnumerationObject(
+                            enumerationObject
+                        );
                 } else {
                     Debugger.LOG(
                         "Couldn't find class processEnumerationObject function."
