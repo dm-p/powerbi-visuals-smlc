@@ -23,9 +23,7 @@
             "description": "Values description",
             "name": "values",
             "kind": "Measure",
-            "requiredTypes": [
-                { "numeric": true}
-            ]
+            "requiredTypes": [{ "numeric": true }]
         },
         {
             "displayNameKey": "Roles_Tooltips",
@@ -233,13 +231,13 @@
                 }
             }
         },
-        "smallMultiple" :{
+        "smallMultiple": {
             "displayNameKey": "Objects_SmallMultiple",
             "descriptionKey": "Objects_SmallMultiple_Description",
-            "displayName" : "Fill & Color",
+            "displayName": "Fill & Color",
             "description": "Fill & Color description.",
-            "properties" : {
-                "backgroundColor" :{
+            "properties": {
+                "backgroundColor": {
                     "displayNameKey": "Objects_SmallMultiple_BackgroundColor",
                     "descriptionKey": "Objects_SmallMultiple_BackgroundColor_Description",
                     "displayName": "Background Color",
@@ -295,7 +293,7 @@
                         ]
                     }
                 },
-                "backgroundColorAlternate" :{
+                "backgroundColorAlternate": {
                     "displayNameKey": "Objects_SmallMultiple_BackgroundColorAlternate",
                     "descriptionKey": "Objects_SmallMultiple_BackgroundColorAlternate_Description",
                     "displayName": "Alternate Background Color",
@@ -387,7 +385,7 @@
                     "displayName": "[DEPRECATED] Column spacing",
                     "type": {
                         "integer": true
-                    }                    
+                    }
                 },
                 "labelPosition": {
                     "displayName": "[DEPRECATED] Position",
@@ -474,11 +472,6 @@
             "displayName": "Lines",
             "description": "Lines description.",
             "properties": {
-                "measureName": {
-                    "type": {
-                        "integer": true
-                    }
-                },
                 "stroke": {
                     "displayNameKey": "Objects_Lines_Stroke",
                     "descriptionKey": "Objects_Lines_Stroke_Description",
@@ -588,7 +581,7 @@
                 }
             }
         },
-        "xAxis" : {
+        "xAxis": {
             "displayNameKey": "Objects_XAxis",
             "descriptionKey": "Objects_XAxis_Description",
             "displayName": "X-Axis",
@@ -597,7 +590,7 @@
                 "show": {
                     "type": {
                         "bool": true
-                    }                    
+                    }
                 },
                 "showLabels": {
                     "displayNameKey": "Objects_XAxis_ShowLabels",
@@ -682,7 +675,7 @@
                             "fontFamily": true
                         }
                     }
-                },                
+                },
                 "showAxisLine": {
                     "displayNameKey": "Objects_XAxis_ShowAxisLine",
                     "descriptionKey": "Objects_XAxis_ShowAxisLine_Description",
@@ -690,7 +683,7 @@
                     "description": "Axis Line description.",
                     "type": {
                         "bool": true
-                    }                    
+                    }
                 },
                 "axisLineColor": {
                     "displayNameKey": "Objects_XAxis_AxisLineColor",
@@ -713,7 +706,7 @@
                     "type": {
                         "integer": true
                     }
-                },                
+                },
                 "fontColor": {
                     "displayNameKey": "Objects_XAxis_FontColor",
                     "descriptionKey": "Objects_XAxis_FontColor_Description",
@@ -826,7 +819,7 @@
                     "type": {
                         "bool": true
                     }
-                },                
+                },
                 "labelPlacement": {
                     "displayNameKey": "Objects_YAxis_LabelPlacement",
                     "descriptionKey": "Objects_YAxis_LabelPlacement_Description",
@@ -1004,6 +997,15 @@
                     "placeHolderText": "Auto",
                     "suppressFormatPainterCopy": true
                 },
+                "invert": {
+                    "displayNameKey": "Objects_YAxis_Invert",
+                    "descriptionKey": "Objects_YAxis_Invert_Description",
+                    "displayName": "Invert",
+                    "description": "Invert description.",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "fontColor": {
                     "displayNameKey": "Objects_YAxis_FontColor",
                     "descriptionKey": "Objects_YAxis_FontColor_Description",
@@ -1059,7 +1061,7 @@
                         "integer": true
                     },
                     "placeHolderTextKey": "Placeholder_Auto",
-                    "placeHolderText": "Auto"   
+                    "placeHolderText": "Auto"
                 }
             }
         },
@@ -1213,10 +1215,10 @@
         {
             "conditions": [
                 {
-                    "smallMultiple" : {
+                    "smallMultiple": {
                         "max": 1
                     },
-                    "category" :{
+                    "category": {
                         "max": 1
                     },
                     "tooltips": {
@@ -1225,7 +1227,7 @@
                 }
             ],
             "categorical": {
-                "categories" : {
+                "categories": {
                     "for": {
                         "in": "smallMultiple"
                     },
@@ -1245,7 +1247,7 @@
                                 }
                             },
                             {
-                                "bind":{ 
+                                "bind": {
                                     "to": "tooltips"
                                 }
                             }
@@ -1261,21 +1263,17 @@
         }
     ],
     "sorting": {
-        "default": {   }
+        "default": {}
     },
     "tooltips": {
         "supportedTypes": {
             "default": true,
             "canvas": true
         },
-        "roles": [
-            "tooltips"
-        ]
+        "roles": ["tooltips"]
     },
     "drilldown": {
-        "roles": [
-            "smallMultiple"
-        ]
+        "roles": ["smallMultiple"]
     },
     "supportsLandingPage": true
 }
