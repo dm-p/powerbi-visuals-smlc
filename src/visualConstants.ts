@@ -8,7 +8,7 @@ const maxCategories = 100, // Manually copied from capabilities
 export const visualConstants = {
     debug: false,
     about: {
-        version: '2.2.0',
+        version: '2.3.0',
         usageUrl: 'https://bit.ly/powerbi-smlc'
     },
     visual: {
@@ -26,8 +26,7 @@ export const visualConstants = {
         },
         font: {
             size: 11,
-            family:
-                '"Segoe UI", wf_segoe-ui_normal, helvetica, arial, sans-serif',
+            family: '"Segoe UI", wf_segoe-ui_normal, helvetica, arial, sans-serif',
             colour: '#777777'
         },
         axis: {
