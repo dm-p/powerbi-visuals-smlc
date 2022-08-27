@@ -26,7 +26,7 @@ export const visualConstants = {
         },
         font: {
             size: 11,
-            family: '"Segoe UI", wf_segoe-ui_normal, helvetica, arial, sans-serif',
+            family: 'Segoe UI',
             colour: '#777777'
         },
         axis: {
