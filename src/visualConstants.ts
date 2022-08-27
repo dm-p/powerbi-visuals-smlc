@@ -47,6 +47,7 @@ export const visualConstants = {
                 start: null,
                 end: null
             },
+            invert: false,
             labelPlacement: 'row'
         },
         categoryAxis: {

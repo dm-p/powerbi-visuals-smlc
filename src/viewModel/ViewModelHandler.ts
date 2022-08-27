@@ -598,18 +598,18 @@ export default class ViewModelHandler {
         );
 
         Debugger.LOG('Y-axis scale & domain...');
+        const yDomain = [
+            this.settings.yAxis.start === 0
+                ? 0
+                : this.settings.yAxis.start ||
+                  this.viewModel.statistics.min.value,
+            this.settings.yAxis.end === 0
+                ? 0
+                : this.settings.yAxis.end || this.viewModel.statistics.max.value
+        ];
         this.viewModel.yAxis.scale = d3
             .scaleLinear()
-            .domain([
-                this.settings.yAxis.start === 0
-                    ? 0
-                    : this.settings.yAxis.start ||
-                      this.viewModel.statistics.min.value,
-                this.settings.yAxis.end === 0
-                    ? 0
-                    : this.settings.yAxis.end ||
-                      this.viewModel.statistics.max.value
-            ])
+            .domain(this.settings.yAxis.invert ? yDomain.reverse() : yDomain)
             .nice();
 
         Debugger.LOG('Y-axis ticks...');

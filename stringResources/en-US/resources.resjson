@@ -137,6 +137,8 @@
     "Objects_YAxis_Start_Description": "Value to start the Y-axis at.",
     "Objects_YAxis_End": "End",
     "Objects_YAxis_End_Description": "Value to end the Y-axis at.",
+    "Objects_YAxis_Invert": "Invert",
+    "Objects_YAxis_Invert_Description": "Invert the Y-axis.",
     "Objects_YAxis_LabelDisplayUnits": "Display Units",
     "Objects_YAxis_LabelDisplayUnits_Description": "Specify whether to display the Y-axis label in specific units.",
     "Objects_YAxis_Precision": "Value Decimal Places",

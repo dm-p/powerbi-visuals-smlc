@@ -22,6 +22,8 @@ export default class ValueAxisSettings extends AxisSettings {
     public start: number = defaults.valueAxis.range.start;
     // Axis range end
     public end: number = defaults.valueAxis.range.end;
+    // Invert axis
+    public invert: boolean = defaults.valueAxis.invert;
 
     constructor() {
         super();

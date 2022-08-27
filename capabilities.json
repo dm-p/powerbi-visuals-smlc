@@ -997,6 +997,15 @@
                     "placeHolderText": "Auto",
                     "suppressFormatPainterCopy": true
                 },
+                "invert": {
+                    "displayNameKey": "Objects_YAxis_Invert",
+                    "descriptionKey": "Objects_YAxis_Invert_Description",
+                    "displayName": "Invert",
+                    "description": "Invert description.",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "fontColor": {
                     "displayNameKey": "Objects_YAxis_FontColor",
                     "descriptionKey": "Objects_YAxis_FontColor_Description",
