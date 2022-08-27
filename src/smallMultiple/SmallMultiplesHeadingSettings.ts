@@ -48,9 +48,7 @@ export default class SmallMultiplesHeadingSettings extends SettingsBase {
             // Alternate background: allows alternate heading colour
             Debugger.LOG('Alternate font colour...');
             if (options && !options.zebraStripe) {
-                Debugger.LOG(
-                    'No need for alternate background colour. Removing...'
-                );
+                Debugger.LOG('No need for alternate background colour. Removing...');
                 delete i.properties['fontColourAlternate'];
             }
         });

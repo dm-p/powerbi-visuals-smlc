@@ -20,8 +20,7 @@ export default class CategoryAxisSettings extends AxisSettings {
     // Axis line colour
     public axisLineColor: string = defaults.axis.gridlineColour;
     // Axis line stroke width
-    public axisLineStrokeWidth: number =
-        defaults.categoryAxis.axisLineStrokeWidth;
+    public axisLineStrokeWidth: number = defaults.categoryAxis.axisLineStrokeWidth;
     // Overload show
     public show: boolean = defaults.categoryAxis.show;
     // Overload gridlines

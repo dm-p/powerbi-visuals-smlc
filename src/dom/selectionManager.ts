@@ -12,10 +12,7 @@ import { visualConstants } from '../visualConstants';
 
 type Selection<T1, T2 = T1> = d3.Selection<any, T1, any, T2>;
 
-export function isSelectionIdInArray(
-    selectionIds: ISelectionId[],
-    selectionId: ISelectionId
-): boolean {
+export function isSelectionIdInArray(selectionIds: ISelectionId[], selectionId: ISelectionId): boolean {
     if (!selectionIds || !selectionId) {
         return false;
     }
@@ -25,28 +22,20 @@ export function isSelectionIdInArray(
     });
 }
 
-export function syncSelectionState(
-    selection: Selection<ISmallMultiple>,
-    selectionIds: ISelectionId[]
-): void {
+export function syncSelectionState(selection: Selection<ISmallMultiple>, selectionIds: ISelectionId[]): void {
     if (!selection || !selectionIds) {
         return;
     }
 
     if (!selectionIds.length) {
         const opacity: number = visualConstants.defaults.selection.solidOpacity;
-        selection
-            .style('fill-opacity', opacity)
-            .style('stroke-opacity', opacity);
+        selection.style('fill-opacity', opacity).style('stroke-opacity', opacity);
 
         return;
     }
 
     selection.each(function(smallMultiple: ISmallMultiple) {
-        const isSelected: boolean = isSelectionIdInArray(
-            selectionIds,
-            smallMultiple.selectionId
-        );
+        const isSelected: boolean = isSelectionIdInArray(selectionIds, smallMultiple.selectionId);
 
         const opacity: number = isSelected
             ? visualConstants.defaults.selection.solidOpacity

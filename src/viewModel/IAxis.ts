@@ -19,10 +19,7 @@ export default interface IAxis {
     tickHeight: number;
     ticks: number;
     tickValues: string[] | Date[] | number[];
-    scale:
-        | d3.ScaleLinear<number, number>
-        | d3.ScalePoint<string>
-        | d3.ScaleTime<number, number>;
+    scale: d3.ScaleLinear<number, number> | d3.ScalePoint<string> | d3.ScaleTime<number, number>;
     scaleType: EAxisScaleType;
     titleIsCollapsed: boolean;
     ticksAreCollapsed: boolean;

@@ -23,9 +23,7 @@ export default class Debugger {
      */
     static HEADING(heading: string) {
         if (this.enabled) {
-            console.log(
-                `\n====================\n${heading}\n====================`
-            );
+            console.log(`\n====================\n${heading}\n====================`);
         }
     }
 

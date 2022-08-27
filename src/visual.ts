@@ -52,19 +52,15 @@ export class Visual implements IVisual {
         try {
             this.viewModelHandler = new ViewModelHandler(this.host);
             this.localisationManager = this.host.createLocalizationManager();
-            this.chartHelper = new ChartHelper(
-                this.visualContainer,
-                options.host
-            );
+            this.chartHelper = new ChartHelper(this.visualContainer, options.host);
             this.landingPageHandler = new LandingPageHandler(
                 this.chartHelper.landingContainer,
                 this.localisationManager
             );
-            this.chartHelper.tooltipServiceWrapper =
-                createTooltipServiceWrapper(
-                    this.host.tooltipService,
-                    options.element
-                );
+            this.chartHelper.tooltipServiceWrapper = createTooltipServiceWrapper(
+                this.host.tooltipService,
+                options.element
+            );
             this.events = this.host.eventService;
             Debugger.LOG('Visual constructor ran successfully :)');
         } catch (e) {
@@ -84,19 +80,11 @@ export class Visual implements IVisual {
             Debugger.CLEAR();
             Debugger.HEADING('Visual update');
             Debugger.LOG(`Update type: ${options.type}`);
-            Debugger.LOG(
-                'Edit Mode',
-                options.editMode,
-                options.editMode ? '(Editor On)' : '(Editor Off)'
-            );
+            Debugger.LOG('Edit Mode', options.editMode, options.editMode ? '(Editor On)' : '(Editor Off)');
             // Parse the settings for use in the visual
             Debugger.LOG('Parsing settings...');
-            this.settings = Visual.parseSettings(
-                options && options.dataViews && options.dataViews[0],
-                this.host
-            );
-            this.viewModelHandler.settings = this.chartHelper.settings =
-                this.settings;
+            this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0], this.host);
+            this.viewModelHandler.settings = this.chartHelper.settings = this.settings;
             Debugger.LOG('Settings', this.settings);
             Debugger.FOOTER();
             // Initialise view model and test
@@ -108,9 +96,7 @@ export class Visual implements IVisual {
                 // not part of the API. Refer to powerbi-visuals-tools/#422 for
                 // details of the issue.
                 case options.type.toString() === '254': {
-                    Debugger.LOG(
-                        'Data changed. We need to re-map from data view...'
-                    );
+                    Debugger.LOG('Data changed. We need to re-map from data view...');
                     this.viewModelHandler.validateDataViewMapping(options);
                     if (this.viewModelHandler.viewModel.dataViewIsValid) {
                         this.viewModelHandler.mapDataView();
@@ -139,8 +125,8 @@ export class Visual implements IVisual {
                 Debugger.FOOTER();
                 Debugger.LOG('Drawing Chart');
                 Debugger.LOG('Passing initial viewport...');
-                this.viewModelHandler.viewModel.initialViewport =
-                    this.viewModelHandler.viewModel.viewport = options.viewport;
+                this.viewModelHandler.viewModel.initialViewport = this.viewModelHandler.viewModel.viewport =
+                    options.viewport;
                 this.chartHelper.renderLegend();
                 this.landingPageHandler.handleLandingPage(options, this.host);
                 this.viewModelHandler.calculateInitialViewport();
@@ -175,37 +161,21 @@ export class Visual implements IVisual {
         }
     }
 
-    private static parseSettings(
-        dataView: DataView,
-        host: IVisualHost
-    ): VisualSettings {
+    private static parseSettings(dataView: DataView, host: IVisualHost): VisualSettings {
         if (!dataView) {
             return;
         }
 
-        let objects =
-            dataView && dataView.metadata && dataView.metadata.objects;
+        let objects = dataView && dataView.metadata && dataView.metadata.objects;
 
         /** All Small Multiple configuration used to be underneath a single menu in 1.0. A lot of this has since been refactored
          *  into more specific locations. However, we need to ensure that any user-defined properties are migrated across to their
          *  correct location and removed for subsequent versions. If we don't remove them, 'reset to default' will fall back to the
          *  'pre-migration' values and potentially confuse the end-user.
          */
-        if (
-            !objects ||
-            !objects.features ||
-            !objects.features.objectVersion ||
-            objects.features.objectVersion < 2
-        ) {
-            Debugger.LOG(
-                'v2 object schema unconfirmed. Existing v1 properties will be migrated.'
-            );
-            DataViewHelper.MIGRATE_OBJECT_PROPERTIES(
-                dataView,
-                host,
-                objectMigrationV1ToV2,
-                2
-            );
+        if (!objects || !objects.features || !objects.features.objectVersion || objects.features.objectVersion < 2) {
+            Debugger.LOG('v2 object schema unconfirmed. Existing v1 properties will be migrated.');
+            DataViewHelper.MIGRATE_OBJECT_PROPERTIES(dataView, host, objectMigrationV1ToV2, 2);
         } else {
             Debugger.LOG('Object schema is already on v2. No need to set up.');
         }
@@ -217,14 +187,9 @@ export class Visual implements IVisual {
      * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the
      * objects and properties you want to expose to the users in the property pane.
      */
-    public enumerateObjectInstances(
-        options: EnumerateVisualObjectInstancesOptions
-    ): VisualObjectInstanceEnumeration {
+    public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
         let instances = (<VisualObjectInstanceEnumerationObject>(
-                VisualSettings.enumerateObjectInstances(
-                    this.settings || VisualSettings.getDefault(),
-                    options
-                )
+                VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options)
             )).instances,
             objectName = options.objectName,
             enumerationObject: VisualObjectInstanceEnumerationObject = {
@@ -237,68 +202,37 @@ export class Visual implements IVisual {
         // We try where possible to use the standard method signature to process the instance, but there are some exceptions...
         switch (objectName) {
             case 'yAxis': {
-                enumerationObject =
-                    this.settings.yAxis.processEnumerationObject(
-                        enumerationObject,
-                        {
-                            numberFormat:
-                                this.viewModelHandler.viewModel.yAxis
-                                    .numberFormat,
-                            axisLabelPlacement:
-                                this.settings.features.axisLabelPlacement
-                        }
-                    );
+                enumerationObject = this.settings.yAxis.processEnumerationObject(enumerationObject, {
+                    numberFormat: this.viewModelHandler.viewModel.yAxis.numberFormat,
+                    axisLabelPlacement: this.settings.features.axisLabelPlacement
+                });
                 break;
             }
             case 'xAxis': {
-                enumerationObject =
-                    this.settings.xAxis.processEnumerationObject(
-                        enumerationObject,
-                        {
-                            axisLabelPlacement:
-                                this.settings.features.axisLabelPlacement
-                        }
-                    );
+                enumerationObject = this.settings.xAxis.processEnumerationObject(enumerationObject, {
+                    axisLabelPlacement: this.settings.features.axisLabelPlacement
+                });
                 break;
             }
             case 'heading': {
-                enumerationObject =
-                    this.settings.heading.processEnumerationObject(
-                        enumerationObject,
-                        {
-                            zebraStripe: this.settings.smallMultiple.zebraStripe
-                        }
-                    );
+                enumerationObject = this.settings.heading.processEnumerationObject(enumerationObject, {
+                    zebraStripe: this.settings.smallMultiple.zebraStripe
+                });
                 break;
             }
             case 'lines': {
-                enumerationObject =
-                    this.settings.lines.processEnumerationObject(
-                        enumerationObject,
-                        {
-                            measures:
-                                this.viewModelHandler.viewModel.measureMetadata
-                        }
-                    );
+                enumerationObject = this.settings.lines.processEnumerationObject(enumerationObject, {
+                    measures: this.viewModelHandler.viewModel.measureMetadata
+                });
                 break;
             }
             default: {
                 // Check to see if the class has our method for processing business logic and run it if so
-                if (
-                    typeof this.settings[`${objectName}`]
-                        .processEnumerationObject === 'function'
-                ) {
-                    Debugger.LOG(
-                        'processEnumerationObject found. Executing...'
-                    );
-                    enumerationObject =
-                        this.settings[`${objectName}`].processEnumerationObject(
-                            enumerationObject
-                        );
+                if (typeof this.settings[`${objectName}`].processEnumerationObject === 'function') {
+                    Debugger.LOG('processEnumerationObject found. Executing...');
+                    enumerationObject = this.settings[`${objectName}`].processEnumerationObject(enumerationObject);
                 } else {
-                    Debugger.LOG(
-                        "Couldn't find class processEnumerationObject function."
-                    );
+                    Debugger.LOG("Couldn't find class processEnumerationObject function.");
                 }
                 break;
             }

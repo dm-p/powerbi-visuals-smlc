@@ -56,7 +56,7 @@ export default class ValueAxisSettings extends AxisSettings {
         } = {}
     ): VisualObjectInstanceEnumerationObject {
         Debugger.LOG('Processing enumeration...');
-        enumerationObject.instances.map((i) => {
+        enumerationObject.instances.map(i => {
             // Range validation
             Debugger.LOG('Range validation...');
             i.validValues = this.validValues;
@@ -75,11 +75,7 @@ export default class ValueAxisSettings extends AxisSettings {
             i = this.handleAxisLabelPlacement(i, options);
             // Title style toggle if units are none
             Debugger.LOG('Managing title style enum...');
-            if (
-                this.labelDisplayUnits === 1 ||
-                (options &&
-                    !(<IValueFormatter>options.numberFormat).displayUnit)
-            ) {
+            if (this.labelDisplayUnits === 1 || (options && !(<IValueFormatter>options.numberFormat).displayUnit)) {
                 i.properties['titleStyle'] = 'title';
                 i.validValues.titleStyle = ['title'];
             }

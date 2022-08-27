@@ -28,10 +28,7 @@ export default class LandingPageHandler {
     /**
      * @param element - main visual element
      */
-    constructor(
-        element: d3.Selection<any, any, any, any>,
-        localisationManager: ILocalizationManager
-    ) {
+    constructor(element: d3.Selection<any, any, any, any>, localisationManager: ILocalizationManager) {
         this.element = element;
         this.localisationManager = localisationManager;
         Debugger.LOG('LandingPageHandler instantiated :)');
@@ -53,15 +50,9 @@ export default class LandingPageHandler {
             !options.dataViews[0] ||
             !options.dataViews[0].metadata ||
             !options.dataViews[0].metadata.columns ||
-            !options.dataViews[0].metadata.columns.filter(
-                c => c.roles['category']
-            )[0] ||
-            !options.dataViews[0].metadata.columns.filter(
-                c => c.roles['smallMultiple']
-            )[0] ||
-            !options.dataViews[0].metadata.columns.filter(
-                c => c.roles['values']
-            )[0] ||
+            !options.dataViews[0].metadata.columns.filter(c => c.roles['category'])[0] ||
+            !options.dataViews[0].metadata.columns.filter(c => c.roles['smallMultiple'])[0] ||
+            !options.dataViews[0].metadata.columns.filter(c => c.roles['values'])[0] ||
             !options.dataViews[0].categorical.values
         ) {
             if (!this.landingPageEnabled) {
@@ -123,9 +114,7 @@ export default class LandingPageHandler {
 
         // Add title
         Debugger.LOG('Adding title...');
-        heading
-            .append('h5')
-            .text(this.localisationManager.getDisplayName('Visual_Name'));
+        heading.append('h5').text(this.localisationManager.getDisplayName('Visual_Name'));
 
         // Add version number
         Debugger.LOG('Adding version number...');
@@ -149,35 +138,15 @@ export default class LandingPageHandler {
         helpBox
             .append('p')
             .classed('w3-small', true)
-            .text(
-                this.localisationManager.getDisplayName('Landing_Page_Overview')
-            );
+            .text(this.localisationManager.getDisplayName('Landing_Page_Overview'));
 
         // Bullet list
         let bulletList = helpBox
             .append('ul')
             .classed('w3-ul', true)
             .classed('w3-border-0', true);
-        bulletList
-            .append('li')
-            .text(
-                this.localisationManager.getDisplayName(
-                    'Landing_Page_Overview_Field_1'
-                )
-            );
-        bulletList
-            .append('li')
-            .text(
-                this.localisationManager.getDisplayName(
-                    'Landing_Page_Overview_Field_2'
-                )
-            );
-        bulletList
-            .append('li')
-            .text(
-                this.localisationManager.getDisplayName(
-                    'Landing_Page_Overview_Field_3'
-                )
-            );
+        bulletList.append('li').text(this.localisationManager.getDisplayName('Landing_Page_Overview_Field_1'));
+        bulletList.append('li').text(this.localisationManager.getDisplayName('Landing_Page_Overview_Field_2'));
+        bulletList.append('li').text(this.localisationManager.getDisplayName('Landing_Page_Overview_Field_3'));
     }
 }

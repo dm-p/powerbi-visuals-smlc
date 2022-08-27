@@ -2,10 +2,7 @@
 import powerbiVisualsApi from 'powerbi-visuals-api';
 import powerbi = powerbiVisualsApi;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
-import {
-    textMeasurementService,
-    interfaces
-} from 'powerbi-visuals-utils-formattingutils';
+import { textMeasurementService, interfaces } from 'powerbi-visuals-utils-formattingutils';
 import TextProperties = interfaces.TextProperties;
 import measureSvgTextHeight = textMeasurementService.measureSvgTextHeight;
 import { valueFormatter } from 'powerbi-visuals-utils-formattingutils';
@@ -64,9 +61,7 @@ export default class SmallMultiplesHelper {
         this.layout.multiple.heading = this.resolveHeadingProperties();
         // Resolve border offset
         this.layout.multiple.borderOffset =
-            (this.stylingSettings.border &&
-                this.stylingSettings.borderStrokeWidth) ||
-            0;
+            (this.stylingSettings.border && this.stylingSettings.borderStrokeWidth) || 0;
     }
 
     // Represents the initial state of the small multiples view model and can be also be used to reset it.
@@ -96,8 +91,7 @@ export default class SmallMultiplesHelper {
                 },
                 margin: {
                     top: visualConstants.defaults.smallMultiple.margin.top,
-                    bottom:
-                        visualConstants.defaults.smallMultiple.margin.bottom,
+                    bottom: visualConstants.defaults.smallMultiple.margin.bottom,
                     left: visualConstants.defaults.smallMultiple.margin.left,
                     right: visualConstants.defaults.smallMultiple.margin.right
                 },
@@ -122,9 +116,7 @@ export default class SmallMultiplesHelper {
                         Math.max(
                             Math.floor(
                                 chartWidth /
-                                    (this.layoutSettings.multipleWidth +
-                                        this.layoutSettings
-                                            .spacingBetweenColumns)
+                                    (this.layoutSettings.multipleWidth + this.layoutSettings.spacingBetweenColumns)
                             ),
                             1
                         )
@@ -136,18 +128,13 @@ export default class SmallMultiplesHelper {
                 Debugger.LOG('Calculating columns for Column mode...');
                 // Resolve number of columns for null (Auto)
                 let columnCap =
-                    this.layoutSettings.numberOfColumns ||
-                    visualConstants.defaults.layout.multipleDataReductionCap;
-                this.layout.grid.columns.count =
-                    this.layout.count < columnCap
-                        ? this.layout.count
-                        : columnCap;
+                    this.layoutSettings.numberOfColumns || visualConstants.defaults.layout.multipleDataReductionCap;
+                this.layout.grid.columns.count = this.layout.count < columnCap ? this.layout.count : columnCap;
                 break;
             }
         }
         this.layout.grid.rows.count =
-            this.layout.grid.columns.count &&
-            Math.ceil(this.layout.count / this.layout.grid.columns.count);
+            this.layout.grid.columns.count && Math.ceil(this.layout.count / this.layout.grid.columns.count);
     }
 
     /**
@@ -156,17 +143,13 @@ export default class SmallMultiplesHelper {
      * @param chartHeight
      */
     calculateDimensions(chartWidth: number, chartHeight: number) {
-        Debugger.HEADING(
-            'Resolving small multiple row and column dimensions...'
-        );
+        Debugger.HEADING('Resolving small multiple row and column dimensions...');
         Debugger.LOG('Chart width', chartWidth, 'Chart height', chartHeight);
         let vph = chartHeight,
             vpw = chartWidth,
             rc = this.layout.grid.rows.count,
             cc = this.layout.grid.columns.count,
-            br = this.stylingSettings.border
-                ? this.stylingSettings.borderStrokeWidth
-                : 0;
+            br = this.stylingSettings.border ? this.stylingSettings.borderStrokeWidth : 0;
 
         this.resolveSmallMultipleHeight(rc, vph, br);
 
@@ -182,9 +165,7 @@ export default class SmallMultiplesHelper {
 
         // Adjust inner canvas for margin
         this.layout.multiple.inner.height =
-            this.layout.multiple.outer.height -
-            this.layout.multiple.margin.top -
-            this.layout.multiple.margin.bottom;
+            this.layout.multiple.outer.height - this.layout.multiple.margin.top - this.layout.multiple.margin.bottom;
 
         Debugger.LOG(
             'Resolved heights: Row height',
@@ -197,15 +178,11 @@ export default class SmallMultiplesHelper {
 
         // Resolve widths
         this.resolveSmallMultipleWidth(cc, vpw, br);
-        this.layout.grid.rows.width =
-            this.layout.grid.columns.width * this.layout.grid.columns.count;
+        this.layout.grid.rows.width = this.layout.grid.columns.width * this.layout.grid.columns.count;
         this.layout.multiple.xOffset =
-            this.layout.multiple.outer.width +
-                this.layoutSettings.spacingBetweenColumns || 0;
+            this.layout.multiple.outer.width + this.layoutSettings.spacingBetweenColumns || 0;
         this.layout.multiple.inner.width =
-            this.layout.multiple.outer.width -
-            this.layout.multiple.margin.right -
-            this.layout.multiple.margin.left;
+            this.layout.multiple.outer.width - this.layout.multiple.margin.right - this.layout.multiple.margin.left;
 
         this.setHeadingPosition();
 
@@ -234,8 +211,7 @@ export default class SmallMultiplesHelper {
                 break;
             }
             case 'center': {
-                this.layout.multiple.heading.x =
-                    this.layout.multiple.inner.width / 2;
+                this.layout.multiple.heading.x = this.layout.multiple.inner.width / 2;
                 this.layout.multiple.heading.textAnchor = 'middle';
                 break;
             }
@@ -252,20 +228,16 @@ export default class SmallMultiplesHelper {
      */
     private adjustMarginsForHeading() {
         switch (true) {
-            case this.headingSettings.labelPosition === 'top' &&
-                this.headingSettings.show: {
+            case this.headingSettings.labelPosition === 'top' && this.headingSettings.show: {
                 Debugger.LOG('Adjusting for top...');
                 this.layout.multiple.heading.y = this.layout.multiple.margin.top;
                 this.layout.multiple.margin.top += this.layout.multiple.heading.textHeight;
                 break;
             }
-            case this.headingSettings.labelPosition === 'bottom' &&
-                this.headingSettings.show: {
+            case this.headingSettings.labelPosition === 'bottom' && this.headingSettings.show: {
                 Debugger.LOG('Adjusting for bottom...');
                 this.layout.multiple.margin.bottom += this.layout.multiple.heading.textHeight;
-                this.layout.multiple.heading.y =
-                    this.layout.multiple.outer.height -
-                    this.layout.multiple.margin.bottom;
+                this.layout.multiple.heading.y = this.layout.multiple.outer.height - this.layout.multiple.margin.bottom;
                 break;
             }
         }
@@ -277,18 +249,12 @@ export default class SmallMultiplesHelper {
      * @param totalWidth    - width of area to work with
      * @param borderWidth   - border width to adjust for
      */
-    private resolveSmallMultipleWidth(
-        columnCount: number,
-        totalWidth: number,
-        borderWidth: number
-    ) {
+    private resolveSmallMultipleWidth(columnCount: number, totalWidth: number, borderWidth: number) {
         switch (this.layoutSettings.horizontalGrid) {
             case 'width': {
                 this.layout.grid.columns.width =
                     this.layoutSettings.multipleWidth +
-                    (columnCount > 1
-                        ? this.layoutSettings.spacingBetweenColumns
-                        : 0);
+                    (columnCount > 1 ? this.layoutSettings.spacingBetweenColumns : 0);
                 this.layout.multiple.outer.width = this.layoutSettings.multipleWidth;
                 break;
             }
@@ -298,8 +264,7 @@ export default class SmallMultiplesHelper {
                     (totalWidth - borderWidth) / columnCount
                 );
                 this.layout.multiple.outer.width =
-                    this.layout.grid.columns.width -
-                    (this.layoutSettings.spacingBetweenColumns || 0);
+                    this.layout.grid.columns.width - (this.layoutSettings.spacingBetweenColumns || 0);
                 break;
             }
         }
@@ -311,17 +276,12 @@ export default class SmallMultiplesHelper {
      * @param totalHeight   - height of area to work with
      * @param borderWidth   - border width to adjust for
      */
-    private resolveSmallMultipleHeight(
-        rowCount: number,
-        totalHeight: number,
-        borderWidth: number
-    ) {
+    private resolveSmallMultipleHeight(rowCount: number, totalHeight: number, borderWidth: number) {
         Debugger.LOG('Resolving heights...');
         switch (this.layoutSettings.verticalGrid) {
             case 'height': {
                 this.layout.grid.rows.height =
-                    this.layoutSettings.multipleHeight +
-                    (rowCount > 1 ? this.layoutSettings.spacingBetweenRows : 0);
+                    this.layoutSettings.multipleHeight + (rowCount > 1 ? this.layoutSettings.spacingBetweenRows : 0);
                 this.layout.multiple.outer.height = this.layoutSettings.multipleHeight;
                 break;
             }
@@ -331,8 +291,7 @@ export default class SmallMultiplesHelper {
                     totalHeight / rowCount - borderWidth
                 );
                 this.layout.multiple.outer.height =
-                    this.layout.grid.rows.height -
-                    (rowCount > 1 ? this.layoutSettings.spacingBetweenRows : 0);
+                    this.layout.grid.rows.height - (rowCount > 1 ? this.layoutSettings.spacingBetweenRows : 0);
                 break;
             }
         }
@@ -343,12 +302,7 @@ export default class SmallMultiplesHelper {
      * @param initialMargin  -initial potision of margin
      */
     private getMarginAdjustedForBorder(initialMargin: number) {
-        return (
-            initialMargin +
-            (this.stylingSettings.border
-                ? this.stylingSettings.borderStrokeWidth
-                : 0)
-        );
+        return initialMargin + (this.stylingSettings.border ? this.stylingSettings.borderStrokeWidth : 0);
     }
 
     /**
@@ -363,14 +317,10 @@ export default class SmallMultiplesHelper {
         return {
             textProperties: textProperties,
             formatter: valueFormatter.create({
-                format: valueFormatter.getFormatStringByColumn(
-                    this.smallMultipleColumnMetadata
-                ),
+                format: valueFormatter.getFormatStringByColumn(this.smallMultipleColumnMetadata),
                 cultureSelector: this.locale
             }),
-            textHeight: this.headingSettings.show
-                ? measureSvgTextHeight(textProperties, 'A')
-                : 0,
+            textHeight: this.headingSettings.show ? measureSvgTextHeight(textProperties, 'A') : 0,
             dominantBaseline: 'hanging',
             textAnchor: '',
             x: 0,

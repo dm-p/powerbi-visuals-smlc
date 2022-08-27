@@ -85,10 +85,7 @@ export default class AxisSettings extends SettingsBase {
         return instance;
     }
 
-    protected handleAxisLabelPlacement(
-        instance: VisualObjectInstance,
-        options: { [propertyName: string]: any } = {}
-    ) {
+    protected handleAxisLabelPlacement(instance: VisualObjectInstance, options: { [propertyName: string]: any } = {}) {
         Debugger.LOG('Managing axis placement...');
         if (options && !options.axisLabelPlacement) {
             delete instance.properties['labelPlacement'];

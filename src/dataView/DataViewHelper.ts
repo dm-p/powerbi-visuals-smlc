@@ -10,10 +10,7 @@ import Fill = powerbi.Fill;
 // Internal dependencies
 import VisualSettings from '../settings/VisualSettings';
 import Debugger from '../debug/Debugger';
-import {
-    IMigrationObject,
-    EMigrationObjectPropertyCase
-} from '../propertyMigration';
+import { IMigrationObject, EMigrationObjectPropertyCase } from '../propertyMigration';
 
 /**
  * Provides means to assist with the Power BI `dataView`.
@@ -71,42 +68,24 @@ export default class DataViewHelper {
 
         // Step over our objects/properties, test and add changes accordingly
         migrationList.map((m, mi) => {
-            Debugger.LOG(
-                `Checking if migration needed for legacy object: ${m.source.object}.${m.source.property}...`
-            );
+            Debugger.LOG(`Checking if migration needed for legacy object: ${m.source.object}.${m.source.property}...`);
             if (
                 dataView.metadata &&
                 dataView.metadata.objects &&
-                dataView.metadata.objects.hasOwnProperty(
-                    `${m.source.object}`
-                ) &&
-                dataView.metadata.objects[m.source.object].hasOwnProperty(
-                    `${m.source.property}`
-                ) &&
-                dataView.metadata.objects[m.source.object][
-                    m.source.property
-                ] !==
-                    VisualSettings.getDefault()[m.source.object][
-                        m.source.property
-                    ]
+                dataView.metadata.objects.hasOwnProperty(`${m.source.object}`) &&
+                dataView.metadata.objects[m.source.object].hasOwnProperty(`${m.source.property}`) &&
+                dataView.metadata.objects[m.source.object][m.source.property] !==
+                    VisualSettings.getDefault()[m.source.object][m.source.property]
             ) {
                 Debugger.LOG(
                     `Adding migration ${m.source.object}.${m.source.property} to ${m.destination.object}.${m.destination.property} to changes...`
                 );
 
                 // Placeholder objects and results if already created for our source/destination
-                let replace = DataViewHelper.newVisualObjectInstance(
-                        m.destination.object
-                    ),
-                    repi = changes.replace.filter(
-                        c => c.objectName === m.destination.object
-                    ),
-                    remove = DataViewHelper.newVisualObjectInstance(
-                        m.source.object
-                    ),
-                    remi = changes.remove.filter(
-                        c => c.objectName === m.source.object
-                    );
+                let replace = DataViewHelper.newVisualObjectInstance(m.destination.object),
+                    repi = changes.replace.filter(c => c.objectName === m.destination.object),
+                    remove = DataViewHelper.newVisualObjectInstance(m.source.object),
+                    remi = changes.remove.filter(c => c.objectName === m.source.object);
 
                 /**
                  *  Add/update appropriate object for destination. Note that colours behave differently to the standard enumeration push
@@ -117,25 +96,19 @@ export default class DataViewHelper {
                     switch (m.objectCase) {
                         case EMigrationObjectPropertyCase.Colour: {
                             replace.properties[m.destination.property] =
-                                dataView.metadata.objects[m.source.object][
-                                    m.source.property
-                                ]['solid']['color'];
+                                dataView.metadata.objects[m.source.object][m.source.property]['solid']['color'];
                             break;
                         }
                         default: {
                             replace.properties[m.destination.property] =
-                                dataView.metadata.objects[m.source.object][
-                                    m.source.property
-                                ];
+                                dataView.metadata.objects[m.source.object][m.source.property];
                             break;
                         }
                     }
                     changes.replace.push(replace);
                 } else {
                     repi[0].properties[m.destination.property] =
-                        dataView.metadata.objects[m.source.object][
-                            m.source.property
-                        ];
+                        dataView.metadata.objects[m.source.object][m.source.property];
                 }
 
                 // Add/update appropriate object for source
@@ -146,9 +119,7 @@ export default class DataViewHelper {
                     remi[0].properties[m.source.property] = null;
                 }
             } else {
-                Debugger.LOG(
-                    `Property doesn't need to be migrated. Skipping...`
-                );
+                Debugger.LOG(`Property doesn't need to be migrated. Skipping...`);
             }
         });
 
@@ -160,9 +131,7 @@ export default class DataViewHelper {
         if (targetVersion === 2) {
             changes.replace.map(c => {
                 if (c.properties.numberOfColumns) {
-                    Debugger.LOG(
-                        "Hard setting horizontal grid mode to 'column'..."
-                    );
+                    Debugger.LOG("Hard setting horizontal grid mode to 'column'...");
                     c.properties.horizontalGrid = 'column';
                     Debugger.LOG("Hard setting vertical grid mode to 'fit'...");
                     c.properties.verticalGrid = 'fit';
@@ -193,19 +162,10 @@ export default class DataViewHelper {
      * @param dataView  - the `DataView` to process
      * @param changes
      */
-    private static migrateColourValues(
-        dataView: powerbi.DataView,
-        changes: powerbi.VisualObjectInstancesToPersist
-    ) {
+    private static migrateColourValues(dataView: powerbi.DataView, changes: powerbi.VisualObjectInstancesToPersist) {
         Debugger.LOG('Migrating data colours...');
         dataView.metadata.columns
-            .filter(
-                c =>
-                    c.roles.values &&
-                    c.objects &&
-                    c.objects.colorSelector &&
-                    c.objects.colorSelector.fill
-            )
+            .filter(c => c.roles.values && c.objects && c.objects.colorSelector && c.objects.colorSelector.fill)
             .map(m => {
                 changes.replace.push({
                     objectName: 'lines',
@@ -233,9 +193,7 @@ export default class DataViewHelper {
      * Creates a new template `VisualObjectInstance` for the specified `IMigrationObject`
      * @param objectName - name of the object to template
      */
-    private static newVisualObjectInstance(
-        objectName: string
-    ): powerbi.VisualObjectInstance {
+    private static newVisualObjectInstance(objectName: string): powerbi.VisualObjectInstance {
         return {
             objectName: objectName,
             selector: null,

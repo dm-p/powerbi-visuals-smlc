@@ -8,17 +8,11 @@ import positionChartArea = legend.positionChartArea;
 import createLegend = legend.createLegend;
 import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
-import {
-    textMeasurementService,
-    valueFormatter
-} from 'powerbi-visuals-utils-formattingutils';
+import { textMeasurementService, valueFormatter } from 'powerbi-visuals-utils-formattingutils';
 import getTailoredTextOrDefault = textMeasurementService.getTailoredTextOrDefault;
 import measureSvgTextWidth = textMeasurementService.measureSvgTextWidth;
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
-import {
-    TooltipEventArgs,
-    ITooltipServiceWrapper
-} from 'powerbi-visuals-utils-tooltiputils';
+import { TooltipEventArgs, ITooltipServiceWrapper } from 'powerbi-visuals-utils-tooltiputils';
 import ISelectionId = powerbi.visuals.ISelectionId;
 
 // External dependencies
@@ -68,12 +62,7 @@ export default class ChartHelper {
     // Tooltip service
     public tooltipServiceWrapper: ITooltipServiceWrapper;
     // Selected small multiples
-    private smSelection: d3.Selection<
-        SVGGElement,
-        ISmallMultiple,
-        SVGGElement,
-        any
-    >;
+    private smSelection: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>;
 
     constructor(visualContainer: HTMLElement, visualHost: IVisualHost) {
         Debugger.LOG('Chart helper constructor');
@@ -81,10 +70,7 @@ export default class ChartHelper {
         this.host = visualHost;
         this.selectionManager = this.host.createSelectionManager();
         this.selectionManager.registerOnSelectCallback(() => {
-            syncSelectionState(
-                this.smSelection,
-                <ISelectionId[]>this.selectionManager.getSelectionIds()
-            );
+            syncSelectionState(this.smSelection, <ISelectionId[]>this.selectionManager.getSelectionIds());
         });
         this.createLegendContainer();
         this.createChartContainer();
@@ -117,13 +103,7 @@ export default class ChartHelper {
      */
     private createLegendContainer() {
         Debugger.LOG('Creating legend container...');
-        this.legend = createLegend(
-            this.visualContainer,
-            false,
-            null,
-            true,
-            LegendPosition.Top
-        );
+        this.legend = createLegend(this.visualContainer, false, null, true, LegendPosition.Top);
     }
 
     /**
@@ -167,11 +147,7 @@ export default class ChartHelper {
     renderLegend() {
         Debugger.FOOTER();
         Debugger.LOG('Rendering legend...');
-        if (
-            !this.viewModel ||
-            !this.viewModel.measureMetadata ||
-            !this.settings
-        ) {
+        if (!this.viewModel || !this.viewModel.measureMetadata || !this.settings) {
             Debugger.LOG('No measure metadata. Skipping render!');
             return;
         }
@@ -179,9 +155,7 @@ export default class ChartHelper {
         // We need to draw the legend first to figure out how big it might be
         Debugger.LOG('Setting position...');
         const position: LegendPosition =
-            this.settings.legend.show &&
-            this.viewModel.dataViewIsValid &&
-            this.viewModel.measureMetadata.length > 0
+            this.settings.legend.show && this.viewModel.dataViewIsValid && this.viewModel.measureMetadata.length > 0
                 ? LegendPosition[this.settings.legend.position]
                 : LegendPosition.None;
         Debugger.LOG(`Position: ${LegendPosition[position]}`);
@@ -193,10 +167,7 @@ export default class ChartHelper {
 
         // We need to test the viewport. If there's not enough room, we remove the legend
         Debugger.LOG('Testing and adjusting viewport to fit legend...');
-        Debugger.LOG(
-            'Previous dimensions',
-            JSON.stringify(this.viewModel.viewport)
-        );
+        Debugger.LOG('Previous dimensions', JSON.stringify(this.viewModel.viewport));
         let width = this.legend.getMargins().width,
             height = this.legend.getMargins().height;
         switch (this.legend.getOrientation()) {
@@ -204,13 +175,8 @@ export default class ChartHelper {
             case LegendPosition.LeftCenter:
             case LegendPosition.Right:
             case LegendPosition.RightCenter:
-                if (
-                    this.viewModel.viewport.width - width <
-                    visualConstants.visual.minPx
-                ) {
-                    Debugger.LOG(
-                        'Viewport cannot support legend in this orientation. Will be hidden.'
-                    );
+                if (this.viewModel.viewport.width - width < visualConstants.visual.minPx) {
+                    Debugger.LOG('Viewport cannot support legend in this orientation. Will be hidden.');
                     this.removeLegend();
                 } else {
                     Debugger.LOG('Legend will fit.');
@@ -221,13 +187,8 @@ export default class ChartHelper {
             case LegendPosition.TopCenter:
             case LegendPosition.Bottom:
             case LegendPosition.BottomCenter:
-                if (
-                    this.viewModel.viewport.height - height <
-                    visualConstants.visual.minPx
-                ) {
-                    Debugger.LOG(
-                        'Viewport cannot support legend in this orientation. Will be hidden.'
-                    );
+                if (this.viewModel.viewport.height - height < visualConstants.visual.minPx) {
+                    Debugger.LOG('Viewport cannot support legend in this orientation. Will be hidden.');
                     this.removeLegend();
                 } else {
                     Debugger.LOG('Legend will fit.');
@@ -235,10 +196,7 @@ export default class ChartHelper {
                 }
                 break;
         }
-        Debugger.LOG(
-            'Adjusted dimensions',
-            JSON.stringify(this.viewModel.viewport)
-        );
+        Debugger.LOG('Adjusted dimensions', JSON.stringify(this.viewModel.viewport));
     }
 
     /**
@@ -260,22 +218,13 @@ export default class ChartHelper {
             .append('div')
             .classed('y-title', true)
             .append('svg')
-            .attr(
-                'height',
-                this.viewModel.viewport.height -
-                    this.viewModel.xAxis.masterTitle.textHeight
-            )
+            .attr('height', this.viewModel.viewport.height - this.viewModel.xAxis.masterTitle.textHeight)
             .attr('width', this.viewModel.yAxis.masterTitle.textHeight)
             .append('g');
-        this.renderAxisTitle(
-            this.yTitleContainer,
-            this.viewModel.yAxis,
-            this.settings.yAxis
-        );
+        this.renderAxisTitle(this.yTitleContainer, this.viewModel.yAxis, this.settings.yAxis);
         this.chartContainer.style(
             'grid-template-columns',
-            `${this.viewModel.yAxis.masterTitle.textHeight}px ${this.viewModel
-                .viewport.width -
+            `${this.viewModel.yAxis.masterTitle.textHeight}px ${this.viewModel.viewport.width -
                 this.viewModel.yAxis.masterTitle.textHeight}px`
         );
 
@@ -285,21 +234,12 @@ export default class ChartHelper {
             .classed('x-title', true)
             .append('svg')
             .attr('height', this.viewModel.xAxis.masterTitle.textHeight)
-            .attr(
-                'width',
-                this.viewModel.viewport.width -
-                    this.viewModel.yAxis.masterTitle.textHeight
-            )
+            .attr('width', this.viewModel.viewport.width - this.viewModel.yAxis.masterTitle.textHeight)
             .append('g');
-        this.renderAxisTitle(
-            this.xTitleContainer,
-            this.viewModel.xAxis,
-            this.settings.xAxis
-        );
+        this.renderAxisTitle(this.xTitleContainer, this.viewModel.xAxis, this.settings.xAxis);
         this.chartContainer.style(
             'grid-template-rows',
-            `${this.viewModel.viewport.height -
-                this.viewModel.xAxis.masterTitle.textHeight}px ${
+            `${this.viewModel.viewport.height - this.viewModel.xAxis.masterTitle.textHeight}px ${
                 this.viewModel.xAxis.masterTitle.textHeight
             }px`
         );
@@ -322,27 +262,19 @@ export default class ChartHelper {
      */
     renderMasterAxes() {
         Debugger.LOG('Adding master axes group...');
-        let group = this.canvasContainer
-            .append('g')
-            .classed('small-multiple-master-axis-container', true);
+        let group = this.canvasContainer.append('g').classed('small-multiple-master-axis-container', true);
 
         // Y-axis
         if (this.settings.yAxis.show) {
             Debugger.LOG('Rendering Y-axis...');
-            for (
-                let r = 0;
-                r < this.viewModel.layout.smallMultiples.grid.rows.count;
-                r++
-            ) {
+            for (let r = 0; r < this.viewModel.layout.smallMultiples.grid.rows.count; r++) {
                 Debugger.LOG('Rendering Y-axis ticks...');
                 this.renderAxis(
                     group,
                     this.viewModel.yAxis.tickLabels.textWidth,
                     r * this.viewModel.layout.smallMultiples.grid.rows.height +
-                        this.viewModel.layout.smallMultiples.multiple.margin
-                            .top +
-                        this.viewModel.layout.smallMultiples.multiple
-                            .borderOffset,
+                        this.viewModel.layout.smallMultiples.multiple.margin.top +
+                        this.viewModel.layout.smallMultiples.multiple.borderOffset,
                     this.viewModel.yAxis,
                     this.settings.yAxis,
                     true
@@ -353,26 +285,17 @@ export default class ChartHelper {
         // X-axis
         if (this.settings.xAxis.show) {
             Debugger.LOG('Rendering X-axis...');
-            for (
-                let c = 0;
-                c < this.viewModel.layout.smallMultiples.grid.columns.count;
-                c++
-            ) {
+            for (let c = 0; c < this.viewModel.layout.smallMultiples.grid.columns.count; c++) {
                 Debugger.LOG('Rendering X-axis ticks...');
                 this.renderAxis(
                     group,
                     this.viewModel.yAxis.tickLabels.textWidth +
-                        c *
-                            this.viewModel.layout.smallMultiples.multiple
-                                .xOffset +
-                        this.viewModel.layout.smallMultiples.multiple.margin
-                            .left +
-                        this.viewModel.layout.smallMultiples.multiple
-                            .borderOffset,
+                        c * this.viewModel.layout.smallMultiples.multiple.xOffset +
+                        this.viewModel.layout.smallMultiples.multiple.margin.left +
+                        this.viewModel.layout.smallMultiples.multiple.borderOffset,
                     this.viewModel.layout.chartViewport.height -
                         this.viewModel.xAxis.tickLabels.textHeight +
-                        this.viewModel.layout.smallMultiples.multiple
-                            .borderOffset,
+                        this.viewModel.layout.smallMultiples.multiple.borderOffset,
                     this.viewModel.xAxis,
                     this.settings.xAxis,
                     true
@@ -389,11 +312,7 @@ export default class ChartHelper {
         let viewport = this.renderSmallMultipleChartViewport();
 
         // Add rows to group
-        for (
-            let r = 0;
-            r < this.viewModel.layout.smallMultiples.grid.rows.count;
-            r++
-        ) {
+        for (let r = 0; r < this.viewModel.layout.smallMultiples.grid.rows.count; r++) {
             Debugger.LOG(`Rendering row #${r}...`);
 
             // Row (of multiples) element
@@ -435,8 +354,7 @@ export default class ChartHelper {
                     multiples,
                     this.viewModel.layout.smallMultiples.multiple.margin.left,
                     this.viewModel.layout.smallMultiples.multiple.inner.height +
-                        this.viewModel.layout.smallMultiples.multiple.margin
-                            .top,
+                        this.viewModel.layout.smallMultiples.multiple.margin.top,
                     this.viewModel.xAxis,
                     this.settings.xAxis,
                     false
@@ -459,10 +377,7 @@ export default class ChartHelper {
         }
 
         // Bind selection events
-        syncSelectionState(
-            this.smSelection,
-            <ISelectionId[]>this.selectionManager.getSelectionIds()
-        );
+        syncSelectionState(this.smSelection, <ISelectionId[]>this.selectionManager.getSelectionIds());
         this.bindSmallMultipleSelection();
         this.bindClearAllSelections();
 
@@ -489,28 +404,17 @@ export default class ChartHelper {
      * Binds the context menu to the small multiple the mouse is over
      */
     private bindContextMenu() {
-        if (
-            this.settings.features.contextMenu &&
-            this.host.hostCapabilities.allowInteractions
-        ) {
+        if (this.settings.features.contextMenu && this.host.hostCapabilities.allowInteractions) {
             Debugger.LOG('Binding context menu...');
             this.chartContainer.on('contextmenu', () => {
                 const mouseEvent: MouseEvent = <MouseEvent>d3.event,
                     eventTarget: EventTarget = mouseEvent.target;
-                Debugger.LOG(
-                    'Context menu click',
-                    d3.select(<d3.BaseType>eventTarget).datum()
-                );
-                let dataPoint = <ISmallMultiple>(
-                    d3.select(<d3.BaseType>eventTarget).datum()
-                );
-                this.selectionManager.showContextMenu(
-                    dataPoint ? dataPoint.selectionId : {},
-                    {
-                        x: mouseEvent.clientX,
-                        y: mouseEvent.clientY
-                    }
-                );
+                Debugger.LOG('Context menu click', d3.select(<d3.BaseType>eventTarget).datum());
+                let dataPoint = <ISmallMultiple>d3.select(<d3.BaseType>eventTarget).datum();
+                this.selectionManager.showContextMenu(dataPoint ? dataPoint.selectionId : {}, {
+                    x: mouseEvent.clientX,
+                    y: mouseEvent.clientY
+                });
                 mouseEvent.preventDefault();
             });
         }
@@ -519,10 +423,7 @@ export default class ChartHelper {
     private bindSmallMultipleSelection() {
         this.smSelection.on('click', d => {
             // Allow selection only if the visual is rendered in a view that supports interactivity (e.g. Report)
-            if (
-                this.host.hostCapabilities.allowInteractions &&
-                this.settings.features.filterOtherVisuals
-            ) {
+            if (this.host.hostCapabilities.allowInteractions && this.settings.features.filterOtherVisuals) {
                 Debugger.LOG('Clicked on SM - filter by category');
                 /** If we have the context menu open, there's nothing in the API currently that lets us close it.
                  *  It does close if somewhere else in the UI is clicked, so this is a 'meh' way we can manage this
@@ -531,11 +432,9 @@ export default class ChartHelper {
 
                 const isCtrlPressed: boolean = (<MouseEvent>d3.event).ctrlKey;
 
-                this.selectionManager
-                    .select(d.selectionId, isCtrlPressed)
-                    .then((ids: ISelectionId[]) => {
-                        syncSelectionState(this.smSelection, ids);
-                    });
+                this.selectionManager.select(d.selectionId, isCtrlPressed).then((ids: ISelectionId[]) => {
+                    syncSelectionState(this.smSelection, ids);
+                });
 
                 (<Event>d3.event).stopPropagation();
             }
@@ -558,18 +457,14 @@ export default class ChartHelper {
     /**
      * Binds mouse events for tooltip handling to the specified element(s)
      */
-    private bindTooltipEvents(
-        element: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>
-    ) {
+    private bindTooltipEvents(element: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>) {
         Debugger.LOG('Binding mouse events...');
 
         // Bind the tooltipWrapper event listener to each small multiple
         this.tooltipServiceWrapper.addTooltip(
             element,
             (tooltipEvent: TooltipEventArgs<ISmallMultipleMeasureValue[]>) =>
-                <VisualTooltipDataItem[]>(
-                    this.getTooltipData(tooltipEvent, 'default')
-                ),
+                <VisualTooltipDataItem[]>this.getTooltipData(tooltipEvent, 'default'),
             (tooltipEvent: TooltipEventArgs<ISmallMultipleMeasureValue[]>) =>
                 <ISelectionId>this.getTooltipData(tooltipEvent, 'canvas'),
             true
@@ -596,15 +491,13 @@ export default class ChartHelper {
 
                 switch (this.viewModel.xAxis.scaleType) {
                     case EAxisScaleType.Linear: {
-                        x = (<d3.ScaleLinear<number, number>>(
-                            this.viewModel.xAxis.scale
-                        ))(<number>dataPoints[0].category);
+                        x = (<d3.ScaleLinear<number, number>>this.viewModel.xAxis.scale)(
+                            <number>dataPoints[0].category
+                        );
                         break;
                     }
                     case EAxisScaleType.Time: {
-                        x = (<d3.ScaleTime<number, number>>(
-                            this.viewModel.xAxis.scale
-                        ))(<Date>dataPoints[0].category);
+                        x = (<d3.ScaleTime<number, number>>this.viewModel.xAxis.scale)(<Date>dataPoints[0].category);
                         break;
                     }
                     default: {
@@ -620,27 +513,20 @@ export default class ChartHelper {
                 d3.select(e[i])
                     .selectAll('.circle-item')
                     .attr('transform', (d, di) => {
-                        let measureIndex =
-                                this.viewModel.measureMetadata.length - 1 - di,
+                        let measureIndex = this.viewModel.measureMetadata.length - 1 - di,
                             dataPoint = dataPoints[measureIndex],
-                            measure = this.viewModel.measureMetadata[
-                                measureIndex
-                            ],
+                            measure = this.viewModel.measureMetadata[measureIndex],
                             value =
                                 measure.role === 'tooltip'
                                     ? this.viewModel.statistics.min.value
                                     : <number>dataPoint.value;
-                        return `translate(${x}, ${(<
-                            d3.ScaleLinear<number, number>
-                        >this.viewModel.yAxis.scale)(value)})`;
+                        return `translate(${x}, ${(<d3.ScaleLinear<number, number>>this.viewModel.yAxis.scale)(
+                            value
+                        )})`;
                     })
                     // #23: If we got a null value for closest data point then hide it
                     .style('display', (d, di) =>
-                        <number>(
-                            dataPoints[
-                                this.viewModel.measureMetadata.length - 1 - di
-                            ].value
-                        ) === null
+                        <number>dataPoints[this.viewModel.measureMetadata.length - 1 - di].value === null
                             ? 'none'
                             : null
                     );
@@ -664,10 +550,7 @@ export default class ChartHelper {
     /**
      * Retrieve tooltip data from specified data points
      */
-    private getTooltipData(
-        tooltipEvent: any,
-        tooltipType = 'default'
-    ): VisualTooltipDataItem[] | ISelectionId {
+    private getTooltipData(tooltipEvent: any, tooltipType = 'default'): VisualTooltipDataItem[] | ISelectionId {
         Debugger.LOG('Instantiating tooltip...');
         let overlay = tooltipEvent.context.closest('.small-multiple-canvas');
         let dataPoints = this.getHighlightedDataPoints(overlay);
@@ -684,9 +567,7 @@ export default class ChartHelper {
     /**
      * Uses the current mouse position to return data points that fall nearest to it
      */
-    private getHighlightedDataPoints(
-        overlay: d3.ContainerElement
-    ): ISmallMultipleMeasureValue[] {
+    private getHighlightedDataPoints(overlay: d3.ContainerElement): ISmallMultipleMeasureValue[] {
         let category = this.viewModel.categoryMetadata.metadata,
             xPos = d3.mouse(overlay)[0],
             xData: number | Date | string,
@@ -703,16 +584,12 @@ export default class ChartHelper {
                 switch (true) {
                     case category.type.numeric:
                     case category.type.dateTime: {
-                        xData = this.linearPointInvert(
-                            <any>this.viewModel.xAxis.scale
-                        )(xPos);
+                        xData = this.linearPointInvert(<any>this.viewModel.xAxis.scale)(xPos);
                         dataPoints.push(this.linearPointBisect(d, i, xData));
                         break;
                     }
                     default: {
-                        xData = this.scalePointInvert(
-                            <d3.ScalePoint<string>>this.viewModel.xAxis.scale
-                        )(xPos);
+                        xData = this.scalePointInvert(<d3.ScalePoint<string>>this.viewModel.xAxis.scale)(xPos);
                         dataPoints.push(this.scalePointBisect(d, i, xData));
                     }
                 }
@@ -723,30 +600,20 @@ export default class ChartHelper {
     /**
      * Gets the resolved category position for the given x-cordinate
      */
-    private linearPointInvert(
-        scale: d3.ScaleLinear<number, number> | d3.ScaleTime<number, number>
-    ) {
+    private linearPointInvert(scale: d3.ScaleLinear<number, number> | d3.ScaleTime<number, number>) {
         return value => scale.invert(value);
     }
 
     /**
      * Finds the nearest desired category for the given x-coordinate
      */
-    private linearPointBisect(
-        multiple: ISmallMultiple,
-        measureIndex: number,
-        xData: number | Date
-    ) {
+    private linearPointBisect(multiple: ISmallMultiple, measureIndex: number, xData: number | Date) {
         let data = multiple.measures[measureIndex].values,
-            bisectValue = d3.bisector(
-                (d: ISmallMultipleMeasureValue) => d.category
-            ).left,
+            bisectValue = d3.bisector((d: ISmallMultipleMeasureValue) => d.category).left,
             idx = bisectValue(data, xData, 1),
             d0 = data[idx - 1],
             d1 = data[idx] || d0;
-        return <any>xData - <any>d0.category > <any>d1.category - <any>xData
-            ? d1
-            : d0;
+        return <any>xData - <any>d0.category > <any>d1.category - <any>xData ? d1 : d0;
     }
 
     /**
@@ -766,14 +633,8 @@ export default class ChartHelper {
     /**
      * Returns the first matching point (category) value for the given x-coordinate
      */
-    private scalePointBisect(
-        multiple: ISmallMultiple,
-        measureIndex: number,
-        xData: string
-    ) {
-        return multiple.measures[measureIndex].values.filter(
-            v => v.category === xData
-        )[0];
+    private scalePointBisect(multiple: ISmallMultiple, measureIndex: number, xData: string) {
+        return multiple.measures[measureIndex].values.filter(v => v.category === xData)[0];
     }
 
     /**
@@ -782,14 +643,10 @@ export default class ChartHelper {
     private getLineXCoordinate(dataPoint: ISmallMultipleMeasureValue) {
         switch (this.viewModel.xAxis.scaleType) {
             case EAxisScaleType.Linear: {
-                return (<d3.ScaleLinear<number, number>>(
-                    this.viewModel.xAxis.scale
-                ))(<number>dataPoint.category);
+                return (<d3.ScaleLinear<number, number>>this.viewModel.xAxis.scale)(<number>dataPoint.category);
             }
             case EAxisScaleType.Time: {
-                return (<d3.ScaleTime<number, number>>(
-                    this.viewModel.xAxis.scale
-                ))(<Date>dataPoint.category);
+                return (<d3.ScaleTime<number, number>>this.viewModel.xAxis.scale)(<Date>dataPoint.category);
             }
             default: {
                 return this.scaleXPoint(<string>dataPoint.category);
@@ -860,38 +717,27 @@ export default class ChartHelper {
             }
             case EAxisType.Category: {
                 Debugger.LOG('Setting up ticks for X-axis...');
-                let d3Axis:
-                    | d3.Axis<number | Date | { valueOf(): number }>
-                    | d3.Axis<String>;
+                let d3Axis: d3.Axis<number | Date | { valueOf(): number }> | d3.Axis<String>;
 
                 // Handle the tick values based on scale type; Linear/Time need formatting
                 switch (axis.scaleType) {
                     case EAxisScaleType.Linear:
                     case EAxisScaleType.Time: {
                         d3Axis = d3.axisBottom(
-                            <
-                                | d3.ScaleLinear<number, number>
-                                | d3.ScaleTime<number, number>
-                            >axis.scale
+                            <d3.ScaleLinear<number, number> | d3.ScaleTime<number, number>>axis.scale
                         );
                         break;
                     }
                     case EAxisScaleType.Point: {
-                        d3Axis = d3.axisBottom(
-                            <d3.ScalePoint<string>>axis.scale
-                        );
+                        d3Axis = d3.axisBottom(<d3.ScalePoint<string>>axis.scale);
                         break;
                     }
                 }
 
                 // Tick size is common to all axis types
-                d3Axis.tickSize(
-                    isMasterAxis ? -axis.tickLabels.textHeight : axis.tickHeight
-                );
+                d3Axis.tickSize(isMasterAxis ? -axis.tickLabels.textHeight : axis.tickHeight);
                 d3Axis.ticks(axis.ticks);
-                d3Axis.tickSizeOuter(
-                    visualConstants.ranges.axisLineStrokeWidth.max
-                );
+                d3Axis.tickSizeOuter(visualConstants.ranges.axisLineStrokeWidth.max);
                 ticks.call(d3Axis);
 
                 break;
@@ -901,22 +747,11 @@ export default class ChartHelper {
         // Manipulate the plotted axis accordingly
         ticks
             // Apply gridline settings
-            .call(element =>
-                this.applyAxisGridlines(element, isMasterAxis, axisSettings)
-            )
+            .call(element => this.applyAxisGridlines(element, isMasterAxis, axisSettings))
             // Apply tick label settings
-            .call(element =>
-                this.applyAxisTickLabels(
-                    element,
-                    axis,
-                    isMasterAxis,
-                    axisSettings
-                )
-            )
+            .call(element => this.applyAxisTickLabels(element, axis, isMasterAxis, axisSettings))
             // Remove the domain line for everything but the master X-axis (if we still want it)
-            .call(element =>
-                this.applyAxisDomainLine(element, axis, isMasterAxis)
-            );
+            .call(element => this.applyAxisDomainLine(element, axis, isMasterAxis));
     }
 
     /**
@@ -929,9 +764,7 @@ export default class ChartHelper {
             .axisLeft(<d3.ScaleLinear<number, number>>axis.scale)
             .ticks(axis.ticks)
             .tickFormat(d => axis.numberFormat.format(d))
-            .tickSize(
-                isMasterAxis ? -axis.tickLabels.textWidth : axis.tickWidth
-            );
+            .tickSize(isMasterAxis ? -axis.tickLabels.textWidth : axis.tickWidth);
     }
 
     /**
@@ -951,12 +784,7 @@ export default class ChartHelper {
                 .selectAll('.tick line')
                 .classed(axisSettings.gridlineStrokeLineStyle, true)
                 .style('stroke', axisSettings.gridlineColor)
-                .style(
-                    'stroke-width',
-                    axisSettings.gridlines
-                        ? axisSettings.gridlineStrokeWidth
-                        : 0
-                );
+                .style('stroke-width', axisSettings.gridlines ? axisSettings.gridlineStrokeWidth : 0);
         } else {
             element.selectAll('.tick line').remove();
         }
@@ -989,56 +817,28 @@ export default class ChartHelper {
              *  Also, tailor the label, if it's wider than half the small multiple.
              */
             if (axis.axisType === EAxisType.Category) {
-                element
-                    .selectAll(
-                        '.tick:not(:first-of-type):not(:last-of-type) text'
-                    )
-                    .remove();
-                element
-                    .select('.tick:first-of-type text')
-                    .style('text-anchor', 'start');
-                element
-                    .select('.tick:last-of-type text')
-                    .style('text-anchor', 'end');
+                element.selectAll('.tick:not(:first-of-type):not(:last-of-type) text').remove();
+                element.select('.tick:first-of-type text').style('text-anchor', 'start');
+                element.select('.tick:last-of-type text').style('text-anchor', 'end');
                 element
                     .selectAll('.tick text')
                     .text((d: string) => {
-                        let formattedValue = valueFormatter.format(
-                            d,
-                            this.viewModel.categoryMetadata.metadata.format
-                        );
+                        let formattedValue = valueFormatter.format(d, this.viewModel.categoryMetadata.metadata.format);
                         let textProperties = axis.tickLabels.properties,
-                            availableWidth =
-                                this.viewModel.layout.smallMultiples.multiple
-                                    .inner.width * 0.5;
+                            availableWidth = this.viewModel.layout.smallMultiples.multiple.inner.width * 0.5;
                         textProperties.text = formattedValue;
                         let actualWidth = measureSvgTextWidth(textProperties);
                         // This is a bit... unforgiving. We'll need to suss it out
-                        return getTailoredTextOrDefault(
-                            textProperties,
-                            availableWidth
-                        );
+                        return getTailoredTextOrDefault(textProperties, availableWidth);
                     })
                     .append('title')
-                    .text(d =>
-                        valueFormatter.format(
-                            d,
-                            this.viewModel.categoryMetadata.metadata.format
-                        )
-                    );
+                    .text(d => valueFormatter.format(d, this.viewModel.categoryMetadata.metadata.format));
             }
             // Nudge down the labels if we want the domain line
-            if (
-                axis.axisType === EAxisType.Category &&
-                isMasterAxis &&
-                this.settings.xAxis.showAxisLine
-            ) {
+            if (axis.axisType === EAxisType.Category && isMasterAxis && this.settings.xAxis.showAxisLine) {
                 element
                     .selectAll('.tick text')
-                    .attr(
-                        'transform',
-                        `translate(0, ${visualConstants.ranges.axisLineStrokeWidth.max})`
-                    );
+                    .attr('transform', `translate(0, ${visualConstants.ranges.axisLineStrokeWidth.max})`);
             }
         } else {
             element.selectAll('.tick text').remove();
@@ -1051,27 +851,15 @@ export default class ChartHelper {
      * @param axis          - axis to work with.
      * @param isMasterAxis  - specifies whether the axis is on the outside of the row or inside the small multiple.
      */
-    private applyAxisDomainLine(
-        element: d3.Selection<SVGGElement, any, any, any>,
-        axis: IAxis,
-        isMasterAxis: boolean
-    ) {
+    private applyAxisDomainLine(element: d3.Selection<SVGGElement, any, any, any>, axis: IAxis, isMasterAxis: boolean) {
         Debugger.LOG('Applying domain line settings...');
         if (
-            !(
-                axis.axisType === EAxisType.Category &&
-                isMasterAxis &&
-                this.settings.xAxis.showAxisLine
-            ) ||
+            !(axis.axisType === EAxisType.Category && isMasterAxis && this.settings.xAxis.showAxisLine) ||
             axis.ticksAreCollapsed
         ) {
             element.select('.domain').remove();
         }
-        if (
-            axis.axisType === EAxisType.Category &&
-            isMasterAxis &&
-            this.settings.xAxis.showAxisLine
-        ) {
+        if (axis.axisType === EAxisType.Category && isMasterAxis && this.settings.xAxis.showAxisLine) {
             element
                 .select('.domain')
                 .style('stroke', this.settings.xAxis.axisLineColor)
@@ -1093,10 +881,7 @@ export default class ChartHelper {
                 .append('text')
                 .classed('master-axis', true)
                 .text(axis.masterTitle.tailoredValue)
-                .attr(
-                    'transform',
-                    `rotate(${axis.axisType === EAxisType.Value ? -90 : 0})`
-                )
+                .attr('transform', `rotate(${axis.axisType === EAxisType.Value ? -90 : 0})`)
                 .attr('x', axis.masterTitle.x)
                 .attr('y', axis.masterTitle.y)
                 .style('text-anchor', 'middle')
@@ -1113,45 +898,26 @@ export default class ChartHelper {
     /**
      * Adds the background element to the small multiple and applies desired settings
      */
-    private renderSmallMultipleBackground(
-        element: d3.Selection<SVGGElement, ISmallMultiple, any, any>
-    ) {
+    private renderSmallMultipleBackground(element: d3.Selection<SVGGElement, ISmallMultiple, any, any>) {
         Debugger.LOG('Adding small mutliple background...');
         element
             .append('rect')
             .classed('small-multiple-background', true)
-            .attr(
-                'height',
-                this.viewModel.layout.smallMultiples.multiple.outer.height
-            )
-            .attr(
-                'width',
-                this.viewModel.layout.smallMultiples.multiple.outer.width
-            )
+            .attr('height', this.viewModel.layout.smallMultiples.multiple.outer.height)
+            .attr('width', this.viewModel.layout.smallMultiples.multiple.outer.width)
             .attr('fill', d => d.backgroundColour)
-            .attr(
-                'fill-opacity',
-                1 - this.settings.smallMultiple.backgroundTransparency / 100
-            );
+            .attr('fill-opacity', 1 - this.settings.smallMultiple.backgroundTransparency / 100);
     }
 
     /**
      * Adds the small multiple chart to the viewport
      */
-    private renderSmallMultipleChartViewport(): d3.Selection<
-        SVGGElement,
-        any,
-        any,
-        any
-    > {
+    private renderSmallMultipleChartViewport(): d3.Selection<SVGGElement, any, any, any> {
         Debugger.LOG('Rendering chart viewport...');
         return this.canvasContainer
             .append('g')
             .classed('small-multiple-container', true)
-            .attr(
-                'transform',
-                `translate(${this.viewModel.layout.x}, ${this.viewModel.layout.y})`
-            )
+            .attr('transform', `translate(${this.viewModel.layout.x}, ${this.viewModel.layout.y})`)
             .attr('width', this.viewModel.layout.visualViewport.width)
             .attr('height', this.viewModel.layout.visualViewport.height);
     }
@@ -1159,44 +925,26 @@ export default class ChartHelper {
     /**
      * Determines if the small multiple label is required and adds it to the DOM if so, with specified settings
      */
-    private renderSmallMultipleLabel(
-        element: d3.Selection<SVGGElement, any, any, any>
-    ) {
+    private renderSmallMultipleLabel(element: d3.Selection<SVGGElement, any, any, any>) {
         if (this.settings.heading.show) {
             Debugger.LOG('Adding small multiple label...');
             element
                 .append('text')
                 .classed('small-multiple-label', true)
-                .attr(
-                    'x',
-                    this.viewModel.layout.smallMultiples.multiple.heading.x
-                )
-                .attr(
-                    'y',
-                    this.viewModel.layout.smallMultiples.multiple.heading.y
-                )
+                .attr('x', this.viewModel.layout.smallMultiples.multiple.heading.x)
+                .attr('y', this.viewModel.layout.smallMultiples.multiple.heading.y)
                 .text(d => {
                     // This should map to view model properly
                     this.viewModel.layout.smallMultiples.multiple.heading.textProperties.text = this.viewModel.layout.smallMultiples.multiple.heading.formatter.format(
                         d.name
                     );
                     return getTailoredTextOrDefault(
-                        this.viewModel.layout.smallMultiples.multiple.heading
-                            .textProperties,
-                        this.viewModel.layout.smallMultiples.multiple.inner
-                            .width
+                        this.viewModel.layout.smallMultiples.multiple.heading.textProperties,
+                        this.viewModel.layout.smallMultiples.multiple.inner.width
                     );
                 })
-                .style(
-                    'text-anchor',
-                    this.viewModel.layout.smallMultiples.multiple.heading
-                        .textAnchor
-                )
-                .style(
-                    'dominant-baseline',
-                    this.viewModel.layout.smallMultiples.multiple.heading
-                        .dominantBaseline
-                )
+                .style('text-anchor', this.viewModel.layout.smallMultiples.multiple.heading.textAnchor)
+                .style('dominant-baseline', this.viewModel.layout.smallMultiples.multiple.heading.dominantBaseline)
                 .style('dy', '1em')
                 .style('font-family', this.settings.heading.fontFamily)
                 .style('font-size', `${this.settings.heading.fontSize}pt`)
@@ -1224,20 +972,12 @@ export default class ChartHelper {
 
                 // Plot the line if a valid data point
                 if (m.role === 'dataPoint') {
-                    Debugger.LOG(
-                        `Plotting line for measure ${m.metadata.displayName}...`
-                    );
+                    Debugger.LOG(`Plotting line for measure ${m.metadata.displayName}...`);
                     element
                         .append('path')
                         .classed('small-multiple-measure-line', true)
                         .classed(m.lineStyle, true)
-                        .attr('d', d =>
-                            lineGen(
-                                d.measures[inverse].values.filter(
-                                    lineGen.defined()
-                                )
-                            )
-                        )
+                        .attr('d', d => lineGen(d.measures[inverse].values.filter(lineGen.defined())))
                         .style('stroke', m.stroke)
                         .style('stroke-linecap', 'round')
                         .style('fill', 'none')
@@ -1266,27 +1006,15 @@ export default class ChartHelper {
             .reverse()
             .map((m, mi) => {
                 if (m.showArea) {
-                    let inverse =
-                        this.viewModel.measureMetadata.length - 1 - mi;
-                    Debugger.LOG(
-                        `Plotting line for measure ${m.metadata.displayName}...`
-                    );
+                    let inverse = this.viewModel.measureMetadata.length - 1 - mi;
+                    Debugger.LOG(`Plotting line for measure ${m.metadata.displayName}...`);
                     areaGen.curve(d3[`${m.lineShape}`]);
                     element
                         .append('path')
                         .classed('small-multiple-measure-area', true)
-                        .attr('d', d =>
-                            areaGen(
-                                d.measures[inverse].values.filter(
-                                    areaGen.defined()
-                                )
-                            )
-                        )
+                        .attr('d', d => areaGen(d.measures[inverse].values.filter(areaGen.defined())))
                         .style('fill', m.stroke)
-                        .attr(
-                            'fill-opacity',
-                            1 - m.backgroundTransparency / 100
-                        )
+                        .attr('fill-opacity', 1 - m.backgroundTransparency / 100)
                         .style('stroke-width', 0);
                 }
             });
@@ -1320,25 +1048,16 @@ export default class ChartHelper {
         return element
             .append('g')
             .classed('small-multiple-row-container', true)
-            .attr(
-                'height',
-                this.viewModel.layout.smallMultiples.grid.rows.height
-            )
+            .attr('height', this.viewModel.layout.smallMultiples.grid.rows.height)
             .attr('width', this.viewModel.layout.smallMultiples.grid.rows.width)
-            .attr(
-                'transform',
-                `translate(${0}, ${row *
-                    this.viewModel.layout.smallMultiples.grid.rows.height})`
-            );
+            .attr('transform', `translate(${0}, ${row * this.viewModel.layout.smallMultiples.grid.rows.height})`);
     }
 
     /**
      * Adds a clipPath to the specified row group element (used to ensure that the chart clips if the Y-axis has been limited, and doesn't exceed
      * the bounds of the small multiple)
      */
-    private renderSmallMultipleRowClipPath(
-        element: d3.Selection<SVGGElement, any, any, any>
-    ) {
+    private renderSmallMultipleRowClipPath(element: d3.Selection<SVGGElement, any, any, any>) {
         Debugger.LOG('Setting up clipPath...');
         element.selectAll('defs').remove();
         element
@@ -1347,14 +1066,8 @@ export default class ChartHelper {
             .attr('id', 'small-multiple-clip')
             .style('fill', 'none')
             .append('rect')
-            .attr(
-                'width',
-                this.viewModel.layout.smallMultiples.multiple.inner.width
-            )
-            .attr(
-                'height',
-                this.viewModel.layout.smallMultiples.multiple.inner.height
-            );
+            .attr('width', this.viewModel.layout.smallMultiples.multiple.inner.width)
+            .attr('height', this.viewModel.layout.smallMultiples.multiple.inner.height);
     }
 
     /**
@@ -1371,11 +1084,7 @@ export default class ChartHelper {
             .enter()
             .append('svg')
             .classed('small-multiple', true)
-            .attr(
-                'x',
-                (d, i) =>
-                    i * this.viewModel.layout.smallMultiples.multiple.xOffset
-            )
+            .attr('x', (d, i) => i * this.viewModel.layout.smallMultiples.multiple.xOffset)
             .style('fill-opacity', d => this.getSmallMultipleOpacity(d))
             .style('stroke-opacity', d => this.getSmallMultipleOpacity(d))
             .append('g')
@@ -1392,10 +1101,7 @@ export default class ChartHelper {
      * Applies border configuration to small multiples y rendering over the top of them (this avoids all kinds of issues
      * that we had in the initial version, as borders would get clipped inside the main SVG)
      */
-    private renderSmallMultipleBorders(
-        element: d3.Selection<SVGGElement, any, any, any>,
-        row: number
-    ) {
+    private renderSmallMultipleBorders(element: d3.Selection<SVGGElement, any, any, any>, row: number) {
         if (this.settings.smallMultiple.border) {
             Debugger.LOG('Rendering small multiple borders...');
             element
@@ -1409,24 +1115,11 @@ export default class ChartHelper {
                 .style('stroke', this.settings.smallMultiple.borderColor)
                 .style(
                     'stroke-width',
-                    this.settings.smallMultiple.border
-                        ? this.settings.smallMultiple.borderStrokeWidth
-                        : 0
+                    this.settings.smallMultiple.border ? this.settings.smallMultiple.borderStrokeWidth : 0
                 )
-                .attr(
-                    'x',
-                    (d, i) =>
-                        i *
-                        this.viewModel.layout.smallMultiples.multiple.xOffset
-                )
-                .attr(
-                    'height',
-                    this.viewModel.layout.smallMultiples.multiple.outer.height
-                )
-                .attr(
-                    'width',
-                    this.viewModel.layout.smallMultiples.multiple.outer.width
-                );
+                .attr('x', (d, i) => i * this.viewModel.layout.smallMultiples.multiple.xOffset)
+                .attr('height', this.viewModel.layout.smallMultiples.multiple.outer.height)
+                .attr('width', this.viewModel.layout.smallMultiples.multiple.outer.width);
         }
     }
 
@@ -1449,14 +1142,8 @@ export default class ChartHelper {
         overlay
             .append('rect')
             .classed('tooltip-canvas', true)
-            .attr(
-                'height',
-                this.viewModel.layout.smallMultiples.multiple.inner.height
-            )
-            .attr(
-                'width',
-                this.viewModel.layout.smallMultiples.multiple.inner.width
-            )
+            .attr('height', this.viewModel.layout.smallMultiples.multiple.inner.height)
+            .attr('width', this.viewModel.layout.smallMultiples.multiple.inner.width)
             .style('fill', 'none');
         return overlay;
     }
@@ -1464,17 +1151,12 @@ export default class ChartHelper {
     /**
      * Adds a line to the specified overlay element, which is used to track mouse position to the nearest category
      */
-    private renderSmallMultipleTooltipMouseLine(
-        element: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>
-    ) {
+    private renderSmallMultipleTooltipMouseLine(element: d3.Selection<SVGGElement, ISmallMultiple, SVGGElement, any>) {
         Debugger.LOG('Adding tooltip mouse line to overlay...');
         element
             .append('line')
             .classed('hover-line', true)
             .attr('y1', 0)
-            .attr(
-                'y2',
-                this.viewModel.layout.smallMultiples.multiple.inner.height
-            );
+            .attr('y2', this.viewModel.layout.smallMultiples.multiple.inner.height);
     }
 }

@@ -16,15 +16,13 @@ export default class SmallMultiplesStylingSettings extends SettingsBase {
     // Background colour
     public backgroundColor: string = defaults.smallMultiple.backgroundColour;
     // Background transparency
-    public backgroundTransparency: number =
-        defaults.smallMultiple.backgroundTransparency;
+    public backgroundTransparency: number = defaults.smallMultiple.backgroundTransparency;
     // Zebra-stripe toggle
     public zebraStripe: boolean = defaults.smallMultiple.zebraStripe;
     // Zebra-stripe background application-type
     public zebraStripeApply: string = defaults.smallMultiple.zebraStripeApply;
     // Alternate background colour
-    public backgroundColorAlternate: string =
-        defaults.smallMultiple.backgroundColourAlternate;
+    public backgroundColorAlternate: string = defaults.smallMultiple.backgroundColourAlternate;
     // Border toggle
     public border: boolean = defaults.smallMultiple.border;
     // Border colour
