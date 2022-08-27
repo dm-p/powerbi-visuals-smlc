@@ -577,7 +577,6 @@ export default class ViewModelHandler {
     initialiseAxes() {
         Debugger.FOOTER();
         Debugger.LOG('Initialising axes...');
-
         // Y-axis setup
         Debugger.LOG('Master Y-axis number formatting...');
         this.viewModel.yAxis.numberFormat = valueFormatter.create({
@@ -596,7 +595,6 @@ export default class ViewModelHandler {
             this.viewModel.yAxis,
             this.settings.yAxis
         );
-
         Debugger.LOG('Y-axis scale & domain...');
         const yDomain = [
             this.settings.yAxis.start === 0
@@ -611,21 +609,18 @@ export default class ViewModelHandler {
             .scaleLinear()
             .domain(this.settings.yAxis.invert ? yDomain.reverse() : yDomain)
             .nice();
-
         Debugger.LOG('Y-axis ticks...');
         this.viewModel.yAxis.tickLabels = this.resolveMasterAxisTickLabel(
             this.viewModel.yAxis,
             this.settings.yAxis,
             this.viewModel.measureMetadata[0].metadata
         );
-
         // X-Axis setup
         Debugger.LOG('Master X-axis title...');
         this.viewModel.xAxis.masterTitle = this.resolveMasterAxisTitle(
             this.viewModel.xAxis,
             this.settings.xAxis
         );
-
         Debugger.LOG('X-axis scale & domain...');
         switch (true) {
             case this.categoryColumn.type.numeric: {
@@ -662,7 +657,6 @@ export default class ViewModelHandler {
                     .domain(<string[]>this.viewModel.categoryMetadata.values);
             }
         }
-
         if (this.viewModel.xAxis.scaleType !== EAxisScaleType.Point) {
             Debugger.LOG(
                 'Master X-axis is linear. Applying number formatting...'
@@ -673,7 +667,6 @@ export default class ViewModelHandler {
                 cultureSelector: this.viewModel.locale
             });
         }
-
         Debugger.LOG('X-axis ticks...');
         this.viewModel.xAxis.tickLabels = this.resolveMasterAxisTickLabel(
             this.viewModel.xAxis,
