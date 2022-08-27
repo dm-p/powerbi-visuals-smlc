@@ -2,20 +2,22 @@
 
 By Daniel Marsh-Patrick
 
-![github.png](./doc/assets/png/github.png "GitHub: dm-p") [dm-p](https://github.com/dm-p) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![twitter.png](./doc/assets/png/twitter.png "Twitter: @the_d_mp") [@the_d_mp](https://twitter.com/the_d_mp) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ![linkedin.png](./doc/assets/png/linkedin.png "in/daniel-m-p") [daniel-m-p](https://www.linkedin.com/in/daniel-m-p)  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; www.coacervo.co  |  [daniel@coacervo.co](mailto:daniel@coacervo.co) 
+![github.png](./doc/assets/png/github.png 'GitHub: dm-p') [dm-p](https://github.com/dm-p) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![twitter.png](./doc/assets/png/twitter.png 'Twitter: @the_d_mp') [@the_d_mp](https://twitter.com/the_d_mp) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![linkedin.png](./doc/assets/png/linkedin.png 'in/daniel-m-p') [daniel-m-p](https://www.linkedin.com/in/daniel-m-p) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; www.coacervo.co | [daniel@coacervo.co](mailto:daniel@coacervo.co)
 
-----
+---
+
 **Home** | [Usage](./doc/usage.md) | [Theming](./doc/theming.md) | Examples | [Change Log](./doc/change_log.md) | [Privacy Policy](./doc/privacy_policy.md) | [Support](./doc/support.md)
 
-----
+---
 
 ## Current Status
 
-| | Development | Submitted | Approved | Available |
-|-|:--:|:-:|:-:|:-:|
-| [2.2.0.133](./doc/change_log.md#220133-2020-08-28) | | | | ✔ |
+|                                                         | Development | Submitted | Approved | Available |
+| ------------------------------------------------------- | :---------: | :-------: | :------: | :-------: |
+| [2.3.0.134](./doc/change_log.md#230-pending-submission) |     🚧      |           |          |           |
+| [2.2.0.133](./doc/change_log.md#220133-2020-08-28)      |             |           |          |     ✔     |
 
-> **If a version is in any status other than *Available* this cannot be imported via file or via the Marketplace, even if the listing is showing the new version**. [More on this below](#More-About-Current-Status).
+> **If a version is in any status other than _Available_ this cannot be imported via file or via the Marketplace, even if the listing is showing the new version**. [More on this below](#More-About-Current-Status).
 
 ## What the Visual Does
 
@@ -23,13 +25,13 @@ A small multiple is a series of charts using the same scale and axes, allowing t
 
 &nbsp;&nbsp;&nbsp;&nbsp;![Simple example by month and city](./doc/assets/png/sm_landing_example.png)
 
-In this example, we are able to take a measure - **Mean Temperature (°C)** - plotted by **Month Name** and then split this out into individual charts by a category (**City**). 
+In this example, we are able to take a measure - **Mean Temperature (°C)** - plotted by **Month Name** and then split this out into individual charts by a category (**City**).
 
 Each small multiple uses the same X and Y scale to allow for consistent visual comparison between categories.
 
 ## Obtaining the Visual
 
-The latest version of the visual is **2.1.0.130**.
+The latest version of the visual is **2.2.0.133**.
 
 The visual is [available in AppSource](https://appsource.microsoft.com/en-us/product/power-bi-visuals/WA104381711?src=website&mktcmpid=repo_main_page) (Power BI Marketplace). You can also download from this repository's [Releases section](https://github.com/dm-p/powerbi-visuals-smlc/releases).
 
@@ -45,7 +47,7 @@ If you want to load a version of this visual before it's fully available (or dow
 
 Here's a bigger explanation for anyone who wants to know about what each status means:
 
-* **Development** - the specified version is undergoing active development and is not in the AppSource/Marketplace ecosystem. Development builds may be available via releases [Releases](https://github.com/dm-p/powerbi-visuals-smlc/releases) or can be compiled from source.
-* **Submitted** - the visual has been submitted to AppSource and is undergoing initial review.
-* **Approved** - the visual listing is updated **but not yet fully available while MS do internal testing and verification**.
-* **Available** - the visual is fully available and can be obtained from the marketplace as normal. Any reports using the visual will be automatically updated.
+-   **Development** - the specified version is undergoing active development and is not in the AppSource/Marketplace ecosystem. Development builds may be available via releases [Releases](https://github.com/dm-p/powerbi-visuals-smlc/releases) or can be compiled from source.
+-   **Submitted** - the visual has been submitted to AppSource and is undergoing initial review.
+-   **Approved** - the visual listing is updated **but not yet fully available while MS do internal testing and verification**.
+-   **Available** - the visual is fully available and can be obtained from the marketplace as normal. Any reports using the visual will be automatically updated.
