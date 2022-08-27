@@ -246,7 +246,7 @@ export default class ViewModelHandler {
                                 'lines',
                                 'strokeWidth',
                                 visualConstants.defaults.lines.strokeWidth
-                            )) ||
+                            )) ??
                         null,
                     lineShape:
                         (role === 'dataPoint' &&
