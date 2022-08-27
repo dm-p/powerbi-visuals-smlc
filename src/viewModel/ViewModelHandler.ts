@@ -42,6 +42,7 @@ import DataViewHelper from '../dataView/DataViewHelper';
 import IStatistics from './IStatistics';
 import SmallMultiplesHelper from '../smallMultiple/SmallMultiplesHelper';
 import MeasureRole from './MeasureRole';
+import IMeasure from './IMeasure';
 
 /**
  * Manages everything needed to create our view model.
@@ -217,76 +218,9 @@ export default class ViewModelHandler {
                     (m.roles.values && 'dataPoint') || 'tooltip';
 
                 // Persist out measure metadata and config
-                this.viewModel.measureMetadata.push({
-                    metadata: m,
-                    formatter: valueFormatter.create({
-                        format: valueFormatter.getFormatStringByColumn(m),
-                        cultureSelector: this.viewModel.locale
-                    }),
-                    stroke:
-                        (role === 'dataPoint' &&
-                            DataViewHelper.GET_METADATA_OBJECT_VALUE<Fill>(
-                                m,
-                                'lines',
-                                'stroke',
-                                defaultColour
-                            ).solid.color) ||
-                        '#ffffff00',
-                    selectionId:
-                        (role === 'dataPoint' &&
-                            this.host
-                                .createSelectionIdBuilder()
-                                .withMeasure(m.queryName)
-                                .createSelectionId()) ||
-                        null,
-                    strokeWidth:
-                        (role === 'dataPoint' &&
-                            DataViewHelper.GET_METADATA_OBJECT_VALUE<number>(
-                                m,
-                                'lines',
-                                'strokeWidth',
-                                visualConstants.defaults.lines.strokeWidth
-                            )) ??
-                        null,
-                    lineShape:
-                        (role === 'dataPoint' &&
-                            DataViewHelper.GET_METADATA_OBJECT_VALUE<string>(
-                                m,
-                                'lines',
-                                'lineShape',
-                                visualConstants.defaults.lines.lineShape
-                            )) ||
-                        null,
-                    lineStyle:
-                        (role === 'dataPoint' &&
-                            DataViewHelper.GET_METADATA_OBJECT_VALUE<string>(
-                                m,
-                                'lines',
-                                'lineStyle',
-                                visualConstants.defaults.lines.lineStyle
-                            )) ||
-                        null,
-                    showArea:
-                        (role === 'dataPoint' &&
-                            DataViewHelper.GET_METADATA_OBJECT_VALUE<boolean>(
-                                m,
-                                'lines',
-                                'showArea',
-                                visualConstants.defaults.lines.showArea
-                            )) ||
-                        null,
-                    backgroundTransparency:
-                        (role === 'dataPoint' &&
-                            DataViewHelper.GET_METADATA_OBJECT_VALUE<number>(
-                                m,
-                                'lines',
-                                'backgroundTransparency',
-                                visualConstants.defaults.lines
-                                    .backgroundTransparency
-                            )) ||
-                        null,
-                    role: role
-                });
+                this.viewModel.measureMetadata.push(
+                    this.getResolvedMeasureData(m, role, defaultColour)
+                );
             });
 
         // Get all category values
@@ -323,6 +257,85 @@ export default class ViewModelHandler {
             this.smallMultipleColumn.source,
             this.viewModel.locale
         );
+    }
+
+    /**
+     * For a supplied measure, resolve all display properties
+     */
+    private getResolvedMeasureData(
+        m: powerbiVisualsApi.DataViewMetadataColumn,
+        role: string,
+        defaultColour: powerbiVisualsApi.Fill
+    ): IMeasure {
+        return {
+            metadata: m,
+            formatter: valueFormatter.create({
+                format: valueFormatter.getFormatStringByColumn(m),
+                cultureSelector: this.viewModel.locale
+            }),
+            stroke:
+                (role === 'dataPoint' &&
+                    DataViewHelper.GET_METADATA_OBJECT_VALUE<Fill>(
+                        m,
+                        'lines',
+                        'stroke',
+                        defaultColour
+                    ).solid.color) ||
+                '#ffffff00',
+            selectionId:
+                (role === 'dataPoint' &&
+                    this.host
+                        .createSelectionIdBuilder()
+                        .withMeasure(m.queryName)
+                        .createSelectionId()) ||
+                null,
+            strokeWidth:
+                (role === 'dataPoint' &&
+                    DataViewHelper.GET_METADATA_OBJECT_VALUE<number>(
+                        m,
+                        'lines',
+                        'strokeWidth',
+                        visualConstants.defaults.lines.strokeWidth
+                    )) ??
+                null,
+            lineShape:
+                (role === 'dataPoint' &&
+                    DataViewHelper.GET_METADATA_OBJECT_VALUE<string>(
+                        m,
+                        'lines',
+                        'lineShape',
+                        visualConstants.defaults.lines.lineShape
+                    )) ||
+                null,
+            lineStyle:
+                (role === 'dataPoint' &&
+                    DataViewHelper.GET_METADATA_OBJECT_VALUE<string>(
+                        m,
+                        'lines',
+                        'lineStyle',
+                        visualConstants.defaults.lines.lineStyle
+                    )) ||
+                null,
+            showArea:
+                (role === 'dataPoint' &&
+                    DataViewHelper.GET_METADATA_OBJECT_VALUE<boolean>(
+                        m,
+                        'lines',
+                        'showArea',
+                        visualConstants.defaults.lines.showArea
+                    )) ||
+                null,
+            backgroundTransparency:
+                (role === 'dataPoint' &&
+                    DataViewHelper.GET_METADATA_OBJECT_VALUE<number>(
+                        m,
+                        'lines',
+                        'backgroundTransparency',
+                        visualConstants.defaults.lines.backgroundTransparency
+                    )) ||
+                null,
+            role: <MeasureRole>role
+        };
     }
 
     /**
