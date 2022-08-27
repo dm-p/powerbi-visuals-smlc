@@ -2,6 +2,7 @@
 import powerbiVisualsApi from 'powerbi-visuals-api';
 import powerbi = powerbiVisualsApi;
 import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
+import VisualEnumerationInstanceKinds = powerbi.VisualEnumerationInstanceKinds;
 import { valueFormatter } from 'powerbi-visuals-utils-formattingutils';
 import IValueFormatter = valueFormatter.IValueFormatter;
 
@@ -53,10 +54,15 @@ export default class ValueAxisSettings extends AxisSettings {
         } = {}
     ): VisualObjectInstanceEnumerationObject {
         Debugger.LOG('Processing enumeration...');
-        enumerationObject.instances.map(i => {
+        enumerationObject.instances.map((i) => {
             // Range validation
             Debugger.LOG('Range validation...');
             i.validValues = this.validValues;
+            // Conditional formatting for start/end
+            i.propertyInstanceKind = {
+                start: VisualEnumerationInstanceKinds.ConstantOrRule,
+                end: VisualEnumerationInstanceKinds.ConstantOrRule
+            };
             // Label toggle
             i = this.handleLabelToggle(i);
             // Gridline toggle
